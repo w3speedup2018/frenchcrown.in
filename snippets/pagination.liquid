@@ -1,0 +1,29 @@
+{%- if paginate.pages > 1 -%}
+  <div class="Pagination Text--subdued">
+    <div class="Pagination__Nav" style="display: none;">
+      {%- if paginate.previous -%}
+        <a class="Pagination__NavItem Link Link--primary" rel="prev" title="{{ 'general.pagination.previous_page' | t }}" href="{{ paginate.previous.url | remove: 'view=ajax' }}{{ hash }}">
+          {%- include 'icon' with 'select-arrow-left' -%}
+        </a>
+      {%- endif -%}
+      
+      {%- assign  pages = paginate.pages -%}
+      {%- for page in (1..pages) -%}
+          <a data-page="{{page}}"  href="{{ collection.url }}?page={{page}}" class="Pagination__NavItem Link Link--primary {% if page == paginate.current_page %}is-active{% endif %}" title="{{ 'general.pagination.go_to_page' | t: page: part.title }}">{{ part.title }}</a>
+      {%- endfor -%}     
+      
+     {%- comment -%} <div>
+        {%- for part in paginate.parts -%}
+        <a href="{{ part.url | remove: 'view=ajax' }}{{ hash }}" class="Pagination__NavItem Link Link--primary {% if part.title == paginate.current_page %}is-active{% endif %}" title="{{ 'general.pagination.go_to_page' | t: page: part.title }}">{{ part.title }}</a>
+
+        {%- endfor -%}
+      </div>{%- endcomment -%}
+      {%- comment -%}{%- if paginate.next -%}
+        <a class="Pagination__NavItem Link Link--primary" rel="next" title="{{ 'general.pagination.next_page' | t }}" href="{{ paginate.next.url | remove: 'view=ajax' }}{{ hash }}">
+          {%- include 'icon' with 'select-arrow-right' -%}
+        </a>
+      {%- endif -%}{%- endcomment -%}
+    </div>
+    <p class="load-more Heading"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/loading_text.svg?v=1640010623"></p>
+  </div>
+{%- endif -%}

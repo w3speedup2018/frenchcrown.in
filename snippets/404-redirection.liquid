@@ -1,0 +1,42 @@
+ <script>
+    var url = window.location.href;
+    {%- if template == '404' -%}
+        if(url.includes('tshirt') || url.includes('polo')){
+        	window.location.href = '/collections/tshirts';
+        }else if(url.includes('shirt')){
+        	window.location.href = '/collections/shirts';
+        }else if(url.includes('suit')){
+        	window.location.href = '/collections/suits';
+        }else if(url.includes('blazer') || url.includes('trench-coat')){
+        	window.location.href = '/collections/blazers';
+        }else if(url.includes('waistcoat') || url.includes('nehru-jacket')){
+        	window.location.href = '/collections/waistcoats';
+        }else if(url.includes('masks')){
+          	window.location.href = '/collections/face-masks';
+        }else if(url.includes('belt')){
+        	window.location.href = '/collections/belts';
+        }else if(url.includes('wallet')){
+        	window.location.href = '/collections/wallets';
+        }else if(url.includes('lounge-pant')){
+        	window.location.href = '/collections/lounge-pants';
+        }else if(url.includes('boxers')){
+        	window.location.href = '/collections/boxers';   	
+        }else if(url.includes('pant') || url.includes('cotton-chino')){
+          	window.location.href = '/collections/pants';
+        }else if(url.includes('keychain') || url.includes('tie-with-pocket') || url.includes('cufflinks')){
+        	window.location.href = '/collections/accessories';
+    	}else if(url.includes('shorts')){
+        	window.location.href = '/collections/shorts';
+        }else if(url.includes('shoes')){
+        	window.location.href = '/collections/footwear';
+        }else{
+          	window.location.href = '/collections/shirts';
+        }
+    {% else %}
+        if(url.includes('collections') && url.includes('products/')){
+            product_handle = url.split('products/')[1];
+            window.location.href = '/products/'+product_handle;
+        }
+    {%- endif -%}
+  
+</script>

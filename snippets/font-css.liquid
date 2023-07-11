@@ -1,0 +1,11 @@
+<style type="lazyload2">
+{%- assign text_font_bold = settings.text_font | font_modify: 'weight', 'bolder' -%}
+{{ settings.heading_font | font_face: font_display: 'swap' }}
+{{ settings.text_font | font_face: font_display: 'swap' }}
+{{ text_font_bold | font_face: font_display: 'swap' }}
+{%- assign text_font_italic = settings.text_font | font_modify: 'style', 'italic' -%}
+{%- assign text_font_bold_italic = text_font_bold | font_modify: 'style', 'italic' -%}
+{{ text_font_italic | font_face: font_display: 'swap' }}
+{{ text_font_bold_italic | font_face: font_display: 'swap' }}
+</style>
+<link rel="stylesheet" data-href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">

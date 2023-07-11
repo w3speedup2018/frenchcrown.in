@@ -1,0 +1,153 @@
+  <div class='fc_overlay'></div>
+  <div class='fc_popupBox checkout-phone-popup'>
+    <div class='fc_mainHead'>       
+      <div class='fc_popup-heading fc_center'>
+        <img alt="French Crown" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/FC_logo_New_Design_01.svg?v=1686997443">
+      </div>
+    </div>
+    
+    <div class="send-otp-section cod-otp-section" style="display: block">
+      <div class='fc_mainContent fc_center m-b-70'>
+        <div class="lock-section">
+          <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+          <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+        </div>
+        <h3 class="otp-title">Mobile Number</h3>
+        <div class="otp-mobile-outer">
+          <img class="india-flag" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/india_flag.png?v=1673522055">
+          <div class="otp-mobile-no-prefix">+91</div>
+          <input class="otp-mobile-no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength=10 placeholder="Enter Number" autocomplete="tel">
+        </div>
+        <div class="otp-error" style="display: none">Please enter valid Mobile Number</div>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+          <button class='send-otp-btn phone-submit'>Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .fc_body{
+      overflow: hidden;
+    }
+    .fc_overlay{
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      background: black;
+      top: 0;
+      right: 0;
+      opacity: 0.5;
+      z-index: 999;
+      display: none;
+    }
+    .fc_popupBox{
+      background-color: #fefefe;
+      margin: auto;
+      max-width:1000px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      z-index: 1000;
+      display: none;
+      width: 360px;
+    }
+    .fc_popupBox .fc_mainHead{
+      background-color:#000;
+    }
+    .fc_popupBox .fc_mainHead img.logo__image{
+    	padding: 10px 20px;
+    }
+    .fc_popupBox .fc_popup-heading{
+      font-size: 18px;
+      font-weight: 700;
+      padding: 15px;
+    }  
+    .fc_popupBox .fc_center{
+      text-align: center;
+      display: block;
+    }
+    .footer-btn{
+      margin: 10px 0;
+      display: flex;
+    }
+    .fc_popupBox p{
+      margin: 0;
+      font-size: 16px;
+    }
+    .fc_popupBox .fc_mainContent{
+      max-height: 500px;
+      overflow: visible;
+    }
+    .fc_product-contain p{
+      margin-bottom: 20px;
+    }
+    .fc_popup-heading img{
+        max-height: 80px;
+        width: 271px;
+        height: 60px;
+    }
+    .fc_popup-heading h3{
+      margin-bottom: 20px;
+    }
+    .fc_mainContent h3{
+      margin: 25px 0;
+      font-weight: 700;
+      font-size: 22px;
+    }
+    .send-otp-btn{
+      background-color: #000;
+      color: #fff;
+      padding: 14px;
+      width: 100%;
+      font-size: 14px;
+      margin: 0;
+      font-weight: bold;
+    }
+    .otp-error{
+      font-size: 12px;
+      color: red;
+      padding: 6px;
+      text-align: left;
+    }
+    .fc_popup-heading .close-btn {
+      color: #fff;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      border: 2px solid #fff;
+      padding: 2px 6px 4px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+    @media screen and (max-width:1024px){
+      .fc_popup-heading img{
+        max-height: 60px;
+        width: 310px;
+      }
+    }
+    @media screen and (max-width:767px){
+      .fc_popupBox{
+        max-width:90%;
+        max-height:90vh;
+        overflow: auto;
+        width: 100%;
+      }
+      .fc_popupBox p{
+        font-size: 12px;
+      }
+      .fc_popup-heading img{
+        width: 240px;
+      }
+      .fc_popupBox{
+        min-width: auto;
+      }
+    }
+  </style>
+
+        

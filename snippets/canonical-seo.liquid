@@ -1,0 +1,18 @@
+{%- if template contains 'collection' and current_tags -%}
+  {%- capture shopURL -%}{{ shop.url }}{{ collection.url }}{%- endcapture -%}
+
+  <link rel="alternate" hreflang="en-in" href="{{ shopURL | replace: shop.domain, 'frenchcrown.in' }}" />
+  <link rel="alternate" hreflang="en-us" href="{{ shopURL | replace: shop.domain, 'frenchcrown.com' }}" />
+  <link rel="alternate" hreflang="x-default" href="{{ shopURL | replace: shop.domain, 'frenchcrown.in' }}" />
+
+  <meta name="robots" content="noindex , nofollow" />
+  <link rel="canonical" href="{{ shopURL }}">
+{%- else -%}
+  {% assign canonical_url = canonical_url | split: "?" %}
+
+  <link rel="alternate" hreflang="en-in" href="{{ canonical_url[0] | replace: shop.domain, 'frenchcrown.in' }}" />
+  <link rel="alternate" hreflang="en-us" href="{{ canonical_url[0] | replace: shop.domain, 'frenchcrown.com' }}" />
+  <link rel="alternate" hreflang="x-default" href="{{ canonical_url[0] | replace: shop.domain, 'frenchcrown.in' }}" />
+  
+  <link rel="canonical" href="{{ canonical_url[0] }}">
+{%- endif -%}

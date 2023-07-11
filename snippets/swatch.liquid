@@ -1,0 +1,116 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% assign file_extension = 'png' %}
+
+{% if swatch == blank %}
+  <div class="swatch error">
+    <p>You must include the snippet swatch.liquid with the name of a product option.</p> 
+    <p>Use: <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+  </div>
+{% else %}
+
+  {% assign found_option = false %}
+  {% assign is_color = false %}
+  {% assign option_index = 0 %}
+
+  {% for option in product.options %}
+    {% if option == swatch %}
+      {% assign found_option = true %}
+      {% assign option_index = forloop.index0 %}
+      <style>
+        label[for="productSelect-option-{{ option_index }}"] { display: none; }
+        #productSelect-{{ product.id }}-option-{{ option_index }} { display: none; }
+        #productSelect-{{ option_index }} + .custom-style-select-box { display: none !important; }
+      </style>
+      <script type="lazyload2">setTimeout(function() { $('.selector-wrapper:eq({{ option_index }})').hide(); });</script>
+      {% assign downcased_option = swatch | downcase %}
+      {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+        {% assign is_color = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% unless found_option %}
+    <div class="swatch error">
+      <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+      <p>Use <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+      <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+      <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+    </div>
+  {% else %}
+      <div class="swatch clearfix" {%if option_index == 1 %}data-next{% endif %} data-product-type="{{product.type}}" data-option-index="{{ option_index }}" {%if option_index == 0 %}data-firstOptoin{% endif %}>
+    <div class="heading-wrapper">
+      {% if swatch contains 'Trouser Size' %}
+          <div class="header">Select Pant Size</div>
+      {% else %}
+          <div class="header">Select {{ swatch }}</div>
+      {% endif %}
+      <div class="close-swatch">x</div>
+      <div class="clear"></div>
+    </div>
+
+    <div class="swatch-lisitng {{product.id}}">
+    {% assign values = '' %}
+    {% for variant in product.variants %}
+
+      {% assign value = variant.options[option_index] %}
+      {% unless values contains value %}
+
+        {% unless value == 'Customize Now' %}
+          {% assign values = values | join: ',' %}
+          {% assign values = values | append: ',' | append: value %} 
+          {% assign values = values | split: ',' %}
+
+          <div data-value="{{ value | escape }}" class="swatch-element {% if is_color %}color {% endif %}{{ value | handle }} {% if variant.available %}available{% else %}soldout{% endif %}">
+          {% if is_color %}
+              <div class="tooltip">{{ value }}</div>
+          {% endif %}
+          <input class="french-size" id="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}" {% unless variant.available %}disabled{% endunless %} />
+          {% if is_color %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}" style="background-color: {{ value | split: ' ' | last | handle }}; background-image: url({{ value | handle | append: '.' | append: file_extension | asset_url }})">
+              <img class="crossed-out lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ 'close-button.png' | asset_url }}" />
+            </label>
+          {% else %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}">
+              {{ value }}
+              <img class="crossed-out lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ 'close-button.png' | asset_url }}" />
+            </label>
+          {% endif %}
+        </div>
+        {% endunless %}
+      {% endunless %}
+      {% if variant.available %}
+        <script>
+          jQuery('.{{product.id}} .{{ value | handle }}').removeClass('soldout').addClass('available').find(':radio').removeAttr('disabled');
+        </script>
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% assign multi_option_ptypes = "Shirt,Suit,Trenchcoat Suit,Designer Shirt,Woman Suit,Shirt Trouser,Shirt Short,Shirt Lounge Pant,Tshirt Short,Tshirt Lounge Pant,Sherwani Pajama,Jodhpuri Pajama,Indowestern Pajama,Wedding Kurta Pajama,Sherwani Dhoti,Jodhpuri Dhoti,Indowestern Dhoti,Wedding Kurta Dhoti,Kurta Jacket Pajama,Kurta Jacket Dhoti,Wedding Kurta Koti Lounge Pant,Wedding Kurta Koti Churi Pant,Wedding Kurta Indowestern Lounge Pant,Wedding Kurta Indowestern Churi Pant,Wedding Kurta Sherwani Lounge Pant,Wedding Kurta Sherwani Churi Pant,Indowestern Lounge Pant,Indowestern Churi Pant,Jacket Short" | split:"," %}
+    {% if option_index == 0 %}
+        {% if multi_option_ptypes contains product.type %}
+        	<div class="swatch-footer">
+              <button class="btn" data-next-btn data-ptype="{{product.type}}">Next</button>
+            </div>
+        {% endif %}
+    {% elsif option_index == 1 %}
+        {% if multi_option_ptypes contains product.type %}
+        	<div class="swatch-footer" style="display: flex; justify-content: space-between;">
+              <button class="btn" data-back-btn>Back</button>
+              <button class="btn" data-atc>ADD</button>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {% unless multi_option_ptypes contains product.type %}
+      <div class="swatch-footer">
+        <button class="btn" data-atc>ADD</button>
+      </div>
+    {% endunless %}
+  </div>
+  {% endunless %}
+
+{% endif %}

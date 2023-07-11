@@ -1,0 +1,33 @@
+<div class="product-details-quickmore">
+  <div class="quick-details">
+      {% assign product_id = '' %}
+      {% assign product_type= '' %}
+      {% section 'product-template' %}
+      {%- include 'size-chart'-%}
+    
+      <script type="application/json" data-quickview-variant-json>
+      {
+          "product": {
+              "id":"{{ product.id }}",
+              "handle":"{{ product.handle }}",
+              "title":"{{ product.title | replace:'"','”' }}",
+              "featured_image":{% if product.featured_image %}"{{ product.featured_image.src | img_url:'master' }}"{% else %}null{% endif %},
+              "vendor": "{{product.vendor}}",
+              "product_type": "{{product.type}}",
+              "variants": [
+                  {% for variant in product.variants %}
+                  {
+                    "variant_price":"{{ variant.price }}",
+                    "variant_id":"{{ variant.id }}",
+                    "variant_image":"{{ variant.image.src | img_url:'master' }}",
+                    "public_title":"{{ variant.title }}",
+                    "variant_qty":"{{ variant.inventory_quantity }}",
+                    "metafields": null
+                  }{% unless forloop.last == true %},{% endunless %}
+                  {% endfor %}
+        		]
+           }
+      }
+      </script>
+  </div>
+</div>

@@ -1,0 +1,971 @@
+{% capture section_settings %}
+{
+  "apiKey": {{ section.settings.api_key | json }},
+  "mapAddress": {{ section.settings.map_address | json }},
+  "zoom": {{ section.settings.zoom }},
+  "markerColor": {% if section.settings.map_style == 'standard' or section.settings.map_style == 'silver' or section.settings.map_style == 'retro' %}"#000000"{% else %}"#ffffff"{% endif %}
+}
+{% endcapture %}
+<section class="Section Section--spacingNormal" data-section-type="map" data-section-settings='{{ section_settings | escape }}'>
+   <div class="Container">
+    <header class="PageHeader">
+      <div class="SectionHeader SectionHeader--center">
+        <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+      </div>
+    </header>
+
+
+
+    <div class="PageContent PageContent--narrow">
+      <div class="Rte">
+        {{- page.content -}}
+        {%- if section.settings.reach_enable -%}
+        
+        <div class="reach-us-wrapper">
+          <h3 class="title">{{ section.settings.reach_title }}</h3>
+          {{ section.settings.reach_desc }}
+        </div>
+        {%- endif -%}
+                
+        <div class="addressbox-wrap Form__Group">
+            <div class="Form__Item">
+              <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+                <u>Postal Address For Our US Customers:</u>
+              </div>
+              <div class="">
+                7063 Clubview Drive, <br>
+                Bridgeville, PA - 15017, <br>
+                United States
+              </div>
+            </div>
+              
+            <div class="Form__Item">
+              <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+                <u>Postal Address For Our Canadian Customers:</u>
+              </div>
+              <div class="">
+                Unit 1110, 1275 Richmond road,<br>
+                K2B 8E3,<br>
+                Ottawa ON,<br>
+                Canada <br>
+              </div>
+            </div>
+        </div>
+        
+        <div class="addressbox-wrap Form__Group">
+          <div class="Form__Item">
+            <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+              <u>Postal Address For Our Australian Customers:</u>
+            </div>
+            <div class="">
+              522 bridge road, <br>
+              para hill west, <br>
+              Adelaide - 5096, <br>
+              South Australia, <br>
+              Australia <br><br>
+
+              Unit 1/ 126 Vernon St, <br>
+              Nundah 4012, <br>
+              Queensland, <br>
+              Australia
+            </div>
+          </div>
+          <div class="Form__Item">
+            <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+              <u>Postal Address For Our UK Customers:</u>
+            </div>
+            <div class="">
+              Unit 2a, 6 Greycaine Road, <br>
+              Watford WD24 7GP, <br>
+              United Kingdom <br>
+            </div>
+          </div>
+        </div>
+           
+        <div class="addressbox-wrap Form__Group">
+          <div class="Form__Item">
+            <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+              <u>Postal Address For Indians And Customers From Rest of The World:</u>
+            </div>
+            <div class="">
+              3001 AB, 3002 AB,<br>
+              RRTM PHASE 2 (India’s largest textile mall) Canal Road,<br>
+              Opposite Orbit 2, Saroli, Surat, Pincode - 395010<br>
+              Gujarat, India <br>
+            </div>
+          </div>
+<!--           <div class="Form__Item">
+            <div class="" style="font-size: 14px; font-weight: 600; padding-bottom: 10px;">
+              <u>Postal Address For Our European Customers:</u>
+            </div>
+            <div class="">
+              Valkal,<br>
+              Birkenweg 2,<br>
+              75175 Pforzheim,<br>
+              Germany.
+            </div>
+          </div> -->
+        </div>
+           
+        <div class="SectionHeader--center" style="margin-bottom: -20px;">
+          <h1 class="SectionHeader__Heading Heading u-h1">Raise a ticket</h1>
+        </div>
+
+        {%- form 'contact', class: 'Form Form--spacingTight' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="Alert Alert--success">{{ 'contact.form.successfully_sent' | t }}</p>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="Form__Alert Alert Alert--error">
+              <ul class="Alert__ErrorList">
+                {%- for field in form.errors -%}
+                  {%- if field == 'form' -%}
+                    <li class="Alert__ErrorItem">{{ form.errors.messages[field] }}</li>
+                  {%- else -%}
+                    <li class="Alert__ErrorItem"><strong>{{ form.errors.translated_fields[field] }}</strong> {{ form.errors.messages[field] }}</li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="Form__Group">
+            <div class="Form__Item">
+              <input type="text" class="Form__Input" name="contact[name]" aria-label="{{ 'contact.form.name' | t }}" placeholder="{{ 'contact.form.name' | t }}" required {% if customer %}value="{{ customer.name }}"{% endif %}>
+              <label class="Form__FloatingLabel">{{ 'contact.form.name' | t }}</label>
+            </div>
+
+            <div class="Form__Item">
+              <input type="email" class="Form__Input" name="contact[email]" aria-label="{{ 'contact.form.email' | t }}" placeholder="{{ 'contact.form.email' | t }}" required {% if customer %}value="{{ customer.email }}"{% endif %}>
+              <label class="Form__FloatingLabel">{{ 'contact.form.email' | t }}</label>
+            </div>
+          </div>
+
+          {%- for block in section.blocks -%}
+            {%- assign field_title = block.settings.title -%}
+
+            {%- if field_title == blank -%}
+              {%- capture field_title -%}Custom field {% increment custom_field %}{%- endcapture -%}
+            {%- endif -%}
+
+            {%- if block.type == 'text' -%}
+              <div class="Form__Item">
+                {%- if block.settings.use_long_text -%}
+                  <textarea name="contact[{{ field_title | escape }}]" cols="30" rows="10" class="Form__Textarea" aria-label="{{ block.settings.title | escape }}" placeholder="{{ block.settings.title | escape }}" {% if block.settings.is_required %}required{% endif %}></textarea>
+                  <label class="Form__FloatingLabel">{{ block.settings.title | escape }}</label>
+                {%- else -%}
+                  <input type="text" class="Form__Input" name="contact[{{ field_title | escape }}]" aria-label="{{ block.settings.title | escape }}" placeholder="{{ block.settings.title | escape }}" {% if block.settings.is_required %}required{% endif %}>
+                  <label class="Form__FloatingLabel">{{ block.settings.title | escape }}</label>
+                {%- endif -%}
+              </div>
+            {%- elsif block.type == 'dropdown' -%}
+              {%- assign values = block.settings.values | split: ',' -%}
+
+              {%- if values == empty -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="Form__Item">
+                <div class="Form__Select Select Select--primary">
+                  {%- include 'icon' with 'select-arrow' -%}
+
+                  <select name="contact[{{ field_title | escape }}]" title="{{ block.settings.title | escape }}" required>
+                    <option value="" disabled selected>{{ block.settings.title | escape }}</option>
+
+                    {%- for value in values -%}
+                      {%- assign trim_value = value | strip -%}
+
+                      <option value="{{ trim_value | escape }}">{{ trim_value | escape }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+          <div class="Form__Item">
+            <textarea name="contact[body]" cols="30" rows="10" class="Form__Textarea" aria-label="{{ 'contact.form.message' | t }}" placeholder="{{ 'contact.form.message' | t }}" required></textarea>
+            <label class="Form__FloatingLabel">{{ 'contact.form.message' | t }}</label>
+          </div>
+
+          <button type="submit" class="Form__Submit Button Button--primary Button--full">{{ 'contact.form.submit' | t }}</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+{%- if section.settings.map_enable -%}
+  <div class="Container">
+    <div class="FeaturedMap">
+      <div class="FeaturedMap__Info">
+        {% if section.settings.title != blank %}
+          <p class="FeaturedMap__Store Heading u-h1">{{ section.settings.title | escape }}</p>
+        {% endif %}
+
+        {% if section.settings.address != blank %}
+          <div class="FeaturedMap__Address Rte">
+            {{ section.settings.address }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.hours != blank %}
+          <div class="FeaturedMap__Hours Rte">
+            {{ section.settings.hours }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.map_link_label != blank and section.settings.map_address != blank %}
+          <a href="https://maps.google.com?daddr={{ section.settings.map_address | escape }}" target="_blank" rel="nofollow" class="FeaturedMap__Location Button Button--primary">
+            {{- section.settings.map_link_label | escape -}}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="FeaturedMap__MapContainer Image--lazyLoad Image--fadeIn" {% if section.settings.image %}data-bg="{{ section.settings.image | img_url: '1500x' }}"{% endif %}>
+        {% unless section.settings.image %}
+          <div class="PlaceholderBackground PlaceholderSvg--dark">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'PlaceholderBackground__Svg' }}
+          </div>
+        {% endunless %}
+
+        <div class="FeaturedMap__GMap"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-gmap-style>
+    {%- case section.settings.map_style -%}
+      {%- when 'standard' -%}
+        []
+
+      {%- when 'silver' -%}
+        [
+          {
+            "elementType": "geometry",
+            "stylers": [{"color": "#f5f5f5"}]
+          },
+          {
+            "elementType": "labels.icon",
+            "stylers": [{"visibility": "off"}]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#616161"}]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#f5f5f5"}]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#bdbdbd"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [{"color": "#eeeeee"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [{"color": "#e5e5e5"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#9e9e9e"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#ffffff"}]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#dadada"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#616161"}]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#9e9e9e"}]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "geometry",
+            "stylers": [{"color": "#e5e5e5"}]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [{"color": "#eeeeee"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#c9c9c9"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#9e9e9e"}]
+          }
+        ]
+
+      {%- when 'retro' -%}
+        [
+          {
+            "elementType": "geometry",
+            "stylers": [{"color": "#ebe3cd"}]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#523735"}]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#f5f1e6"}]
+          },
+          {
+            "featureType": "administrative",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#c9b2a6"}]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#dcd2be"}]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#ae9e90"}]
+          },
+          {
+            "featureType": "landscape.natural",
+            "elementType": "geometry",
+            "stylers": [{"color": "#dfd2ae"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [{"color": "#dfd2ae"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#93817c"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry.fill",
+            "stylers": [{"color": "#a5b076"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#447530"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#f5f1e6"}]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [{"color": "#fdfcf8"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#f8c967"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#e9bc62"}]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry",
+            "stylers": [{"color": "#e98d58"}]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#db8555"}]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#806b63"}]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "geometry",
+            "stylers": [{"color": "#dfd2ae"}]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#8f7d77"}]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#ebe3cd"}]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [{"color": "#dfd2ae"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [{"color": "#b9d3c2"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#92998d"}]
+          }
+        ]
+
+      {%- when 'dark' -%}
+        [
+          {
+          "elementType": "geometry",
+          "stylers": [{"color": "#212121"}]
+          },
+          {
+            "elementType": "labels.icon",
+            "stylers": [{"visibility": "off"}]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#212121"}]
+          },
+          {
+            "featureType": "administrative",
+            "elementType": "geometry",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "featureType": "administrative.country",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#9e9e9e"}]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "stylers": [{"visibility": "off"}]
+          },
+          {
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#bdbdbd"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [{"color": "#181818"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#616161"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#1b1b1b"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [{"color": "#2c2c2c"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#8a8a8a"}]
+          },
+          {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [{"color": "#373737"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#3c3c3c"}]
+          },
+          {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry",
+            "stylers": [{"color": "#4e4e4e"}]
+          },
+          {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#616161"}]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#757575"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#000000"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#3d3d3d"}]
+          }
+        ]
+
+      {%- when 'night' -%}
+        [
+          {
+            "elementType": "geometry",
+            "stylers": [{"color": "#242f3e"}]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#746855"}]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#242f3e"}]
+          },
+          {
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#d59563"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#d59563"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [{"color": "#263c3f"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#6b9a76"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#38414e"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#212a37"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#9ca5b3"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#746855"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#1f2835"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#f3d19c"}]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "geometry",
+            "stylers": [{"color": "#2f3948"}]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#d59563"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#17263c"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#515c6d"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#17263c"}]
+          }
+        ]
+
+      {%- when 'aubergine' -%}
+        [
+          {
+            "elementType": "geometry",
+            "stylers": [{"color": "#1d2c4d"}]
+          },
+          {
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#8ec3b9"}]
+          },
+          {
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#1a3646"}]
+          },
+          {
+            "featureType": "administrative.country",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#4b6878"}]
+          },
+          {
+            "featureType": "administrative.land_parcel",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#64779e"}]
+          },
+          {
+            "featureType": "administrative.province",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#4b6878"}]
+          },
+          {
+            "featureType": "landscape.man_made",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#334e87"}]
+          },
+          {
+            "featureType": "landscape.natural",
+            "elementType": "geometry",
+            "stylers": [{"color": "#023e58"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "geometry",
+            "stylers": [{"color": "#283d6a"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#6f9ba5"}]
+          },
+          {
+            "featureType": "poi",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#1d2c4d"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "geometry.fill",
+            "stylers": [{"color": "#023e58"}]
+          },
+          {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#3C7680"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{"color": "#304a7d"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#98a5be"}]
+          },
+          {
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#1d2c4d"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [{"color": "#2c6675"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "geometry.stroke",
+            "stylers": [{"color": "#255763"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#b0d5ce"}]
+          },
+          {
+            "featureType": "road.highway",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#023e58"}]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#98a5be"}]
+          },
+          {
+            "featureType": "transit",
+            "elementType": "labels.text.stroke",
+            "stylers": [{"color": "#1d2c4d"}]
+          },
+          {
+            "featureType": "transit.line",
+            "elementType": "geometry.fill",
+            "stylers": [{"color": "#283d6a"}]
+          },
+          {
+            "featureType": "transit.station",
+            "elementType": "geometry",
+            "stylers": [{"color": "#3a4762"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{"color": "#0e1626"}]
+          },
+          {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{"color": "#4e6d70"}]
+          }
+        ]
+    {%- endcase -%}
+  </script>
+  {%- endif -%}
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Contact page",
+  "settings": [
+	{
+	  "type": "header",
+      "content": "MAP"
+	},
+    {
+      "type": "checkbox",
+      "id": "map_enable",
+      "label": "Enable Map?",
+      "default": false
+    },
+	{
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Store name"
+    },
+    {
+      "type": "richtext",
+      "id": "address",
+      "label": "Address",
+      "default": "<p>123 Fake St. Toronto, Canada</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "hours",
+      "label": "Hours",
+      "default": "<p>Mon - Fri, 10am - 9pm<br>Saturday, 11am - 9pm<br>Sunday, 11am - 5pm</p>"
+    },
+    {
+      "type": "text",
+      "id": "map_address",
+      "label": "Map address",
+      "info": "Google Maps will find the exact location",
+      "default": "80 Spadina Ave, Toronto"
+    },
+    {
+      "type": "text",
+      "id": "map_link_label",
+      "label": "Map link label",
+      "default": "Get directions"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "text",
+      "id": "api_key",
+      "label": "Google Maps API key",
+      "info": "You’ll need to register a [Google Maps API Key](https://help.shopify.com/manual/using-themes/troubleshooting/map-section-api-key) to display the map."
+    },
+    {
+      "type": "range",
+      "id": "zoom",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "label": "Map zoom",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "map_style",
+      "label": "Map style",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard"
+        },
+        {
+          "value": "silver",
+          "label": "Silver"
+        },
+        {
+          "value": "retro",
+          "label": "Retro"
+        },
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "night",
+          "label": "Night"
+        },
+        {
+          "value": "aubergine",
+          "label": "Aubergine"
+        }
+      ],
+      "default": "silver"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed if the map isn’t loaded"
+    },
+    {
+	  "type": "header",
+      "content": "Reach US"
+	},
+    {
+      "type": "checkbox",
+      "id": "reach_enable",
+      "label": "Enable?",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "reach_title",
+      "label": "Title",
+      "default": "Reach Us"
+    },
+    {
+      "type": "textarea",
+      "id": "reach_desc",
+      "label": "Information"
+    },
+	{
+      "type": "textarea",
+      "id": "postal_address",
+      "label": "Postal Address"
+    }
+
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text field",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Custom field"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_long_text",
+          "label": "Use long text",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "is_required",
+          "label": "Field is required",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Dropdown",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Custom field"
+        },
+        {
+          "type": "text",
+          "id": "values",
+          "label": "Values",
+          "info": "Separate each value by a comma.",
+          "default": "value 1, value 2, value 3"
+        }
+      ]
+    }
+	
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "text",
+        "settings": {
+          "title": "Your phone (optional)"
+        }
+      }
+    ]
+  }
+}
+{% endschema %}

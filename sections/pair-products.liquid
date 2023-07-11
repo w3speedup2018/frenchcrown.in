@@ -1,0 +1,172 @@
+{%- if section.settings.layout_mode == 'carousel' -%}
+  {%- capture flickity_options -%}
+  {
+    "prevNextButtons": true,
+    "pageDots": false,
+    "wrapAround": true,
+    "contain": true,
+    "cellAlign": "left",
+    "watchCSS": true,
+    "dragThreshold": 8,
+    "groupCells": true,
+    "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+  }
+  {%- endcapture -%}
+{%- endif -%}
+{%- capture section_settings -%}
+{
+  "layout": {{ section.settings.layout_mode | json }}
+}
+{%- endcapture -%}
+<section class="Section Section--spacingNormal" data-section-id="{{ section.id }}" data-section-type="featured-collections" data-settings='{{ section_settings }}'>
+  <header class="SectionHeader SectionHeader--center">
+    <div class="Container">
+    {%- if section.settings.title != blank -%}
+      <h3 class="SectionHeader__Heading Heading u-h3">{{ section.settings.title | escape }}</h3>
+    {%- endif -%}    
+    </div>
+  </header>
+      <div class="TabPanel" id="block-{{ section.id }}" aria-hidden="false" role="tabpanel">
+      <div class="ProductListWrapper index-featured-products">
+          {%- assign item_count = section.settings.grid_items_count -%}
+
+            {%- assign item_count = 8 -%}
+
+          {%- if section.settings.layout_mode == 'grid' -%}
+          <div data-list-selectcallback class="custom-selectcallback ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="{{ section.settings.grid_mobile_items_per_row }}" data-desktop-count="{{ section.settings.grid_desktop_items_per_row }}">
+            {%- assign product_handle_name = product.metafields.product_pair.pair -%}
+            {%- assign product_handle = product_handle_name | split:','  -%}
+            {%- assign all_product = '' -%}
+            {%- for product_name in product_handle -%}
+            {%- assign split_product_name = product_name | strip %}
+            {%- assign product = all_products[split_product_name] -%}
+            {% if product != blank %}
+              {% assign all_product = all_product | append : product.handle | append: ',' %}
+             {% endif %}            	
+            {%- endfor -%}
+            {%- assign product_handle_ = all_product | split:','  -%}
+            {%- for product_name in product_handle_ limit: 4-%}
+            {%- assign split_product_name = product_name | strip %}
+            {%- assign product = all_products[split_product_name] -%}
+            	{%- if product.available -%}
+                  <div class="jQueryEqualHeight Grid__Cell 1/{{ section.settings.grid_mobile_items_per_row }}--phone 1/2--tablet 1/{{ section.settings.grid_desktop_items_per_row }}--lap-and-up">
+                    {%- include 'product-item', show_product_info: section.settings.show_product_info, show_vendor: section.settings.show_vendor, show_color_swatch: section.settings.show_color_swatch, show_labels: true, hide_button :true -%}
+                  </div>
+            	{%- endif -%}
+            {%- endfor -%}
+            </div>
+          {%- else -%}
+            <div data-list-selectcallback class="custom-selectcallback ProductList ProductList--carousel Carousel " data-flickity-config='{{ flickity_options }}'>
+              {%- assign product_handle_name = product.metafields.product_pair.pair -%}
+           {%- assign product_handle = product_handle_name | split:','  -%}
+     		{%- assign all_product = '' -%}
+           {%- for product_name in product_handle -%}
+     	   {%- assign split_product_name = product_name | strip %}
+           {%- assign product = all_products[split_product_name] -%}
+           {% if product.handle == blank %}{% continue %}
+           {% endif %}
+              <div class="Carousel__Cell jQueryEqualHeight">
+                {%- include 'product-item', show_product_info: section.settings.show_product_info, show_vendor: section.settings.show_vendor, show_color_swatch: section.settings.show_color_swatch, show_labels: true , pair_product: true -%}
+              </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}   
+      </div>
+
+      
+    </div>
+  
+</section>
+{% include 'custom-selectcallback' %}
+{%- capture hack -%}
+{%- comment -%}This is just an ugly hack to make those variables appear as part of the theme editor in the General Settings{%- endcomment -%}
+{% if section.settings.layout_mode == 'grid' %}{{ settings.product_list_horizontal_spacing }},{{ settings.product_list_vertical_spacing }}{% endif %}
+{%- endcapture -%}
+
+{% schema %}
+{
+  "name": "Pair it with",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Sub-heading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "select",
+      "id": "layout_mode",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_info",
+      "label": "Show product info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatch",
+      "label": "Show color swatch",
+      "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch).",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Grid",
+      "info": "Those settings apply only if the layout mode is set to grid."
+    },
+    {
+      "type": "select",
+      "id": "grid_mobile_items_per_row",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "min": 2,
+      "max": 4,
+      "id": "grid_desktop_items_per_row",
+      "label": "Products per row (desktop)",
+      "default": 4
+    },
+	{
+      "type": "range",
+      "id": "grid_items_count",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "label": "Products to show",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

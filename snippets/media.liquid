@@ -1,0 +1,38 @@
+    {% case media.media_type %}
+      {% when 'image' %}
+		{% assign img_alt = media.alt | downcase %}
+        {%- unless media.alt == 'fb-add' or img_alt == 'hidden' -%}
+        {%- if media.alt == 'featured' or media.alt == 'featured mobile' -%}
+        {%- continue -%}
+        {%- endif -%}
+
+        {%- if section.settings.stack_images -%}
+        <a href="#Image{{ media.id }}" data-image-id="{{ media.id }}" class="Product__SlideshowNavImage AspectRatio {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.aspect_ratio }}">
+          <img src="{{ media | img_url: '120x' }}">
+        </a>
+        {%- else -%}
+        <span data-image-id="{{ media.id }}" class="Product__SlideshowNavImage AspectRatio {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.aspect_ratio }}">
+          <img src="{{ media | img_url: '100x' }}">
+        </span>
+        {%- endif -%}
+        {%- endunless -%}
+      {% when 'external_video' %}
+        <div class="product-single__media" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100}}%;" data-media-id="{{ media.id }}">
+          {{ media | external_video_tag }}
+        </div>
+      {% when 'video' %}
+		<a href="#Image{{ media.id }}" data-image-id="{{ media.id }}" class="Product__SlideshowNavImage {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.aspect_ratio }}">
+          <span data-image-id="{{ media.id }}" class="Product__SlideshowNavImage Product__SlideshowNavImage--video AspectRatio {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.aspect_ratio }}">
+            <img src="{{ media | img_url: '100x' }}">
+            <button type="button" class="Product__SlideshowNavPlay" data-action="play-video" aria-label="{{ 'home_page.featured_video.play' | t }}">{% include 'icon' with 'play' %}</button>
+          </span>
+		</a>
+      {% when 'model' %}
+        <div class="product-single__media" style="padding-top: 100%" data-media-id="{{ media.id }}">
+          {{ media | model_viewer_tag }}
+        </div>
+      {% else %}
+        <div class="product-single__media" style="padding-top: 100%;" data-media-id="{{ media.id }}">
+          {{ media | media_tag }}
+        </div>
+    {% endcase %}

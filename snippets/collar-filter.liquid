@@ -1,0 +1,36 @@
+{%- assign collor_tag_lists = '' %}
+{%- if collection.handle contains 'shirts' and section.settings.collar_taglist != empty -%}
+	{% unless collection.handle contains 'tshirts' %}
+  	{%- assign collor_tag_lists = section.settings.collar_taglist | split: ',' -%}
+	{% endunless %}
+{%- elsif collection.handle contains 'women' %}
+	{%- if collection.handle contains 'shirt' or collection.handle contains 'top' or collection.handle contains 'jacket' or collection.handle contains 'suit' or collection.handle contains 'blazer' -%}
+		{%- assign collor_tag_lists = section.settings.woman_top_collar_taglist | split: ',' -%}
+    {%- elsif collection.handle contains 'dress' -%}
+		{%- assign collor_tag_lists = section.settings.woman_western_collar_taglist | split: ',' -%}
+	{% endif %}
+{%- elsif collection.handle contains 'jackets' -%}
+  {%- assign collor_tag_lists = section.settings.jacket_collar_taglist | split: ',' -%}
+{%- endif -%}
+
+{%- if collor_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      {{ section.settings.collar_title }} <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in collor_tag_lists -%}
+          {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

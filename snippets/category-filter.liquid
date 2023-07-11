@@ -1,0 +1,62 @@
+{%- if collection.handle == 'sale' or collection.handle == 'sale-all' or collection.handle == 'new' or collection.handle == 'women-new' or collection.handle == 'women-sale' and section.settings.category_taglist != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      Category <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {% if collection.handle contains 'women' %}
+            {% assign categories = "Tops / Shirts:sale-women-tops,Pants:sale-women-pants,Dresses / Jumpsuits:sale-women-dresses,Suits:sale-women-suits,Blazers:sale-women-blazers" %}
+          {% else %}
+            {% assign categories = "Shirts:sale-shirts,Pants:sale-pants,Suits:sale-suits,Blazers:sale-blazers,Jackets:sale-jackets,Waistcoats:sale-waistcoats,T-shirts:sale-tshirts,Boxers:sale-boxers,Pajamas/Lounge Pants:sale-pajamas-lounge-pants,Belts:sale-belts,Wallets:sale-wallets,Accessories:sale-accessories" %}
+          {% endif %}
+          {% if collection.handle contains 'new' %}
+            {% assign categories = categories | replace: "sale", "new" %}
+          {% endif %}
+          {% assign categoriesArr = categories | split: ',' %}
+          {% for category in categoriesArr %}
+            {% assign title = category | split: ':' | first %}
+            {% assign handle = category | split: ':' | last %}
+            <li class="Linklist__Item">
+              <a href="/collections/{{ handle }}">
+                <button type="button" class="Link Link--primary Text--subdued" data-action="toggle-tag">
+                  {{ title }}
+                </button>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if collection.handle == 'wedding-evening-partywear-collection' or collection.handle == 'all-women-products' %}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      Category <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {% if collection.handle == 'wedding-evening-partywear-collection' %}
+            {% assign categories = "Shirts:shirts,Suits:suits,Blazers:blazers,Waistcoats:waistcoats,Sherwani Sets:sherwani-sets,Jodhpuri Sets:jodhpuri-sets,Indowestern Sets:indowestern-sets,Kurta Jacket Sets:kurta-jacket-sets,Jodhpuri Suits:jodhpuri-suits,Kurtas:kurtas" %}
+          {% else %}
+            {% assign categories = "Tops / Shirts:women-tops,Pants:women-pants,Dresses / Jumpsuits:women-dresses,Suits:women-suits,Blazers:women-blazers" %}
+          {% endif %}
+          {% assign categoriesArr = categories | split: ',' %}
+          {% for category in categoriesArr %}
+            {% assign tag_name = category | split: ':' | first %}
+            {% assign tag_value = category | split: ':' | last %}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>          
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

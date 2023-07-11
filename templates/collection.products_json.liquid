@@ -1,0 +1,28 @@
+{% layout none %}
+
+{"products":[
+{%- for product in collection.products -%}
+{%- assign showProduct = true -%}
+{%- for variant in product.variants -%}
+  {%- if variant.inventory_quantity < 1 -%}
+  	{%- assign showProduct = false -%}          			
+  {%- endif -%}
+{%- endfor -%}
+{%- if product.available -%}
+{
+	"id": {{product.id}},
+    "handle": "{{product.handle}}",
+	"title": "{{product.title}}",
+	"price": "{{product.price}}",
+	"src": "{{product.featured_image | img_url: '500x' }}",
+	"alt":"{{ product.featured_image.alt | escape }}",
+    "vendor": "{{product.vendor}}",
+    "product_type": "{{product.type}}",
+	"tags": "{% for tag in product.tags %} {{ tag | remove: '"' }} {% unless forloop.last == true %},{% endunless %} {% endfor %}",
+	"url": "{{product.url}}",
+	"product_story": "{{ product.metafields.product_story.story | strip_html | strip_newlines }}",
+	"all_variant_available": {{showProduct}}
+}
+{%- unless forloop.last == true -%},{%- endunless -%}
+{%- endif -%}
+{%- endfor -%}]}

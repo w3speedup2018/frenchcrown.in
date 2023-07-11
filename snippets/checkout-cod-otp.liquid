@@ -1,0 +1,166 @@
+  <div class='fc_overlay'></div>
+  <div class='fc_popupBox'>
+
+    <div class='fc_mainHead'>       
+      <div class='fc_popup-heading fc_center'>
+        <img alt="French Crown" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/REG_Website_logo_1c1801f4-9c4c-4c6e-9aeb-2c768501fd73_350x.png?v=1643605551">
+      </div>
+    </div>
+    
+    <div class="send-otp-section cod-otp-section" style="display: block">
+      <div class='fc_mainContent fc_center m-b-70'>
+        <div class="lock-section">
+          <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+          <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+        </div>
+        <h3>Confirm your order by OTP</h3>
+        <h3 class="otp-title">Mobile Number</h3>
+        <div class="otp-mobile-outer">
+          <img class="india-flag" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/india_flag.png?v=1673522055">
+          <div class="otp-mobile-no-prefix">+91</div>
+          <input class="otp-mobile-no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength=10 placeholder="Enter Number" autocomplete="tel">
+        </div>
+        <div class="otp-error" style="display: none">Please enter valid Mobile Number</div>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+          <button class='send-otp-btn' data-otp-type="sms">Send OTP</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="send-whatsapp-otp-section cod-otp-section" style="display: none">
+      <div class='fc_mainContent fc_center m-b-70'>
+        <div class="lock-section">
+          <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+          <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+        </div>
+        <h3>Confirm your order by OTP</h3>
+        <h3 class="otp-title">Mobile Number</h3>
+        <div class="otp-mobile-outer">
+          <img class="india-flag" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/india_flag.png?v=1673522055">
+          <div class="otp-mobile-no-prefix">+91</div>
+          <input class="otp-mobile-no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength=10 placeholder="Enter Number" autocomplete="tel">
+        </div>
+        <div class="otp-error" style="display: none">Please enter valid Mobile Number</div>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+          <button class='send-otp-btn' data-otp-type="whatsapp">Send OTP</button>
+          <button class='back-btn' type="button" data-back-section="otp-verify-section">Back</button>
+        </div>
+      </div>
+    </div>
+
+<!--     <div class="send-email-otp-section cod-otp-section" style="display: none">
+      <div class='fc_mainContent fc_center m-b-70'>
+        <div class="lock-section">
+          <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+          <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+        </div>
+        <h3>Confirm your order by OTP</h3>
+        <h3 class="otp-title">Email</h3>
+        <div class="otp-mobile-outer">
+          <input class="otp-email" type="email" placeholder="Enter Email">
+        </div>
+        <div class="otp-error" style="display: none">Please enter valid Email ID</div>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+          <button class='send-otp-btn' data-otp-type="email">Send OTP</button>
+          <button class='back-btn' type="button" data-back-section="otp-verify-section">Back</button>
+        </div>
+      </div>
+    </div> -->
+    
+    <div class="otp-verify-section cod-otp-section digit-group1" style="display: none">
+      <div class='fc_mainContent fc_center'>
+        <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+        <h3>Enter One Time Password</h3>
+        <p>We have send OTP on your mobile number</p>
+        <h3><span class="received-otp-phone"></span><a href="#" class="change-mobile-no"> Change Number</a></h3>
+        <div class="otp-sent" style="display: none">OTP sent successfully</div>
+        <div class="otp-error" style="display: none"></div>
+        <input type="number" id="digit-1" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-1" data-next="digit-2" />
+        <input type="number" id="digit-2" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+        <input type="number" id="digit-3" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+        <a href="#" class="resend-otp" data-otp-type="sms">Resend OTP</a>
+        <button class='submit-otp' type="button">Submit</button>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+            <p class="unable-receive-otp">Unable to receive OTP on SMS?</p>
+            <a href="#" class="resend-otp-whatsapp" data-otp-type="whatsapp"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/whatsapp-icon.png?v=1673530244"> Resend OTP on WhatsApp</a>
+<!--             <a href="#" class="resend-otp-email" data-otp-type="email"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/gmail-icon.png?v=1673530249"> Resend OTP on Email</a> -->
+        </div>
+      </div>
+    </div>
+
+<!--     <div class="otp-email-verify-section cod-otp-section digit-group1" style="display: none">
+      <div class='fc_mainContent fc_center'>
+        <h3>Enter OTP received on</h3>
+        <h3><span class="received-otp-email"></span><a href="#" class="change-email"> Change</a></h3>
+        
+        <div class="otp-sent" style="display: none">OTP sent successfully</div>
+        <div class="otp-error" style="display: none"></div>
+        <input type="number" id="digit-1" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-1" data-next="digit-2" />
+        <input type="number" id="digit-2" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+        <input type="number" id="digit-3" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+        <button class='submit-otp' type="button">Submit</button>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+          <a href="#" class="resend-otp" data-otp-type="email">Resend OTP</a>
+        </div>
+        <div class="fc_center footer-btn">
+          <div class="unable-receive-otp">Unable to receive OTP on Email?</div>
+            <a href="#" class="resend-otp-sms" data-otp-type="sms">Resend OTP on SMS</a>
+            <a href="#" class="resend-otp-whatsapp" data-otp-type="whatsapp">Resend OTP on WhatsApp</a>
+          </div>
+        
+      </div>
+    </div> -->
+
+    <div class="otp-whatsapp-verify-section cod-otp-section digit-group1" style="display: none">
+      <div class='fc_mainContent fc_center'>
+        <img class="cross-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/cross-icon.png?v=1673518264">
+        <h3>Enter One Time Password</h3>
+        <p>We have send OTP on your mobile number</p>
+        <h3><span class="received-otp-phone"></span><a href="#" class="change-mobile-no"> Change Number</a></h3>
+        <div class="otp-sent" style="display: none">OTP sent successfully</div>
+        <div class="otp-error" style="display: none"></div>
+        <input type="number" id="digit-1" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-1" data-next="digit-2" />
+        <input type="number" id="digit-2" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+        <input type="number" id="digit-3" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+        <a href="#" class="resend-otp" data-otp-type="sms">Resend OTP</a>
+        <button class='submit-otp' type="button">Submit</button>
+      </div>
+
+      <div class='fc_popup-footer'>
+        <div class="fc_center footer-btn">
+            <p class="unable-receive-otp">Unable to receive OTP on SMS?</p>
+            <a href="#" class="resend-otp-sms" data-otp-type="sms"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/phone-icon.png?v=1673530237"> Resend OTP on SMS</a>
+<!--             <a href="#" class="resend-otp-email" data-otp-type="email"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/gmail-icon.png?v=1673530249"> Resend OTP on Email</a> -->
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+<!--   <div class="payment-back-popup" style="padding: 22px;font-size: 18px;border-radius: 20px;min-width: auto;background-color: rgb(254, 254, 254);margin: auto;max-width: 1000px;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);z-index: 1000;width: 90%;display: none;">
+      <h3 style="margin-bottom: 5px">Products in huge demand</h3>
+      <h3 style="margin-bottom: 10px">might run <span style="color: orange">Out of Stock</span></h3>
+      <h3 style="margin-bottom: 15px;">Are you sure you want to cancel payment?</h3>
+      <div class="bottom-actions">
+        <div class="yes-btn" style="float:left;font-size: 22px;color: grey;cursor: pointer;">Yes</div>
+        <div class="no-btn" style="float:right;font-size: 22px;color: grey;cursor: pointer;">No</div>
+        <div class="clear" style="clear: both"></div>
+      </div>
+  </div> -->
+
+        

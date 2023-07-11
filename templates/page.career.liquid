@@ -1,0 +1,124 @@
+<div class="Container career-page">
+  <header class="PageHeader">
+    <div class="SectionHeader SectionHeader--center">
+      <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+    </div>
+  </header>
+
+  <div class="PageContent Rte">
+      <div class="careers">
+  </div>
+</div>
+
+<div class="modal apply-modal">
+  <div class="modal-inner modal-inner-center">
+    <div class="modal-wht-header">
+      <div class="modal-txt">
+        Apply Here
+      </div>
+      <div class="modal-buttons">
+        &nbsp;
+        <a class="close"> X </a>
+      </div>
+    </div>
+    <div style="padding: 15px;">
+        <form method="post" action="#" id="careerForm" accept-charset="UTF-8" class="Form Form--spacingTight">
+          <input type="hidden" name="career_id" class="career-id">
+          <input type="hidden" name="utf8" value="✓">
+          <div class="Form__Item">
+            <input type="email" class="Form__Input email" name="email" aria-label="Your email" placeholder="Email" required>
+            <label class="Form__FloatingLabel">Email*</label>
+          </div>
+          <div class="Form__Item">
+            <input type="text" class="Form__Input phone_no" name="phone_no" aria-label="Your phone" placeholder="Phone" required minlength=10>
+                  <label class="Form__FloatingLabel">Phone*</label>
+          </div>
+          <div class="Form__Item">
+            <input type="file" class="Form__Input resume" name="resume" required>
+            <label class="Form__FloatingLabel">Resume*</label>
+          </div>
+          <p style="display: none" class="thank-you-msg"><b>Thank you for the details. <br>Our HR will contact you within 24 hours.</b></p>
+          <button type="submit" class="Button Button--primary Button--full">Submit Application</button></form>
+      </div>
+  </div>
+</div>
+
+<style>
+  .career {
+    width: 50%;
+    display: inline-block;
+    float: left;
+    padding: 10px;
+  }
+  
+  .career-details{
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+  }
+
+  .careers{
+    clear: both;
+  }
+
+  .careers h3{
+    text-align: center;
+  }
+
+/*   .career-details .Button{
+    position: absolute;
+    width: calc(100% - 20px);
+    bottom: 6px;
+  } */
+  @media (max-width: 576px) {
+    .career {
+      width: 100%;
+    }
+  }
+</style>
+
+<script type="lazyload2">
+  $(document).on('click', '.apply_now', function(e){
+    $('.career-id').val($(this).attr('data-career-id'));
+    $('.apply-modal').addClass('show');
+  });
+  
+  $(document).on('submit', '#careerForm', function(e){
+    e.preventDefault();
+    var form = $("#careerForm");
+    var formData = new FormData(form[0]);
+    $.ajax({
+      url: 'https://hr.frenchcrownerp.com/api/v1/applicants',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+    })
+    .done(function() {
+      $('.thank-you-msg').show();
+      setTimeout(function(){
+        $('.apply-modal').removeClass('show');
+      }, 3000)
+    });
+  });
+
+  $.ajax({
+    url: 'https://hr.frenchcrownerp.com/api/v1/careers.json',
+    type: 'GET',
+    contentType: false,
+    processData: false,
+  })
+  .done(function(response) {
+    $.each(response, function( index, data ) {
+      $('.careers').append('<div class="career"><div class="career-details"><h3>'+data["position"]+'</h3><div class="responsibilities">'+data["responsibilities"]+'</div><br><div class="salary"><b>Salary Range:</b> '+data["salary_range"]+'</div><br><div class="address"><b>Company Address:</b> '+data["company_address"]+'</div><button type="button" class="apply_now Button Button--primary Button--full" data-career-id="'+data["id"]+'">Apply Now</button></div></div>');
+    });
+    // $maxHeight = 0;
+    // $(".career-details").each(function(){
+    //   if($(this).height() > $maxHeight) {
+    //     $maxHeight = $(this).height();
+    //   }
+    // });
+    // $(".career-details").height($maxHeight+50);
+  });
+  
+</script>

@@ -1,0 +1,30 @@
+{%- assign fit_tag_lists = '' %}
+{%- if collection.handle contains 'jeans' %}
+  {%- if collection.handle contains 'women' -%}
+    {%- assign fit_tag_lists = section.settings.jeans_woman_fit_taglist | split: ',' -%}
+  {%- else -%}
+  	{%- assign fit_tag_lists = section.settings.jeans_fit_taglist | split: ',' -%}
+  {% endif %}
+{%- endif -%}
+
+{%- if fit_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      Fit <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in fit_tag_lists -%}
+          {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,53 @@
+<section class="Section">
+  <div class="Container">
+    <header class="PageHeader">
+      <div class="SectionHeader SectionHeader--center">
+        <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+<!--         <p style="font-size: 18px;"><b>Total Number of Reviews: {{ section.blocks.size }}</b></p> -->
+      </div>
+    </header>
+    <div class="PageContent">
+      {%- for block in section.blocks reversed -%}
+      <div id="block-{{ block.id }}" class="Grid__Cell 1/2--tablet 1/3--lap-and-up" {{ block.shopify_attributes }} data-slide-index="{{ forloop.index0 }}">
+        <div class="Container" style="padding: 15px;">
+          {%- if block.settings.image != blank -%}
+          <img class="" src="{{ block.settings.image | img_url: 'master' }}" alt="Image {{ forloop.index }}">
+          {%- endif -%}
+        </div>
+      </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "All Reviews"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Reviews",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

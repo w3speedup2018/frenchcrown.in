@@ -1,0 +1,47 @@
+<script>
+  
+      {% assign upsellfunnel_page_type = "" %}
+        window.upsellfunnel = {
+          shop_slug: "{{shop.permanent_domain | remove: '.myshopify.com' }}",
+          store_id: "{{shop.permanent_domain}}",
+          money_format: "{{shop.money_format | replace: '"', "'"}}",
+          cart: null,
+          product_id: null,
+          page_type: null,
+          app_url: "https://upsell-funnel.herokuapp.com",
+        }
+
+      window.upsellfunnel.cart = {{ cart | json }}
+      {% if template contains "cart" %}
+        window.upsellfunnel.page_type = "cart";  
+        if (typeof window.upsellfunnel.cart.items == "object") {
+          for (var i=0; i<window.upsellfunnel.cart.items.length; i++) {
+            ["sku", "grams", "vendor", "url", "image", "handle", "requires_shipping", "product_type", "product_description"].map(function(a) {
+              delete window.upsellfunnel.cart.items[i][a]
+            })
+          }
+        }
+        window.upsellfunnel.cart_collections = {}
+        {% for item in cart.items %}
+          window.upsellfunnel.cart_collections["{{item.product_id}}"] = []
+          {% for c in item.product.collections %}
+            window.upsellfunnel.cart_collections["{{item.product_id}}"].push({{c.id}})
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+
+      window.upsellfunnel.product_collections = [];
+      {% if template contains "product" %}
+        window.upsellfunnel.page_type = "product"
+        window.upsellfunnel.product_id = "{{ product.id }}";
+        {% for c in product.collections %}
+          window.upsellfunnel.product_collections.push({{c.id}})
+        {% endfor %}                                        
+      {% endif %}
+
+      </script>
+
+      <div class="upsellfunnel-popup"></div>
+      <script src="https://upsell-funnel.herokuapp.com/upsellfunnel.js"></script>
+      <style>@import url(//fonts.googleapis.com/css?family=Abril+Fatface|Allerta|Amaranth|Anton|Arvo|Berkshire+Swash|Bitter|Caveat|Ceviche+One|Chewy|Comfortaa|Crimson+Text|Domine|Dosis|Frijole|Heebo|Josefin+Slab|Kaushan+Script|Knewave|Lato|Libre+Baskerville|Lobster|Montserrat|Noto+Serif|Old+Standard+TT|Oleo+Script|Open+Sans|Oswald|PT+Sans|Pacifico|Passion+One|Permanent+Marker|Playfair+Display|Poly|Poppins|Quicksand|Radley|Raleway|Righteous|Roboto|Rubik|Shrikhand|Titillium+Web|Ubuntu|Vollkorn|Work+Sans);</style>
+    

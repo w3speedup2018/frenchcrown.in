@@ -1,0 +1,47 @@
+{%- if collection.handle contains 'women' -%}
+  {%- if collection.handle contains 'shirt' or collection.handle contains 'top' or collection.handle contains 'jacket' or collection.handle contains 'dress' -%}
+    <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+  	  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+  	    Sleeve type <span class="Collapsible__Plus"></span>
+  	  </button>
+  
+  	  <div class="Collapsible__Inner">
+          <div class="Collapsible__Content">
+            <ul class="Linklist">
+              {%- assign  sleeve_tag_lists = section.settings.woman_sleeves_taglist | split: ','  -%}
+              {%- for tag_name in sleeve_tag_lists -%}
+              {%- assign tag_value = tag_name | handleize -%}
+              <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+                <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                  {{- tag_name -}}
+                </button>
+              </li>                      
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+  	</div>
+   {% endif %}
+{%- elsif collection.handle contains 'shirts' -%}
+	<div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+	  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+	    Sleeve type <span class="Collapsible__Plus"></span>
+	  </button>
+	  <div class="Collapsible__Inner">
+	    <div class="Collapsible__Content">
+	      <ul class="Linklist">
+            <li class="Linklist__Item {% if current_tags contains 'full' %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains 'full' %}is-active{% endif %}" data-tag="full" data-action="toggle-tag">
+                Full
+              </button>
+            </li>
+            <li class="Linklist__Item {% if current_tags == 'half-short' %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags == 'half-short' %}is-active{% endif %}" data-tag="half-short" data-action="toggle-tag">
+                Half / Short
+              </button>
+            </li>
+	      </ul>
+	    </div>
+	  </div>
+	</div>
+{%- endif -%}

@@ -1,0 +1,100 @@
+{%- assign size_tag_lists = '' -%}
+{%- if collection.handle contains 'tshirt' -%}
+  {%- assign size_tag_lists = section.settings.tshirts_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'pant' and collection.handle contains 'women' -%}
+  {%- assign size_tag_lists = section.settings.woman_bottomwear_size_taglist | split: ',' -%}
+{% elsif collection.handle contains 'women' %}
+  {%- if collection.handle contains 'shirt' or collection.handle contains 'top' or collection.handle contains 'jacket' or collection.handle contains 'dress' or collection.handle contains 'suit' or collection.handle contains 'blazer' -%}
+    {%- assign size_tag_lists = section.settings.woman_topwear_size_taglist | split: ',' -%}
+  {%- endif -%}
+{%- elsif collection.handle contains 'shirt' or collection.handle contains 'co-ord-sets' -%}
+  {%- assign size_tag_lists = section.settings.shirt_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'jacket' -%}
+  {%- assign size_tag_lists = section.settings.jacket_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'suit' or collection.handle contains 'blazer' or collection.handle contains "sherwani-sets-wedding-engagement" or collection.handle contains "jodhpuri-sets-wedding-engagement" or collection.handle contains "indowestern-sets-wedding-engagement" or collection.handle contains "kurta-sets-wedding-engagement" or collection.handle contains 'kurta-jacket-sets-wedding-engagement' or collection.handle contains 'kurta-jackets' or collection.handle contains 'wedding-engagement'-%}
+  {%- assign size_tag_lists = section.settings.blazer_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'footwear' -%}
+  {%- assign size_tag_lists = section.settings.footwear_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'belt' -%}
+  {%- assign size_tag_lists = section.settings.belt_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'waistcoat' -%}
+  {%- assign size_tag_lists = section.settings.waistcoat_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'lounge-pant' -%}
+  {%- assign size_tag_lists = section.settings.lounge_pants_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'pant' -%}
+  {%- assign size_tag_lists = section.settings.trousers_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'short' -%}
+  {%- assign size_tag_lists = section.settings.shorts_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'jeans' -%}
+  {% if collection.handle contains 'women' %}
+    {%- assign size_tag_lists = section.settings.jeans_woman_size_taglist | split: ',' -%}
+  {% else %}
+    {%- assign size_tag_lists = section.settings.jeans_size_taglist | split: ',' -%}
+  {% endif %}
+{%- elsif collection.handle contains 'boxer' -%}
+  {%- assign size_tag_lists = section.settings.boxer_size_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'kurtas' -%}
+  {%- assign size_tag_lists = section.settings.kurta_size_taglist | split: ',' -%}
+{%- endif -%}
+
+{%- if size_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      {{ section.settings.size_title }} <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in size_tag_lists -%}
+          {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% comment %}
+{%- if collection.handle contains 'sale' or  collection.handle == 'new' -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand sale-size">
+    <button type="button" class="Collapsible__Button Heading u-h6 phone" data-action="toggle-collapsible" aria-expanded="false">
+      Size <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- assign  size_tag_lists = section.settings.shirt_size_taglist | split: ','  -%}
+          <span class="Heading u-h6">Shirt Size</span>
+
+          {%- for tag_name in size_tag_lists -%}
+            {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+
+          {%- assign  size_tag_lists = section.settings.trousers_size_taglist | split: ','  -%}
+
+          {% if section.settings.trousers_size_taglist != blank %}
+            <span class="Heading u-h6">Pant Size</span>
+            {%- for tag_name in size_tag_lists -%}
+              {%- assign tag_value = tag_name | handleize -%}
+              <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+                <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                  {{- tag_name -}}
+                </button>
+              </li>
+            {%- endfor -%}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% endcomment %}

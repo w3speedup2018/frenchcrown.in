@@ -1,0 +1,74 @@
+{%- if product.metafields.product_story.story -%}
+<div class="Product__Tabs story_tab">
+      <div class="Collapsible Collapsible--large">
+        <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="true">
+          Story <span class="Collapsible__Plus"></span>
+        </button>
+
+        <div class="Collapsible__Inner"  style="overflow: visible; height: auto;">
+          <div class="Collapsible__Content">
+            <div class="Rte">
+              {{- product.metafields.product_story.story -}}
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{%- endif -%}
+
+{%- if product.metafields.product_description.description != blank -%}
+<div class="Product__Tabs no-margin">
+      <div class="Collapsible Collapsible--large">
+        <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+          Description <span class="Collapsible__Plus"></span>
+        </button>
+
+        <div class="Collapsible__Inner">
+          <div class="Collapsible__Content">
+            <div class="Rte">
+              {{- product.metafields.product_description.description-}}
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{%- endif -%}
+{%- if section.settings.enable_return_tab -%}
+    <div class="Product__Tabs return-tab no-margin">
+          <div class="Collapsible Collapsible--large">
+            <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+              Return Policy<span class="Collapsible__Plus"></span>
+            </button>
+    
+            <div class="Collapsible__Inner">
+              <div class="Collapsible__Content">
+                <div class="Rte">
+                  {% if product.type contains 'Boxer' %}
+                    <h4 style="text-align: center;"><strong>For hygiene Purpose, we do not accept Returns in Boxer Category</strong></h4>
+                  {% elsif product.type == 'Perfume' %}
+                     <h4 style="text-align: center;"><strong>Returns are not acceptable in Perfume Category</strong></h4>
+                  {% else %}
+                      {{ section.settings.return_tab_desc }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+{%- endif -%}
+
+<div class="Product__Tabs cod-terms no-margin">
+      <div class="Collapsible Collapsible--large">
+        <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+          Cash on delivery terms<span class="Collapsible__Plus"></span>
+        </button>
+
+        <div class="Collapsible__Inner">
+          <div class="Collapsible__Content">
+            <div class="Rte">
+              <b><span>- Placing "cash on delivery" order for fun and refusing it at the time of delivery is a punishable cybercrime. Please place "cash on delivery" order only if you want to accept the parcel. </span><br><br><span>- We provide "cash on delivery" service in India only for customers' convenience, in all other countries, we accept only online payments. Please do not misuse this service. </span><br><br><span>- Open delivery is not available. Each parcel is Seal packed and they are having insurance to Protect it from Fraud. Under this insurance policy, no one can open it before paying the full order amount. Though we have 60 days "No Question Asked" Return policy, under which if you don't like the product then you can ask for refund or exchange. Customer care number: 9723325522 (Mon to Sat, 9:00 am to 6:00 pm)</span><br><br><span>- Card payment is not available in "cash on delivery" payment method. If you want to use card then pay online using 0ur online payment options. </span></b>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

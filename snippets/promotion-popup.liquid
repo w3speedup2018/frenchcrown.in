@@ -1,0 +1,129 @@
+<div class="modal cart-prmotion">
+  <div class="modal-inner modal-inner-center">
+    <div class="modal-wht-header">
+      <div class="modal-txt">
+        Offers
+      </div>
+      <div class="modal-buttons">
+        &nbsp;
+        <a class="close"> X </a>
+      </div>
+    </div>
+    <div class="" style="background: #000">
+      <div class="" style="padding: 15px;">
+        <div class="model-wht-txt">Buy any 2 items and get 10% off + 1 free Gift</div>
+        <div class="model-wht-txt">Use coupon code: BUY2 </div>
+
+        <br/>
+
+        <div class="model-wht-txt">Buy any 3 or more items and get 15% off + 1 free Gift </div>
+        <div class="model-wht-txt">Use coupon code: BUY3</div>
+
+        <br/>
+
+        <div class="model-wht-txt">Buy any 4 items and get 1 item free + 1 free Gift </div>
+        <div class="model-wht-txt">Use coupon code: BUY4</div>
+
+        <div class="modal-btn-bottom">
+          <a class="close Button Button--primary Button--primary-white"><span>close</span></a>
+<!--           <a href="/checkout" class="Button Button--full Button--primary Button--primary-white checkout" data-action="add-to-cart"><span>checkout with one item only</span></a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <style type="text/css">
+      .cart-prmotion.modal{
+      	z-index: 999999;
+      }
+      .modal .close{
+      	padding: 8px 14px;
+      }
+      .modal .close.Button{
+      	padding: 14px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+      }
+      .model-wht-txt{
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+      .modal-btn-bottom{
+        display: flex !important;
+        margin-top: 40px;
+/*         padding-bottom: 20px; */
+      }
+      .modal-btn-bottom .button{
+        margin: 0 15px;
+      }
+      .modal .modal-inner.modal-inner-center{
+        height: auto !important;
+        padding: 0;
+      }
+      .Button--primary-white{
+        color: #000;
+      }
+      .Button--primary-white::before{
+       	background: #fff !important 
+      }
+      .modal-inner-center{
+        overflow-y: hidden !important;
+      }
+      .modal-wht-header{
+            display: flex;
+        padding: 10px 15px;
+      }
+      .modal-wht-header .modal-txt{
+          width: calc(100% - 35px);
+        	text-align: center;
+          font-size: 20px;
+          font-weight: 700;
+          text-transform: uppercase;
+        margin-left: 25px;
+      }
+      .modal-wht-header .modal-buttons{
+        margin: 0 0 0 auto;
+        top: 7px;
+        position: absolute;
+        right: 10px;
+        top: 7px;
+      }
+      @media only screen and (min-width: 768px) {
+        .modal-inner-center{
+          top: 50% !important;
+          left: 50% !important;
+          margin: 40px auto;
+          padding: 20px;
+          position: absolute;
+          transform: translate(-50%, -50%);
+        }
+      }
+       @media only screen and (max-width: 992px) {
+        .modal-btn-bottom{
+          display: inline-block;
+        }
+         .modal-btn-bottom .button {
+            margin: 10px 0;
+        }
+         .modal-inner-center{
+          top: 50% !important;
+          left: 0 !important;
+          padding: 20px;
+          position: absolute;
+          transform: translate(0, -50%);
+        }
+         .modal-wht-header .modal-txt{
+           width: calc(100% - 54px);
+         }
+         .modal .close.Button{
+           margin-bottom: 15px;
+         }
+      }
+    </style>

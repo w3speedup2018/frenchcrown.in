@@ -1,0 +1,124 @@
+{%- capture flickity_options -%}
+{
+  "prevNextButtons": true,
+  "wrapAround": true,
+  "dragThreshold": 16,
+  "groupCells": true,
+  "pageDots": true,
+  "autoPlay": 5000,
+  "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+}
+{%- endcapture -%}
+
+
+<section class="Section Section--spacingNormal TestimonialList--carousel media-press" id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="testimonials"> 
+    <header class="SectionHeader SectionHeader--center">
+      <div class="Container">
+      {%- if section.settings.title != blank -%}
+        <h3 class="SectionHeader__SubHeading Heading u-h1">{{ section.settings.title | escape }}</h3>
+      {%- endif -%}
+      </div>
+    </header>
+    <div class="TestimonialList Carousel Carousel--fadeIn" data-flickity-config='{{ flickity_options }}'>
+      {%- for block in section.blocks -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <div class="Container">
+            <a href="{{ block.settings.press_link }}" target="_blank">
+            	<img class="Press__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ block.settings.image | img_url: '1512x' }}" data-mobsrc="{{ block.settings.image | img_url: '540x' }}" alt="Slide {{ forloop.index }}">
+            </a>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+</section>
+<!-- <section class="cities-section">
+  <header class="SectionHeader SectionHeader--center">
+    <div class="Container">
+      <h2 class="SectionHeader__SubHeading Heading u-h1"> Our Fastest Delivery Indian Cities</h2>
+    </div>
+  </header>
+  <div class="Container">
+    <div class="cities-list">
+      <div class="city-name">Mumbai</div>
+      <div class="city-name">New Delhi</div>
+      <div class="city-name">Bengaluru</div>
+      <div class="city-name">Hyderabad</div>
+      <div class="city-name">Chennai</div>
+      <div class="city-name">Ahmedabad</div>
+      <div class="city-name">Kolkata</div>
+      <div class="city-name">Surat</div>
+    </div>
+  </div>
+</section> -->
+<section class="rating-info-section">
+  <div class="Container">
+    <div class="rating-info-box">
+      <div class="rating-info-box-col">
+        <div class="main-title">1st</div>
+        <p>Introducing: The world's first fashion brand with zero unsold products, championing environmental positivity. Join us in revolutionizing fashion by eliminating waste and overproduction. Together, let's redefine style and sustainability.</p>	
+      </div>
+      <div class="rating-info-box-col">
+        <div class="main-title">90+</div>
+        <p>countries <br> delivered to</p>	
+      </div>
+      <div class="rating-info-box-col">
+        <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="https://cdn.shopify.com/s/files/1/0323/5574/5932/files/10-star.png?v=1624944008" style="width: 150px;">
+        <p>lifetime <br> reviews</p>	
+      </div>	
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }} {
+    color: {{ section.settings.text_color }};
+    background: {{ section.settings.background }};
+  }
+
+  #section-{{ section.id }} .flickity-page-dots .dot:not(.is-selected) {
+    border-color: {{section.settings.background | color_mix: section.settings.text_color, 85}};
+  }
+</style>
+{% schema %}
+{
+  "name": "Media Press Product",
+  "class": "Image",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Yay! We Got Featured"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "press",
+      "name": "Press",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "press_link",
+          "label": "Press link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+          {
+            "category": "Image",
+            "name": "Media Press Product",
+            "settings": {}
+          }
+        ]
+}
+{% endschema %}

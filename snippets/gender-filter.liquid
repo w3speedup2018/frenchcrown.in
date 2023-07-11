@@ -1,0 +1,27 @@
+{%- if collection.handle == 'sale-all' -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      Gender <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          <li class="Linklist__Item">
+            <a href="/collections/sale">
+              <button type="button" class="Link Link--primary Text--subdued" data-action="toggle-tag">
+                Men
+              </button>
+            </a>
+          </li>
+          <li class="Linklist__Item">
+            <a href="/collections/women-sale">
+              <button type="button" class="Link Link--primary Text--subdued" data-action="toggle-tag">
+                Women
+              </button>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,82 @@
+ <div class="modal modal-size">
+  <div class="modal-inner">
+    <div class="modal-close">
+     
+    </div>
+    <div class="modal-buttons">
+      <a class="Button-primary modal-button button-in active" href="#"> inches</a>
+      <a class="Button-primary modal-button button-cm" href="#">cm</a>
+      <a class="close"> X </a>
+    </div>
+    {%- if  product.type == "Woman Top" or product.type == "Woman Shirt" or product.type == "Woman Jacket" or product.type == "Woman Suit" or product.type == "Woman Blazer" or product.type == "Woman Trenchcoat" or product.type == "Woman Dress" -%}
+    	{%- include 'women-top-size'-%}
+    {%- elsif product.type == "Woman Pant" -%}
+    	{%- include 'women-bottom-size'-%}
+    {%- elsif product.type == "Shirt" and product.tags contains 'oversized' -%}
+        {%- include 'shirt-oversized-size'-%}
+    {%- elsif product.type == 'Shirt' or product.type == 'Shirt Trouser' or product.type == 'Shirt Short' or product.type == 'Shirt Lounge Pant' or product.type == 'Designer Shirt' or product.type == 'Jacket Short'-%}
+    	{%- include 'shirt-size'-%}
+    {%- elsif product.type == 'Suit' or product.type == 'Blazer' or product.type == 'Suit With Shawl' or product.type == 'Blazer With Shawl' -%}
+    	{%- include 'blazer-size'-%}
+    {%- elsif product.type == 'Trenchcoat Suit' or product.type == 'Trenchcoat' -%}
+    	{%- include 'trenchcoat-size'-%}
+    {%- elsif product.type == 'Trousers'-%}
+    	{%- include 'trousers-size'-%}
+    {%- elsif product.type == 'Short'-%}
+    	{%- include 'shorts-size'-%}
+    {%- elsif product.type == 'Jeans' or product.type == 'Designer Jeans' -%}
+    	{%- include 'jeans-size'-%}
+    {%- elsif product.type == 'Woman Jeans' or product.type == 'Woman Designer Jeans' -%}
+        {% if product.tags contains 'mom-fit' %}
+          {%- include 'mom-fit-jeans-size'-%}
+        {% elsif product.tags contains 'skinny-fit' %}
+          {%- include 'skinny-fit-jeans-size'-%}
+    	{%- endif -%}
+    {%- elsif product.type == 'Waistcoat'-%}
+    	{%- include 'waistcoat-size'-%}
+    {%- elsif product.type == 'Nehru Jacket' or product.type == 'Kurta Jacket Pajama' or product.type == 'Kurta Jacket Dhoti' -%}
+    	{%- include 'nehru-jacket-size'-%}
+    {%- elsif product.type == 'Boxer' or product.type == 'Boxer Combo' -%}
+    	{%- include 'boxer-size'-%}
+    {%- elsif product.type == 'Lounge Pant' -%}
+    	{%- include 'pajama-size'-%}
+    {%- elsif product.type == 'Belt' -%}
+    	{%- include 'belt-size'-%}
+    {%- elsif product.type == 'Tshirt' or product.type == 'Tshirt Short' or product.type == 'Tshirt Lounge Pant' or product.type == 'Designer Tshirt' -%}
+    	{%- include 'tshirt-size' -%}
+    {%- elsif product.type == 'Footwear' -%}
+    	{%- include 'footwear-size'-%}
+    {%- elsif product.type == 'Kurta' -%}
+    	{%- include 'kurta-size'-%}
+    {%- elsif product.type == 'Jacket' -%}
+    	{%- include 'jacket-size'-%}
+    {%- elsif product.type == 'Sherwani Pajama' or product.type == 'Jodhpuri Pajama' or product.type == 'Indowestern Pajama' or product.type == 'Wedding kurta Pajama' or product.type == 'Sherwani Dhoti' or product.type == 'Jodhpuri Dhoti' or product.type == 'Indowestern Dhoti' or product.type == 'Wedding kurta Dhoti' or product.type == 'Jodhpuri' or product.type == 'Sherwani' or product.type == 'Indowestern' or product.type == 'Pajama' or product.type == 'Dhoti' or product.type == 'Wedding kurta' or product.type == 'Wedding Kurta Koti Lounge Pant' or product.type == 'Wedding Kurta Koti Churi Pant' or product.type == 'Wedding Kurta Indowestern Lounge Pant' or product.type == 'Wedding Kurta Indowestern Churi Pant' or product.type == 'Wedding Kurta Sherwani Lounge Pant' or product.type == 'Wedding Kurta Sherwani Churi Pant' or product.type == 'Indowestern Lounge Pant' or product.type == 'Indowestern Churi Pant' or product.type == 'Koti' -%}
+    	{%- include 'top-garment-size'-%}
+    {%- elsif product.type == 'Pajama' or product.type == 'Dhoti' or product.type == 'Churi Pant' -%}
+    	{%- include 'bottom-size'-%}
+  	{%- endif -%}
+  </div>
+</div>
+<div class="modal modal-size-other">
+  <div class="modal-inner">
+    <div class="modal-close">
+     
+    </div>
+    <div class="modal-buttons">
+      <a class="Button-primary modal-button button-in active" href="#"> inches</a>
+      <a class="Button-primary modal-button button-cm" href="#">cm</a>
+      <a class="close"> X </a>
+    </div>
+    {%- if product.type == 'Suit' or product.type == 'Trenchcoat Suit' or product.type == 'Shirt Trouser'-%}
+    	{%- include 'trousers-size'-%}
+    {%- elsif product.type == 'Shirt Short' or product.type == 'Tshirt Short' or product.type == 'Jacket Short'-%}
+        {%- include 'shorts-size'-%}
+    {%- elsif product.type == 'Shirt Lounge Pant' or product.type == 'Tshirt Lounge Pant'-%}
+        {%- include 'pajama-size'-%}
+    {%- elsif product.type == 'Woman Suit'-%}
+        {%- include 'women-bottom-size'-%}
+    {%- elsif product.type == 'Sherwani Pajama' or product.type == 'Jodhpuri Pajama' or product.type == 'Indowestern Pajama' or product.type == 'Wedding kurta Pajama' or product.type == 'Sherwani Dhoti' or product.type == 'Jodhpuri Dhoti' or product.type == 'Indowestern Dhoti' or product.type == 'Wedding kurta Dhoti'  or product.type == 'Wedding Kurta Koti Lounge Pant' or product.type == 'Wedding Kurta Koti Churi Pant' or product.type == 'Wedding Kurta Indowestern Lounge Pant' or product.type == 'Wedding Kurta Indowestern Churi Pant' or product.type == 'Wedding Kurta Sherwani Lounge Pant' or product.type == 'Wedding Kurta Sherwani Churi Pant' or product.type == 'Indowestern Lounge Pant' or product.type == 'Indowestern Churi Pant' -%}
+    	{%- include 'bottom-size'-%}
+    {%- endif -%}
+  </div>
+</div>

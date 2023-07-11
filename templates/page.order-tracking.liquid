@@ -1,0 +1,64 @@
+<div class="Container">
+  <header class="PageHeader">
+    <div class="SectionHeader SectionHeader--center">
+      <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+    </div>
+  </header>
+
+  <div class="PageContent PageContent--narrow Rte">
+   
+    <form id="tracking-order" method="post">
+    <div class="Form__Group">
+      <div class="Form__Item">
+        <input type="text" id="order_id" class="Form__Input" aria-label="Order Id" placeholder="Order number without #" required>
+        <label class="Form__FloatingLabel">Order Id</label>
+      </div>
+
+      <div class="Form__Item">
+        <input type="number" id="Mobile_no" class="Form__Input" aria-label="Mobile No" placeholder="Enter 10 digit Mobile number without country code." required minlength="10">
+        <label class="Form__FloatingLabel">Mobile No</label>
+      </div>
+    </div>
+      <button type="submit" class="Form__Submit Button Button--primary Button--full">Submit</button>
+    </form>
+
+  </div>
+</div>
+
+
+<script>
+  $('#tracking-order').on('submit', function(e){
+    e.preventDefault();
+    var order_id = $('#order_id').val(),
+        mobile_no = $('#Mobile_no').val();
+    var data = {
+      order_id: parseInt(order_id),
+      mobile_no: parseInt(mobile_no),
+      shopify_domain: 'french-crown-dress-sharp.myshopify.com'
+    };
+    
+    $.ajax({
+      type: "POST",
+      url: 'https://frenchcrownerp.com/miscellaneous/track_order',
+      data: data,
+      success: function (data) {
+        $('p.error, p.msg').remove();
+        if(data.status == 200){
+          if (typeof data.tracking_url !== "undefined" && data.tracking_url != '') {
+          	window.location.href = data.tracking_url;
+          }else{
+            $("<p class='msg'>Your Order will be shipped within 2 days.</p>").insertBefore( ".Form__Submit" );
+            setTimeout(function(){
+              $('#tracking-order .msg').remove();
+            },10000);
+          }          
+        }else if(data.status == 500){
+          $("<p class='error'>Phone No/Order Id is invalid</p>").insertBefore( ".Form__Submit" );
+          setTimeout(function(){
+            $('#tracking-order .error').remove();
+          },10000);
+        }
+      }  
+    });
+  });
+</script>

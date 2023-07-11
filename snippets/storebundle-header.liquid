@@ -1,0 +1,53 @@
+{{ 'sb.french-crown-dress-sharp.css' | asset_url | stylesheet_tag }}
+<script>
+    var StoreBundleBase = StoreBundleBase || {};
+    StoreBundleBase.baseURL = "https://app.storebundle.io/";
+    StoreBundleBase.scrEl = document.querySelector('script#sbstorefrontjs');
+    StoreBundleBase.shop = Shopify.shop;
+    StoreBundleBase.unique_name = Shopify.shop.split('.')[0];
+    StoreBundleBase.isProductPage = false;
+    StoreBundleBase.isCartPage = false;
+    StoreBundleBase.isCollectionPage = false;
+    StoreBundleBase.isFrontPage = false;
+    StoreBundleBase.apiVersion = "2021-07";
+    StoreBundleBase.shopData = {"currency":{"name":"INR","money_format":"Rs. {@amount@}","symbol":"Rs. ","money":{"format":"Rs. {@amount@}","with_currency_format":"Rs. {@amount@}"},"epc":["INR"],"country":{"name":"India","iso2":"IN"}},"meta":{"weight_unit":"kg","pwd":false,"timezone":{"full":"(GMT+05:30) Asia\/Kolkata","slim":"Asia\/Kolkata"}}};
+    StoreBundleBase.isOwner = false;
+    StoreBundleBase.formatMoney=function(a,b=!0){var c;if(c=this.shopData.currency.symbol?this.shopData.currency.symbol:Shopify.currency.active,a)return b?(a/=100,a=(+a.toFixed(2)).toLocaleString(),`${c+a}`):(a=(+a.toFixed(2)).toLocaleString(),`${c+a}`)};
+
+    {% if request.page_type == 'product' %}
+        StoreBundleBase.isProductPage = true;
+    {% endif %}
+
+    {% if request.page_type == 'cart' %}
+        StoreBundleBase.isCartPage = true;
+    {% endif %}
+
+    {% if request.page_type == 'index' %}
+        StoreBundleBase.isFrontPage = true;
+    {% endif %}
+
+    {% if request.page_type == 'collection' or request.page_type == 'list-collections' %}
+        StoreBundleBase.isCollectionPage = true;
+    {% endif %}
+
+
+    {% if request.page_type == 'collection' or request.page_type == 'list-collections' %}
+        StoreBundleBase.shopifyCollection = {
+            type: 'grid'
+        };
+    {% endif %}
+
+    {% if request.page_type == 'list-collections' %}
+        StoreBundleBase.shopifyCollection = {
+            type: 'list'
+        };
+    {% endif %}
+
+    {% if content_for_header contains 'adminBarInjector' or content_for_header contains 'previewBarInjector' or content_for_header contains 'admin_bar_iframe' or content_for_header contains 'preview_bar_injector-' %}
+        StoreBundleBase.isOwner = true;
+    {% else %}
+        StoreBundleBase.isOwner = false;
+    {% endif %}
+</script>
+<script id="sbjQuerySniffer" defer="defer"></script>
+<script src='{{ 'sb.french-crown-dress-sharp.js' | asset_url }}' defer='defer' id='sbstorefrontjs'></script>

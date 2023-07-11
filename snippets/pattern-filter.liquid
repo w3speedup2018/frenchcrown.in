@@ -1,0 +1,44 @@
+{%- assign pattern_tag_lists = '' -%}
+{%- if collection.handle contains 'shirts' or collection.handle contains 'suits' or collection.handle contains 'blazers' or collection.handle contains 'kurtas' or collection.handle contains 'jackets' or collection.handle contains 'co-ord-sets' and collection.handle != 'tshirts' and section.settings.shirt_pattern_taglist != empty -%}
+  {% unless collection.handle contains 'women' %}
+    {%- assign pattern_tag_lists = section.settings.shirt_pattern_taglist | split: ',' -%}
+  {% endunless %}
+{%- elsif collection.handle contains 'boxer' -%}
+  {%- assign pattern_tag_lists = section.settings.boxer_pattern_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'lounge-pant' -%}
+  {%- assign pattern_tag_lists = section.settings.lounge_pants_pattern_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'pant' -%}
+  {%- assign pattern_tag_lists = section.settings.trousers_pattern_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'waistcoat' -%}
+  {%- assign pattern_tag_lists = section.settings.waistcoat_pattern_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'short' -%}
+  {%- assign pattern_tag_lists = section.settings.shorts_pattern_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'sale' or collection.handle == 'new' -%}
+  {% unless collection.handle contains 'women' %}
+    {%- assign pattern_tag_lists = section.settings.sale_pattern_taglist | split: ',' -%}
+  {% endunless %}
+{%- elsif collection.handle contains 'socks' -%}
+  {%- assign pattern_tag_lists = section.settings.socks_pattern_taglist | split: ',' -%}
+{%- endif -%}
+
+{%- if pattern_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      {{ section.settings.pattern_title }} <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in pattern_tag_lists -%}
+          {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

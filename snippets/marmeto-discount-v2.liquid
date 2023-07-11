@@ -1,0 +1,776 @@
+{%- assign banner_text = settings.main_banner_text -%}
+{%- assign before_discount = settings.before_discount_text -%}
+{%- assign after_discount = settings.after_discount_text -%}
+
+<script>
+  $(document).on('page:load page:change', function() {
+    if(Shopify.Checkout.step == "contact_information" || Shopify.Checkout.step == "shipping_method" || Shopify.Checkout.step == "payment_method" ){
+      /* default check checkbox for remember_me and accept marketing */
+      if(Shopify.Checkout.step == "contact_information"){
+        $('[name="checkout[remember_me]"]').attr('checked', true);
+        $('[name="checkout[buyer_accepts_marketing]"]').attr('checked', true);
+      }
+      var subtotal_price =  parseFloat("{{ checkout.subtotal_price | round }}")/100;
+      if(Shopify.Checkout.step == "shipping_method" && $('.shipping-note').length == 0 && subtotal_price <= 999){  
+        $('.section__content').append('<br><p style="font-weight:bold" class="shipping-note">NOTE: Free shipping for orders above ₹999. Also get extra 10% off when you buy 2 items and extra 15% off when you buy 3 items.</p>') 
+      }
+      /* default check checkbox for remember_me and accept marketing end */
+      if(Shopify.Checkout.step == "payment_method"){
+        $('[data-select-gateway="63753093171"] .radio__label__primary').html("Wallets / Net banking / UPI / Google Pay / Paytm / Credit or Debit Cards / EMI");
+        $('[data-select-gateway="63753060403"] .radio__label__primary').html("Credit Card / Debit Card");
+
+        /* simpl payment gateway */
+        $('[data-select-gateway="69303337011"], #payment-gateway-subfields-69303337011').insertBefore('[data-select-gateway="25861029939"]');
+        $('[data-select-gateway="69303337011"] .radio__label__primary').html("Buy Now Pay Later").css('vertical-align', 'baseline');
+        $('<label for="checkout_payment_gateway_68679729203" class="radio__label__primary" style="width: auto;padding-right: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="25" fill="none" viewBox="0 0 130 40"><path fill="#28C9C9" d="M23.237 8.727l3.38-3.453-.723-.738c-5.92-6.048-15.545-6.048-21.464 0-5.663 5.787-5.897 15.074-.7 21.17L.328 29.135l.722.738c5.92 6.048 15.545 6.048 21.464 0 5.687-5.787 5.92-15.074.723-21.146zM5.875 6.037c4.847-4.977 12.63-5.215 17.758-.739L21.7 7.275c-4.102-3.43-10.138-3.191-13.96.714-3.822 3.905-4.055 10.097-.7 14.264l-1.887 1.929C.771 18.919 1.004 10.99 5.875 6.037zm15.171 22.336c-4.87 4.977-12.631 5.215-17.782.714L5.2 27.111c4.101 3.429 10.137 3.19 13.96-.715 3.822-3.905 4.055-10.096.699-14.264l1.887-1.928c4.405 5.286 4.172 13.216-.699 18.169zM66.325 11.443h4.546v3.573c2.309-4.752 10.002-5.788 11.716-.036h.07c1.573-3.18 5.455-4.716 8.742-3.68 3.043.965 3.917 4.11 3.917 7.04v12.434h-4.721V19.268c0-2-.525-4.037-2.903-3.859-2.308.143-3.776 2.251-4.266 4.395-.175.75-.21 1.608-.21 2.502v8.504H78.46V19.268c0-2.143-.594-4.145-3.112-3.823-2.239.286-3.602 2.323-4.092 4.395-.175.715-.21 1.608-.21 2.466v8.504h-4.72V11.443zM129.236 26.703c-1.223 0-1.923-.536-1.923-2.645V3.87l-4.686 4.788v16.115c0 5.539 3.217 6.218 5.84 6.218.769 0 1.469-.108 1.469-.108v-4.216s-.35.036-.7.036zM117.067 14.845c-1.644-2.752-4.651-4.11-7.799-3.788-1.993.215-4.126 1.287-5.14 3.145v-2.716h-4.302v28.515l4.721-4.824v-4.86-1.68c1.574 2.359 4.721 3.038 7.309 2.466 6.819-1.536 8.498-10.827 5.211-16.258zm-7.939 12.363c-2.902 0-4.511-2.715-4.686-5.395-.14-2.252.455-4.896 2.518-6.075 1.714-.965 3.952-.714 5.316.715 3.007 3.108 1.923 10.755-3.148 10.755zM61.778 11.448h-4.721v19.367h4.72V11.448zM52.825 21.739c-.734-3.359-3.847-5.003-6.714-6.218-1.889-.821-5.63-1.822-5.525-4.502.104-2.68 3.147-3.359 5.245-3.001 1.19.214 2.343.679 3.357 1.357l3.148-3.215c-2.833-2.788-7.764-3.467-11.33-2.144-3.848 1.429-6.505 5.824-4.722 9.898 1.294 3.001 4.651 4.252 7.379 5.467 2.098.929 5.805 2.572 4.126 5.61-1.189 2.18-4.231 1.93-6.19 1.215-1.083-.394-2.168-1.001-3.112-1.716l-3.147 3.216c2.762 2.859 7.274 4.038 11.05 3.323 4.302-.786 7.414-4.788 6.435-9.29z"></path></svg></label>').insertBefore('[data-select-gateway="69303337011"] .radio__label__primary');
+      }
+      var discount_amount = "{{ checkout.total_price | times: 0.01 | round | money }}";
+      
+      {%- comment -%}
+      //JS Cookie Library
+      {%- endcomment -%}
+      
+      !function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function e(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function n(o){function t(n,r,i){var c;if("undefined"!=typeof document){if(arguments.length>1){if("number"==typeof(i=e({path:"/"},t.defaults,i)).expires){var a=new Date;a.setMilliseconds(a.getMilliseconds()+864e5*i.expires),i.expires=a}i.expires=i.expires?i.expires.toUTCString():"";try{c=JSON.stringify(r),/^[\\{\\[]/.test(c)&&(r=c)}catch(e){}r=o.write?o.write(r,n):encodeURIComponent(String(r)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),n=(n=(n=encodeURIComponent(String(n))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\\(\\)]/g,escape);var s="";for(var f in i)i[f]&&(s+="; "+f,!0!==i[f]&&(s+="="+i[f]));return document.cookie=n+"="+r+s}n||(c={});for(var p=document.cookie?document.cookie.split("; "):[],d=/(%[0-9A-Z]{2})+/g,u=0;u<p.length;u++){var l=p[u].split("="),C=l.slice(1).join("=");this.json||'"'!==C.charAt(0)||(C=C.slice(1,-1));try{var g=l[0].replace(d,decodeURIComponent);if(C=o.read?o.read(C,g):o(C,g)||C.replace(d,decodeURIComponent),this.json)try{C=JSON.parse(C)}catch(e){}if(n===g){c=C;break}n||(c[g]=C)}catch(e){}}return c}}return t.set=t,t.get=function(e){return t.call(t,e)},t.getJSON=function(){return t.apply({json:!0},[].slice.call(arguments))},t.defaults={},t.remove=function(n,o){t(n,"",e(o,{expires:-1}))},t.withConverter=n,t}(function(){})});
+      
+      {%- comment -%}
+      //Initializing Global Variables
+      {%- endcomment -%}
+      
+      window.$ = window.Checkout.$;
+      window.checkDiscount = false;
+      window.cartCount = 0;
+      var properties = {};
+      var allProperties = {};
+      var selectedgate = '';
+      var lineQty = 1;
+      window.codGateway = $('[data-select-gateway] .radio__label__primary:contains(Cash)').parents('[data-select-gateway]').attr('data-select-gateway');
+
+      {%- comment -%}
+      //Loader and Main Banner
+      {%- endcomment -%}
+
+      $('.content[data-content]').after('<div class="mm__loader"><div class="mm__loader--text">Processing...</div>');
+
+      {%- comment -%}
+      /* Capturing previous line item properties:
+       *  - We need to capture previous properties becuase of adding or removing properties through change.js. 
+       *  - it will change the complete property object through which we may loose other line item properties.
+       *  - If first line item contains '_discount' property only then we will trigger discount.
+       */
+      {%- endcomment -%}
+      // var cod_high_value = false;
+      var cod_for_size = false;
+      var is_premium_gift = false;
+      {%- assign to = '' -%}
+      {%- assign message = '' -%}
+      {%- assign from = '' -%}
+      {%- assign gift_vid = '' -%}
+      {%- for item in checkout.line_items -%}
+        {%- if forloop.first -%}
+          lineQty = {{ item.quantity }};
+        {%- endif -%}
+        var ptype = "{{item.product.type}}";
+        var variant_size = "{{item.variant.sku}}".split('-').pop().split('/')[0];
+        var cod_disable_sizes = ["36", "38", "50", "52", "54", "56", "58", "60"];
+        // if(ptype == 'Suit' || ptype == 'Blazer' || ptype == 'Trenchcoat Suit' || ptype == 'Trenchcoat' || (ptype == 'Shirt' && parseInt("{{item.price | times: 0.01}}") >= 4997)){
+        //   cod_high_value = true;
+        // }
+        if((ptype == 'Suit' || ptype == 'Blazer' || ptype == 'Trenchcoat Suit' || ptype == 'Trenchcoat' || ptype == 'Waistcoat') && $.inArray(variant_size, cod_disable_sizes) > -1 ){
+          cod_for_size = true;
+        }
+        {%- if item.variant_id == 40755882786867 -%}
+          var is_premium_gift = true;
+        {%- endif -%}
+        {%- for property in item.properties -%}
+          {%- if property.first == '_discount' and property.last == 'true' and item.total_discount > 0 -%}
+            {%- assign checkDiscount = true -%}
+            checkDiscount = true;
+          {%- elsif property.first == 'To' -%}
+                {%- assign gift_vid = item.variant_id -%}
+                {%- assign to = property.last -%}
+                properties['{{property.first}}'] = '{{property.last}}';
+          {%- elsif property.first == 'Message' -%}     
+                {%- assign message = property.last -%}
+                properties['{{property.first}}'] = '{{property.last}}';
+          {%- elsif property.first == 'From' -%}     
+                {%- assign from = property.last -%}
+                properties['{{property.first}}'] = '{{property.last}}';
+          {%- else %}
+            properties['{{property.first}}'] = '{{property.last}}';
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      /* disable COD for given pincodes and high value products */
+      if(Shopify.Checkout.step == "payment_method"){
+        $('.cod-error').remove();
+        var zip = "{{ checkout.shipping_address.zip }}";
+        var no_cod_zips = ["125077", "140103", "171208", "171211", "171214", "171225", "171226", "172001", "172023", "172025", "172029", "172107", "172116", "175028", "175038", "175106", "175123", "175134", "177105", "180001", "180002", "180003", "180004", "180005", "180006", "180007", "180009", "180010", "180011", "180012", "180013", "180015", "180016", "180017", "180019", "181008", "181101", "181102", "181103", "181104", "181111", "181121", "181122", "181123", "181124", "181131", "181132", "181133", "181134", "181141", "181143", "181145", "181151", "181201", "181202", "181203", "181204", "181205", "181206", "181207", "181208", "181209", "181221", "181224", "182101", "182104", "182121", "182122", "182124", "182125", "182127", "182128", "182141", "182142", "182143", "182144", "182145", "182146", "182147", "182148", "182161", "182200", "182201", "182202", "182203", "182204", "182205", "182206", "182221", "182301", "182311", "182312", "182313", "182315", "182320", "184101", "184102", "184104", "184120", "184121", "184141", "184142", "184143", "184144", "184145", "184148", "184151", "184152", "184201", "184202", "184203", "184204", "184205", "184206", "185101", "185102", "185111", "185121", "185131", "185132", "185135", "185151", "185152", "185153", "185154", "185155", "185156", "185201", "185202", "185203", "185212", "185233", "190001", "190002", "190003", "190004", "190005", "190006", "190007", "190008", "190009", "190010", "190011", "190012", "190014", "190015", "190017", "190018", "190019", "190020", "190021", "191101", "191102", "191103", "191111", "191112", "191113", "191121", "191131", "191201", "191202", "191203", "191515", "192101", "192102", "192121", "192122", "192123", "192124", "192125", "192126", "192129", "192201", "192202", "192210", "192211", "192212", "192221", "192231", "192232", "192301", "192302", "192303", "192305", "192401", "193101", "193103", "193121", "193122", "193123", "193198", "193201", "193202", "193221", "193222", "193223", "193224", "193225", "193301", "193302", "193303", "193401", "193402", "193403", "193411", "193501", "193502", "193503", "193504", "193508", "194101", "194102", "194103", "194104", "194105", "194106", "194109", "194201", "194301", "194302", "194401", "246174", "246443", "248164", "248179", "263132", "263656", "284126", "321203", "392150", "393050", "393125", "393130", "416602", "486445", "488446", "497225", "523260", "584129", "591230", "737103", "737106", "737120", "737121", "737126", "737128", "737132", "744101", "744103", "744105", "744202", "744207", "744209", "744303", "761131", "761213", "764043", "766027", "767020", "781136", "782105", "784506", "786125", "786184", "786670", "787001", "787034", "788003", "788710", "790101", "790102", "790104", "790114", "791001", "791101", "791109", "791110", "791111", "791122", "791123", "792101", "792102", "792103", "792120", "792122", "793011", "793021", "793102", "793119", "793120", "793121", "793150", "793160", "794103", "794104", "794108", "794110", "794111", "794115", "795001", "795002", "795003", "795004", "795005", "795008", "795009", "795101", "795103", "795113", "795117", "795118", "795125", "795128", "795129", "795130", "795131", "795132", "795133", "795134", "795138", "795140", "795141", "795142", "795146", "795148", "795149", "796001", "796005", "796007", "796012", "796014", "796017", "796321", "796691", "796701", "797001", "797003", "797103", "797108", "797111", "797115", "797116", "798611", "798612", "798621", "798622", "799001", "799003", "799005", "799006", "799045", "799101", "799104", "799141", "799143", "799145", "799156", "799181", "799256", "799261", "799262", "799270", "799273", "799275", "799284", "799287", "825325", "833222", "835214", "841428", "852131", "852138", "271004", "560150", "852137", "263140", "173027", "822134", "794001", "847108", "795107", "852123", "171203", "764028", "627647", "560150", "249121", "799102", "502210", "583280", "759117", "670704", "585215", "494446", "793101", "505122", "854317", "685532", "522658", "795114", "794106", "322243", "171007", "610102", "840101", "523226", "494114", "855113", "610102", "678508", "793101", "481885", "500053", "855113", "855102", "585236", "852217", "793101", "685532"]
+        if($.inArray(zip, no_cod_zips) !== -1){
+          $('[data-gateway-name="manual"]').addClass('disabled');
+          $('[data-gateway-name="manual"] input').attr('disabled', true);
+          $('[data-gateway-name="manual"] .radio__label').append('<span class="cod-error">(COD is not available in your pincode)</span>');
+        }else if(cod_for_size && $('.is_old_customer').length == 0){
+          $('[data-gateway-name="manual"]').addClass('disabled');
+          $('[data-gateway-name="manual"] input').attr('disabled', true);
+          $('[data-gateway-name="manual"] .radio__label').append('<span class="cod-error">(COD is not available for some products in your cart)</span>');
+        }else if(is_premium_gift){
+          $('[data-gateway-name="manual"]').addClass('disabled');
+          $('[data-gateway-name="manual"] input').attr('disabled', true);
+          $('[data-gateway-name="manual"] .radio__label').append('<span class="cod-error">(COD option is not available for Premium Gift Wrapping)</span>');
+        }else{
+          $('[data-gateway-name="manual"]').removeClass('disabled');
+          $('[data-gateway-name="manual"] input').attr('disabled', false);
+        }
+      }
+                                                                                   
+
+       {%- comment -%}
+       /* Handling Abandoned Checkouts
+        *  - Call cart.json to identify abandon checkout.
+        *  - If abandoned checkout is found, create a cart with existing customer information.
+        *  - Redirect user back to the checkout with the saved info.
+        */
+       {%- endcomment -%}
+                             
+       $.ajax({
+         type: 'GET',
+         url: '/cart.json',
+         dataType: 'json',
+         success: function(data){
+          cartCount = data.item_count;
+          if(cartCount == 0){
+            $('body').hide();
+            $('.mm__loader').fadeIn();
+            handleCart();
+          }
+         },
+         error: function(){}
+       });
+
+      function handleCart() {  
+        Shopify.queue = [];
+
+        Shopify.moveAlong = function() {
+          if (Shopify.queue.length) {
+            var request = Shopify.queue.shift();
+            Shopify.addItem(request.variantId, request.quantity, request.properties, Shopify.moveAlong);
+          }else {
+            var checkoutUrl = "/checkout";
+            checkoutUrl += "?checkout[email]={{ checkout.email }}";
+            checkoutUrl += "&checkout[shipping_address][first_name]={{ checkout.shipping_address.first_name }}";
+            checkoutUrl += "&checkout[shipping_address][last_name]={{ checkout.shipping_address.last_name }}";
+            checkoutUrl += "&checkout[shipping_address][company]={{ checkout.shipping_address.company }}";
+            checkoutUrl += "&checkout[shipping_address][address1]={{ checkout.shipping_address.address1 }}";
+            checkoutUrl += "&checkout[shipping_address][address2]={{ checkout.shipping_address.address2 }}";
+            checkoutUrl += "&checkout[shipping_address][city]={{ checkout.shipping_address.city }}";
+            checkoutUrl += "&checkout[shipping_address][country]={{ checkout.shipping_address.country }}";
+            checkoutUrl += "&checkout[shipping_address][province]={{ checkout.shipping_address.province }}";
+            checkoutUrl += "&checkout[shipping_address][zip]={{ checkout.shipping_address.zip }}";
+            checkoutUrl += "&checkout[shipping_address][country]={{ checkout.shipping_address.country }}";
+            checkoutUrl += "&checkout[shipping_address][phone]={{ checkout.shipping_address.phone }}";
+            document.location.href = checkoutUrl;
+          }
+        };
+
+        Shopify.addItem = function(id, qty, properties, callback) {
+          var params = {
+            quantity: qty,
+            id: id
+          };
+          if(properties != false){
+            params.properties = properties;
+          }
+          $.ajax({
+            type: 'POST',
+            url: '/cart/add.js',
+            dataType: 'json',
+            data: params,
+            success: function(){
+              if(typeof callback === 'function'){
+                callback();
+              }
+            },
+            error: function(){}
+          });
+        }
+
+        function push_to_queue(variantID, quantity, properties) {
+          Shopify.queue.push({
+            variantId: variantID,
+            quantity: quantity,
+            properties: properties
+          });
+        }
+
+        {% assign line_items_count = 0 %}
+        {%- for item in checkout.line_items -%}
+          {% assign line_items_count = line_items_count | plus: item.quantity %}
+          allProperties = {};
+          {%- for prop in item.properties -%}
+            {%- unless prop.first == "_discount" %}
+            allProperties['{{prop.first}}'] = '{{prop.last}}';  
+            {%- endunless -%}
+          {%- endfor -%}
+          push_to_queue({{ item.variant_id }},{{ item.quantity }},allProperties);
+        {%- endfor -%}
+        Shopify.moveAlong();
+      };
+
+      function changeProperty(discount){
+        if(discount){
+          properties['_discount'] = "true";
+        }
+        else {
+          properties['_discount'] = "false";
+        }
+        var params = {
+          line: 1,
+          quantity: lineQty,
+          properties: properties
+        };
+
+        $.ajax({
+          type: 'POST',
+          url: '/cart/change.js',
+          dataType: 'json',
+          data: params,
+          success: function() {
+            $('.step__footer__continue-btn').attr("disabled",true).addClass("btn--disabled");
+            // document.location.href = '/checkout';
+            location.reload();
+          },
+          error: function(){}
+        });
+      }
+
+      function changePaymentGateway(){
+        if($('[data-gateway-name="manual"]').length == 1 || $('input[name="checkout[payment_gateway]"]').length == 2){
+          selectedgate = $('input[name="checkout[payment_gateway]"]:first').val()
+        }else{
+          selectedgate = $('input[name="checkout[payment_gateway]"]:checked').val();    
+        }
+        Cookies.set('payment_gateway', selectedgate, { expires: 1 });
+
+        if (selectedgate === codGateway) {
+          if(checkDiscount){
+            $('.mm__loader').fadeIn();
+            changeProperty(false);
+          }
+        }else{
+          if(!checkDiscount) {
+            $('.mm__loader').fadeIn();
+            changeProperty(true);
+          }
+        }
+      }
+
+      function changeShippingMethod(){
+        if($('[name="checkout[shipping_rate][id]"]').length > 0){
+          selectedshipping = $('[name="checkout[shipping_rate][id]"]:checked').val()
+          Cookies.set('shipping_method', selectedshipping, { expires: 1 });
+          if (selectedshipping.includes('Cash on Delivery')) {
+            if(checkDiscount){
+              $('.mm__loader').fadeIn();
+              changeProperty(false);
+            }
+          }else{
+            if(!checkDiscount) {
+              $('.mm__loader').fadeIn();
+              changeProperty(true);
+            }
+          }
+        }
+      }
+
+      {%- comment -%}
+      /* Calling change.js
+       *   - Change.js is used to add or remove the '_discount' line item property.
+       */      
+      {%- endcomment -%}
+
+      
+
+      {%- comment -%}
+      //Handling propeties on click of payment gateway
+      {%- endcomment -%}
+
+      
+      $(document).on('click', '.radio__input input[name="checkout[payment_gateway]"]', function(){
+        selectedgate = $(this).val();    
+        Cookies.set('payment_gateway', selectedgate, { expires: 1 });
+
+        if (selectedgate === codGateway) {
+          if(checkDiscount){
+            $('.mm__loader').fadeIn();
+            changeProperty(false);
+          }
+        }else{
+          if(!checkDiscount) {
+            $('.mm__loader').fadeIn();
+            changeProperty(true);
+          }
+        }
+      });
+
+      $(document).on('click', '[name="checkout[shipping_rate][id]"]', function(){
+        selectedshipping = $(this).val();
+        Cookies.set('shipping_method', selectedshipping, { expires: 1 });
+
+        if (selectedshipping.includes('Cash on Delivery')) {
+          if(checkDiscount){
+            $('.mm__loader').fadeIn();
+            changeProperty(false);
+          }
+        }else{
+          if(!checkDiscount) {
+            $('.mm__loader').fadeIn();
+            changeProperty(true);
+          }
+        }
+      });
+
+      if(Shopify.Checkout.step == "payment_method"){ 
+        $('[data-select-gateway="68679729203"], #payment-gateway-subfields-68679729203').insertBefore('[data-select-gateway="70396543027"]');
+        //$('[data-select-gateway="67243311155"], #payment-gateway-subfields-67243311155').insertBefore('[data-select-gateway="63753060403"]');
+        //$('[data-select-gateway="63753093171"], #payment-gateway-subfields-63753093171').insertBefore('[data-select-gateway="63753060403"]');
+        //$('#payment-gateway-subfields-68753752115, #payment-gateway-subfields-69303337011').addClass('hidden');
+        $('#payment-gateway-subfields-63753060403').removeClass('hidden');
+        $('#payment-gateway-subfields-68679729203').addClass('hidden');
+        $(".section--payment-method .radio-wrapper .input-radio:first").prop("checked", true);
+        //$('[data-select-gateway="67775922227"], #payment-gateway-subfields-67775922227').insertBefore('[data-select-gateway="66008973363"]');
+        
+        var banner_text = "{{ banner_text }}";
+        var after_discount = "{{ after_discount }}";
+        var before_discount = "{{ before_discount }}";      
+        var payment_gateway = Cookies.get('payment_gateway');
+        if(payment_gateway != undefined) {
+          if(payment_gateway === codGateway) {
+            if(checkDiscount){
+              $('.mm__loader').fadeIn();
+              changeProperty(false);
+            }
+            var discount_amount = (Shopify.Checkout.estimatedPrice*0.01).toFixed(2);
+            $('.mm__banner').remove();
+            $('.banner').after('<div class="mm__banner"><h2>'+banner_text.replace('5%', discount_amount)+'</h2></div>');
+            if($('.mm__discount').length <= 0 && before_discount != ''){
+              $('.section--payment-method .section__content').prepend('<div class="mm__discount mm__discount--cod">' + before_discount.replace('5%', discount_amount)+ '</div>');
+            }
+            $('.radio-wrapper[data-select-gateway="' + payment_gateway + '"] .radio__input input').prop('checked', true);
+            if($('[data-gateway-name="manual"] input').attr('disabled') !== undefined){
+              $(".section--payment-method .radio-wrapper .input-radio:first").prop("checked", true).trigger('click');
+            }
+          }else if(payment_gateway !== codGateway && checkDiscount){
+            if($('.mm__discount').length <= 0 && after_discount != ''){
+              var discount_amount = (Shopify.Checkout.estimatedPrice*0.01).toFixed(2);
+              $('.section--payment-method .section__content').prepend('<div class="mm__discount mm__discount--prepaid">' + after_discount.replace('5%', discount_amount)+ '</div>');
+            }
+            $('.radio-wrapper[data-select-gateway="' + payment_gateway + '"] .radio__input input').prop('checked', true); 
+          }else{
+            $('.radio-wrapper[data-select-gateway="' + payment_gateway + '"] .radio__input input').prop('checked', true).trigger('click');
+          }
+        }else{
+          if($('.mm__discount').length <= 0 && after_discount != ''){
+            var discount_amount = (Shopify.Checkout.estimatedPrice*0.01).toFixed(2);
+            $('.section--payment-method .section__content').prepend('<div class="mm__discount mm__discount--prepaid">' + after_discount.replace('5%', discount_amount)+ '</div>');
+          }
+          $(".section--payment-method .radio-wrapper .input-radio:first").prop("checked", true).trigger('click');
+        } 
+      }
+
+      // if(Shopify.Checkout.step == "shipping_method"){ 
+      //   var banner_text = "{{ banner_text }}";
+      //   var after_discount = "{{ after_discount }}";
+      //   var before_discount = "{{ before_discount }}";      
+      //   var shipping_method = Cookies.get('shipping_method');
+      //   if(shipping_method != undefined) {
+      //     if(shipping_method.includes('Cash on Delivery')) {
+      //       var discount_amount = (Shopify.Checkout.estimatedPrice*0.01).toFixed(2);
+      //       $('.mm__banner').remove();
+      //       $('.banner').after('<div class="mm__banner"><h2>'+banner_text.replace('5%', discount_amount)+'</h2></div>');
+      //       if($('.mm__discount').length <= 0 && before_discount != ''){
+      //         $('.section--shipping-method .section__content').prepend('<div class="mm__discount mm__discount--cod">' + before_discount.replace('5%', discount_amount)+ '</div>');
+      //       }
+      //     }else if(shipping_method.includes('Online') && checkDiscount){
+      //       if($('.mm__discount').length <= 0 && after_discount != ''){
+      //         var discount_amount = (Shopify.Checkout.estimatedPrice*0.01).toFixed(2);
+      //         $('.section--shipping-method .section__content').prepend('<div class="mm__discount mm__discount--prepaid">' + after_discount.replace('5%', discount_amount)+ '</div>');
+      //       }
+      //     }
+      //     if($("input[value='"+shipping_method+"']").length == 0){
+      //       changeShippingMethod();
+      //     }else{
+      //       $("input[value='"+shipping_method+"']").prop('checked', true).trigger('click');
+      //     }
+      //   }else{
+      //     shipping_box = $('[name="checkout[shipping_rate][id]"]').length;
+      //     if(shipping_box > 0){
+      //       changeShippingMethod();
+      //     }else{
+      //       do {
+      //         shipping_box = $('[name="checkout[shipping_rate][id]"]').length;
+      //         console.log(shipping_box);
+      //         if(shipping_box > 0){
+      //           shipping_method = $('[name="checkout[shipping_rate][id]:checked"]').val();
+      //           $("input[value='"+shipping_method+"']").prop('checked', true).trigger('click');
+      //           changeShippingMethod();
+      //         }
+      //       }
+      //       while (shipping_box < 0);
+      //     }
+      //   }
+      // }
+    }
+  });
+
+  /*
+   * Handle discounts and selected gateway on:
+   *  - DOM change and DOM ready
+  */
+
+  $(document).on('page:load page:change', function() {
+    'use strict';
+    $('.cashback-msg').remove();
+    if((Shopify.Checkout.totalPrice * 0.1) > 0){
+      $('.order-summary__section--discount').append('<p class="cashback-msg" style="color: #197bbd;font-weight: bold;">(You will get <span>₹'+Math.round(Shopify.Checkout.totalPrice * 0.1)+'</span> cashback which can be used in next order)</p>');  
+    }
+    if($('.order-summary__section--discount .discount-button-wrapper').length == 0){
+      var discountHtml = $("#discount-wrapper").html();
+      $('.order-summary__section--discount').append(discountHtml);
+    }
+    $(".gift-wrap-section").insertBefore('.section--shipping-method').show();
+
+    $(document).on("click","#apply-discount",function(){
+      $(this).html('<img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/black-loader.gif?v=1681550751" style="width: 25px">');
+      var discountCode = $(this).data('discount-code');
+      $('[name="checkout[reduction_code]"]').val(discountCode);
+      $('.edit_checkout').addClass('discount-apply-form');
+      $('[name="checkout[reduction_code]"]').closest('form').submit();
+      setTimeout(function(){
+        location.reload();
+      }, 500);
+    });
+
+    $(document).on("click",".code-button a",function(){
+      $(this).fadeOut();
+      $(this).closest('.section__discount').find('.section__discount-description').stop().slideDown();
+    });
+
+    function checkDiscountApplied(){
+      $('.tags-list .tag').each(function(){
+        var discountCode = $(this).find(".reduction-code__text").text();
+        $('.'+discountCode).addClass('applied-discount');
+      });
+      $('.discount-button-wrapper .section__discount').each(function(){
+        var isDiscountApplied = $(this).find(".apply-button").hasClass('applied-discount');
+        if(!isDiscountApplied){
+          $(this).addClass('disabled-discount');
+        }
+      });
+    }
+
+    var appliedDiscount = $(".tags-list .tag").length;
+    if(appliedDiscount){
+      checkDiscountApplied();
+    }
+
+    $(document).on('click','.tags-list .tag__wrapper .tag__button',function(e){
+      e.preventDefault();    
+      $('form [data-trekkie-id="apply_discount_button"]').addClass("btn--loading");
+      var formTag = $(this).closest('form');
+      var tagUrl = $(formTag).attr("action");
+      $.ajax({
+        url: tagUrl,
+        type: 'post',
+        data: formTag.serialize(),
+        success: function(response) {
+          location.reload();
+        }
+      })
+    });
+    
+    /* gift block JS Start */
+    $(document).on('change','#is-gift-wrap',function(e){
+      if($(this).prop('checked')){
+        $(".gift-wrap-form").show(1000);
+      }else{
+        $(".gift-wrap-form").hide(1000);
+      }
+    });
+    
+    $(document).on('click','.edit-message',function(e){
+      $(".gift-wrap-form").show(1000);
+    });
+    
+    $(document).on('click','.gift-card-submit-btn',function(e){
+      e.preventDefault();
+      var recipient_name = $.trim($('#recipient-name').val());
+      var gift_message = $.trim($('#gift-message').val());
+      var sender_name = $.trim($('#sender-name').val());
+      if(recipient_name == '' || gift_message == '' || sender_name ==''){
+        $('.gift-card-submit').trigger('click');
+      }else{
+        $(this).attr('disabled', true).css("cursor", "not-allowed");
+        {% if to == '' %}
+          $.ajax({
+            type: "POST",
+            url: '/cart/add.js',
+            dataType: "json",
+            data: $('.gift-card-form').serialize(),
+            success: function(res) {
+              location.reload();
+            },
+            error: function(e) {
+              alert('error');
+            }
+          });
+        {% else %}
+          $.ajax({
+            type: "POST",
+            url: "/cart/change.js",
+            dataType: "json",
+            data: {
+              id: "{{ gift_vid }}",
+              quantity: 0,
+            },
+            success: function(res) {
+              $.ajax({
+                type: "POST",
+                url: '/cart/add.js',
+                dataType: "json",
+                data: $('.gift-card-form').serialize(),
+                success: function(res) {
+                  location.reload();
+                },
+                error: function(e) {
+                  alert('error');
+                }
+              });
+            }
+          });
+        {% endif %}
+      }
+    });
+    $(document).on('click','.remove-gift-card',function(e){
+      $.ajax({
+        type: "POST",
+        url: "/cart/change.js",
+        dataType: "json",
+        data: {
+          id: "{{ gift_vid }}",
+          quantity: 0,
+        },
+        success: function(res) {
+          location.reload();
+        },
+        error: function(e) {
+          alert('error');
+        }
+      });
+    });
+
+    $(document).on('change','.gift-type',function(e){
+      if($(this).val() == '40755882786867'){
+        $('.videowrapper').show(1000);
+      }else{
+        $('.videowrapper').hide(1000);
+      }
+    });
+    
+    $.getJSON('/cart.js', function(cart) {
+      var variant_ids = [];
+      $.each(cart.items, function(key,val) {
+        variant_ids.push(val.variant_id);
+      });
+      if(variant_ids.includes(40755882786867)){
+        $('#premium_gift').prop('checked', true).change();
+      }else if(variant_ids.includes(40755882754099)){
+        $('#normal_gift').prop('checked', true).change();
+      }
+    });
+    /* gift block JS End */
+  });
+</script>
+
+<div id="discount-wrapper">
+  <div class="discount-button-wrapper">
+    <div class="discount-wrapper">
+      <div class="section__discount">
+        <div class="section__discount-code">
+          <div class="svg-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13.68" height="12.224" viewBox="0 0 13.68 12.224"><defs><style>.a{fill:#717171;}.b{fill:#a8a8a8;}</style></defs><g transform="translate(0 -23.224)"><g transform="translate(0 23.224)"><g transform="translate(0 0)"><path class="a" d="M10.67,23.224H6.47a1,1,0,0,0-.709.294L.294,28.984a1,1,0,0,0,0,1.419l4.2,4.2a1,1,0,0,0,1.418,0l5.467-5.466a1.006,1.006,0,0,0,.294-.71v-4.2A1,1,0,0,0,10.67,23.224ZM8.915,26.735a.752.752,0,1,1,.752-.752A.753.753,0,0,1,8.915,26.735Z" transform="translate(0 -23.224)"></path></g></g><g transform="translate(6.865 24.227)"><g transform="translate(0 0)"><path class="b" d="M224.8,55.224v4.669a.871.871,0,0,1-.256.617l-5.555,5.555.085.085a1,1,0,0,0,1.418,0l5.017-5.016a1,1,0,0,0,.294-.709v-4.2A1,1,0,0,0,224.8,55.224Z" transform="translate(-218.988 -55.224)"></path></g></g></g></svg>
+          </div>
+          <div class="discount-code-wrapper">
+            <div class="code-button">
+              <p class="code-off">BUY2 - Buy any 2 or more products and get 10% off + 1 free Gift</p>
+              <a href="javascript:void(0);" style="display: none;">View Details</a>
+            </div>
+            <div class="apply-button BUY2">
+              <p id="apply-discount" data-discount-code="BUY2">
+                <span>Apply</span>
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="19.13" height="13.018" viewBox="0 0 19.13 13.018"><defs><style>.tick-a{fill:#197bbd;}</style></defs><g transform="translate(-15.876 -21.316)"><g transform="translate(15.876 21.316)"><path class="tick-a" d="M141.879,165.829a1.49,1.49,0,0,0-2.107-.056l-9.516,9.025-4.539-4.66a1.491,1.491,0,0,0-2.136,2.08l5.565,5.714a1.491,1.491,0,0,0,2.094.042l10.583-10.037A1.49,1.49,0,0,0,141.879,165.829Z" transform="translate(-123.158 -165.364)"></path></g></g></svg>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section__discount">
+        <div class="section__discount-code">
+          <div class="svg-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13.68" height="12.224" viewBox="0 0 13.68 12.224"><defs><style>.a{fill:#717171;}.b{fill:#a8a8a8;}</style></defs><g transform="translate(0 -23.224)"><g transform="translate(0 23.224)"><g transform="translate(0 0)"><path class="a" d="M10.67,23.224H6.47a1,1,0,0,0-.709.294L.294,28.984a1,1,0,0,0,0,1.419l4.2,4.2a1,1,0,0,0,1.418,0l5.467-5.466a1.006,1.006,0,0,0,.294-.71v-4.2A1,1,0,0,0,10.67,23.224ZM8.915,26.735a.752.752,0,1,1,.752-.752A.753.753,0,0,1,8.915,26.735Z" transform="translate(0 -23.224)"></path></g></g><g transform="translate(6.865 24.227)"><g transform="translate(0 0)"><path class="b" d="M224.8,55.224v4.669a.871.871,0,0,1-.256.617l-5.555,5.555.085.085a1,1,0,0,0,1.418,0l5.017-5.016a1,1,0,0,0,.294-.709v-4.2A1,1,0,0,0,224.8,55.224Z" transform="translate(-218.988 -55.224)"></path></g></g></g></svg>
+          </div>
+          <div class="discount-code-wrapper">
+            <div class="code-button">
+              <p class="code-off">BUY3 - Buy any 3 or more products and get 15% off + 1 free Gift of worth Rs.1500</p>
+              <a href="javascript:void(0);" style="display: none;">View Details</a>
+            </div>
+            <div class="apply-button BUY3">
+              <p id="apply-discount" data-discount-code="BUY3">
+                <span>Apply</span>
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="19.13" height="13.018" viewBox="0 0 19.13 13.018"><defs><style>.tick-a{fill:#197bbd;}</style></defs><g transform="translate(-15.876 -21.316)"><g transform="translate(15.876 21.316)"><path class="tick-a" d="M141.879,165.829a1.49,1.49,0,0,0-2.107-.056l-9.516,9.025-4.539-4.66a1.491,1.491,0,0,0-2.136,2.08l5.565,5.714a1.491,1.491,0,0,0,2.094.042l10.583-10.037A1.49,1.49,0,0,0,141.879,165.829Z" transform="translate(-123.158 -165.364)"></path></g></g></svg>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section__discount">
+        <div class="section__discount-code">
+          <div class="svg-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13.68" height="12.224" viewBox="0 0 13.68 12.224"><defs><style>.a{fill:#717171;}.b{fill:#a8a8a8;}</style></defs><g transform="translate(0 -23.224)"><g transform="translate(0 23.224)"><g transform="translate(0 0)"><path class="a" d="M10.67,23.224H6.47a1,1,0,0,0-.709.294L.294,28.984a1,1,0,0,0,0,1.419l4.2,4.2a1,1,0,0,0,1.418,0l5.467-5.466a1.006,1.006,0,0,0,.294-.71v-4.2A1,1,0,0,0,10.67,23.224ZM8.915,26.735a.752.752,0,1,1,.752-.752A.753.753,0,0,1,8.915,26.735Z" transform="translate(0 -23.224)"></path></g></g><g transform="translate(6.865 24.227)"><g transform="translate(0 0)"><path class="b" d="M224.8,55.224v4.669a.871.871,0,0,1-.256.617l-5.555,5.555.085.085a1,1,0,0,0,1.418,0l5.017-5.016a1,1,0,0,0,.294-.709v-4.2A1,1,0,0,0,224.8,55.224Z" transform="translate(-218.988 -55.224)"></path></g></g></g></svg>
+          </div>
+          <div class="discount-code-wrapper">
+            <div class="code-button">
+              <p class="code-off">BUY4 - Buy any 4 products and get 1 product free + 1 free Gift of worth Rs.2000</p>
+              <a href="javascript:void(0);" style="display: none;">View Details</a>
+            </div>
+            <div class="apply-button BUY4">
+              <p id="apply-discount" data-discount-code="BUY4">
+                <span>Apply</span>
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="19.13" height="13.018" viewBox="0 0 19.13 13.018"><defs><style>.tick-a{fill:#197bbd;}</style></defs><g transform="translate(-15.876 -21.316)"><g transform="translate(15.876 21.316)"><path class="tick-a" d="M141.879,165.829a1.49,1.49,0,0,0-2.107-.056l-9.516,9.025-4.539-4.66a1.491,1.491,0,0,0-2.136,2.08l5.565,5.714a1.491,1.491,0,0,0,2.094.042l10.583-10.037A1.49,1.49,0,0,0,141.879,165.829Z" transform="translate(-123.158 -165.364)"></path></g></g></svg>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% if checkout.customer %}
+        {% assign customer_tags = checkout.customer.tags | downcase %}
+        {% if checkout.customer and customer_tags contains 'old' %}
+          <input type="hidden" class="is_old_customer" value="true">
+          <div class="section__discount">
+            <div class="section__discount-code">
+              <div class="svg-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13.68" height="12.224" viewBox="0 0 13.68 12.224"><defs><style>.a{fill:#717171;}.b{fill:#a8a8a8;}</style></defs><g transform="translate(0 -23.224)"><g transform="translate(0 23.224)"><g transform="translate(0 0)"><path class="a" d="M10.67,23.224H6.47a1,1,0,0,0-.709.294L.294,28.984a1,1,0,0,0,0,1.419l4.2,4.2a1,1,0,0,0,1.418,0l5.467-5.466a1.006,1.006,0,0,0,.294-.71v-4.2A1,1,0,0,0,10.67,23.224ZM8.915,26.735a.752.752,0,1,1,.752-.752A.753.753,0,0,1,8.915,26.735Z" transform="translate(0 -23.224)"></path></g></g><g transform="translate(6.865 24.227)"><g transform="translate(0 0)"><path class="b" d="M224.8,55.224v4.669a.871.871,0,0,1-.256.617l-5.555,5.555.085.085a1,1,0,0,0,1.418,0l5.017-5.016a1,1,0,0,0,.294-.709v-4.2A1,1,0,0,0,224.8,55.224Z" transform="translate(-218.988 -55.224)"></path></g></g></g></svg>
+              </div>
+              <div class="discount-code-wrapper">
+                <div class="code-button">
+                  <p class="code-off">Next10 - Get flat 10% Off</p>
+                  <a href="javascript:void(0);" style="display: none;">View Details</a>
+                </div>
+                <div class="apply-button NEXT10">
+                  <p id="apply-discount" data-discount-code="NEXT10">
+                    <span>Apply</span>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="19.13" height="13.018" viewBox="0 0 19.13 13.018"><defs><style>.tick-a{fill:#197bbd;}</style></defs><g transform="translate(-15.876 -21.316)"><g transform="translate(15.876 21.316)"><path class="tick-a" d="M141.879,165.829a1.49,1.49,0,0,0-2.107-.056l-9.516,9.025-4.539-4.66a1.491,1.491,0,0,0-2.136,2.08l5.565,5.714a1.491,1.491,0,0,0,2.094.042l10.583-10.037A1.49,1.49,0,0,0,141.879,165.829Z" transform="translate(-123.158 -165.364)"></path></g></g></svg>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+<!--     <button name="button" type="submit" class="field__input-btn btn btn--disabled" data-trekkie-id="apply_discount_button" aria-busy="false" disabled="disabled">
+      Apply
+    </button> -->
+  </div>
+</div>
+
+<div class="gift-wrap-section" style="border: 1px solid #dedede;border-radius: 5px;overflow: hidden;margin-top: 20px;display: none;">
+  <form action="/cart/add" class="gift-card-form">
+    {% if to == '' %}
+      <div class="gift-wrap-details" style="position: relative;padding: 31px 10px;background: #fff;">
+        <div class="checkbox__input">
+          <input type="checkbox" id="is-gift-wrap" class="input-checkbox" style="position: absolute;">
+        </div>
+        <label class="checkbox__label" for="is-gift-wrap" style="font-weight: bold;padding-left: 15px;">Gift Wrapping For Rs.50</label>
+        <img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/gift-wrap.png?v=1651922810" style="position: absolute;right: 12px;width: 18px;top: 0;">
+      </div>
+    {% else %}
+      <div class="gift-wrap-details" style="position: relative;padding: 20px 20px 21px;background: #fff;">
+        <label class="checkbox__label" for="is-gift-wrap" style="font-weight: bold;">Yay! Gift Wrapping Applied</label>
+        <p style="padding-bottom: 6px;">Your order will be gift wrapped with message</p>
+        <ul class="gift-actions">
+          <li style="display: inline-block;font-weight: bold;color: #f7827a;margin-right: 10px;cursor: pointer;" class="edit-message">Edit</li>
+          <li class="remove-gift-card" style="display: inline-block;font-weight: bold;color: #f7827a;cursor: pointer;">Remove</li>
+        </ul>
+        <img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/gift-wrap.png?v=1651922810" style="position: absolute;right: 18px;width: 23px;top: 1px;">
+      </div>
+    {% endif %}
+    <div class="gift-wrap-form" style="background: rgb(255, 255, 255);padding: 5px 10px;border-top: 1px solid #dedede;display:none;">
+      <fieldset class="content-box" style="margin: 10px 0;display: none">
+<!--         <div class="radio-wrapper content-box__row">
+          <div class="radio__input">
+            <input class="input-radio gift-type" type="radio" checked="checked" name="id" id="premium_gift" value="40755882786867">
+          </div>
+          <label class="radio__label content-box__emphasis" for="premium_gift">Premium Gift Wrapping For Rs.499
+          </label>
+        </div> -->
+        <div class="radio-wrapper content-box__row" style="display: none">
+          <div class="radio__input">
+            <input class="input-radio gift-type" type="radio" checked="checked" name="id" id="normal_gift" value="40755882754099">
+          </div>
+          <label class="radio__label content-box__emphasis" for="normal_gift">Normal Gift Wrapping For Rs.50
+          </label>
+        </div>
+      </fieldset>
+<!--       <div class="videowrapper">
+        <iframe height="315" src="https://www.youtube.com/embed/JjPtlHAuzjQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div> -->
+      <div class="field__input-btn-wrapper" style="padding: 10px 0;">
+        <div class="field__input-wrapper">
+          <input placeholder="Recipient Name" class="field__input" id="recipient-name" type="text" name="properties[To]" required value="{{to}}">
+        </div>
+      </div>
+      <div class="field__input-btn-wrapper" style="padding: 10px 0;">
+        <div class="field__input-wrapper">
+          <input placeholder="Message" class="field__input" id="gift-message" type="text" name="properties[Message]" required value="{{message}}">
+        </div>
+      </div>
+      <div class="field__input-btn-wrapper" style="padding: 10px 0;">
+        <div class="field__input-wrapper">
+          <input placeholder="Sender Name" class="field__input" id="sender-name" type="text" name="properties[From]" required value="{{from}}">
+        </div>
+      </div>
+      <div class="field__input-btn-wrapper" style="padding: 10px 0;">
+          <button name="button" type="submit" class="gift-card-submit" style="background: black;color: white;padding: 10px;border-radius: 5px;display:none;">Save</button>
+          <button name="button" type="button" class="gift-card-submit-btn" style="background: black;color: white;padding: 10px;border-radius: 5px;cursor:pointer;">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+<style>
+  .videowrapper {
+      float: none;
+      clear: both;
+      width: 100%;
+      position: relative;
+      padding-bottom: 56.25%;
+      padding-top: 25px;
+      height: 0;
+  }
+  .videowrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+  }
+</style>

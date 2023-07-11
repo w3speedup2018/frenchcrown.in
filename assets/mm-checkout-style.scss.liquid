@@ -1,0 +1,529 @@
+{%- comment -%}
+/* Discount Script Style
+ * By Marmeto 
+*/
+{%- endcomment -%}
+$bannerBackground: {{ settings.main_banner_text_bg }};
+$bannerTextColor: {{ settings.main_banner_text_color }};
+$bannerFontMobile: {{ settings.banner_text_font_small }}px;
+$bannerFontDesktop: {{ settings.banner_text_font_large }}px;
+
+$afterDiscountBg: {{ settings.after_discount_bg }};
+$beforeDiscountBg: {{ settings.before_discount_bg }};
+$afterDiscountColor: {{ settings.after_discount_color }};
+$beforeDiscountColor: {{ settings.before_discount_color }};
+$discountFontsizeMobile: {{ settings.discount_text_font_small }}px;
+$discountFontsizeDesktop: {{ settings.discount_text_font_large }}px;
+
+.mm__loader {  
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; 
+  display: none;
+  z-index: 1000;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  
+  .mm__loader--text {
+    top: 50%;
+    left: 50%;      
+    color: #ffffff;
+    font-size: 16px;
+    position: fixed;
+    line-height: 1.4em;
+    padding: 12px 30px;
+    text-align: center;
+    border-radius: 5px;
+    background: #000000;    
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+  }
+}
+.mm__banner {
+  display: block;
+  text-align: center;
+  padding: 30px 20px;
+  background: $bannerBackground;
+
+  h2 {    
+    font-weight: 600;
+    line-height: 1.4em;
+    letter-spacing: 1px;    
+  	color: $bannerTextColor;
+    font-size: $bannerFontDesktop;
+  }
+
+  @media only screen and (max-width: 949px) {
+    padding: 20px;
+    
+    h2 {
+      font-size: $bannerFontMobile;
+    }
+  }
+  @media only screen and (max-width: 749px) {
+    padding: 10px;
+  }
+}
+
+.mm__discount {  
+  font-size: $discountFontsizeDesktop;
+  padding: 1em 0.75em;
+  border-radius: 5px;  
+  text-align: center;
+  margin: 0 0 10px;  
+  font-weight: bold;
+  
+  @media only screen and (max-width: 949px) {
+  	font-size: $discountFontsizeMobile;
+  }
+  
+  &.mm__discount--cod {
+    background: $beforeDiscountBg;
+    color: $beforeDiscountColor;
+  }
+  &.mm__discount--prepaid {
+    background: $afterDiscountBg;
+    color: $afterDiscountColor;
+  }
+}
+
+
+/* ============================================
+				COD POPUP STYLE 
+=============================================*/
+*{
+  box-sizing: border-box;
+}
+.fc_body{
+  overflow: hidden;
+}
+.fc_overlay{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: black;
+  top: 0;
+  right: 0;
+  opacity: 0.5;
+  z-index: 999;
+  display: none;
+}
+.fc_popupBox{
+  background-color: #fefefe;
+  margin: auto;
+  max-width:1000px;
+/*   width: 100%; */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 1000;
+  display: none;
+  width: 360px;
+}
+.fc_popupBox .fc_mainHead{
+  //padding: 10px 20px 0 20px;
+  background-color:#000;
+}
+.fc_popupBox .fc_mainHead img.logo__image{
+	padding: 10px 20px;
+}
+.fc_popupBox .fc_popup-heading{
+  font-size: 18px;
+  font-weight: 700;
+  padding: 28px 45px;
+}  
+.fc_popupBox .fc_center{
+  text-align: center;
+  display: block;
+}
+.footer-btn{
+  margin: 10px 0;
+  display: flex;
+/*   padding: 4px; */
+}
+.fc_popupBox p{
+  margin: 0;
+  font-size: 16px;
+}
+.fc_popupBox .fc_mainContent{
+  max-height: 500px;
+  overflow: visible;
+}
+.fc_product-contain p{
+  margin-bottom: 20px;
+}
+.fc_popup-heading img{
+    max-height: 80px;
+    width: 271px;
+    height: 37px;
+}
+.fc_popup-heading h3{
+  margin-bottom: 20px;
+}
+.fc_mainContent h3{
+  margin: 25px 0;
+  font-weight: 700;
+  font-size: 22px;
+}
+.fc_popup-footer .fc_footer-text{
+  margin-bottom: 0;
+  color: #0061d0;
+  font-size: 22px;
+}
+.fc_popup-footer .fc_back-btn, .send-otp-btn, .submit-otp, .back-btn{
+  background-color: #000;
+  color: #fff;
+  padding: 14px;
+  width: 100%;
+}
+
+.fc_popup-footer .complete-order-btn, .send-otp-btn, .submit-otp, .back-btn{
+    font-size: 14px;
+    margin: 0;
+    font-weight: bold;
+}
+.resend-otp-whatsapp, .resend-otp-email, .resend-otp-sms {
+    width: 100%;
+    display: block;
+    display: block;
+    margin: 10px auto;
+    font-size: 16px !important;
+}
+/* button.back-btn {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 12px;
+    border: 1px;
+    border-radius: 5px;
+    font-size: 18px;
+    margin: 10px 0;
+    margin-left: 5px;
+} */
+.back-btn{
+  margin-left: 20px;
+}
+.otp-sent{
+  font-size: 12px;
+  color: #DE5145;
+  padding-bottom: 10px;
+}
+.otp-error{
+    font-size: 12px;
+    color: red;
+    padding: 6px;
+    text-align: left;
+}
+/* .unable-receive-otp{
+  font-size: 20px;
+  color: #000;
+  padding: 5px 0;
+} */
+.digit-group1 input {
+    width: 44px;
+    height: 44px;
+    background: #EFEFEF;
+    font-size: 20px;
+    margin: 0 2px;
+    text-align: center;
+}
+
+.digit-group1 input::-webkit-outer-spin-button,
+.digit-group1 input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.digit-group1 input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.prompt {
+	margin-bottom: 20px;
+	font-size: 20px;
+	color: white;
+}
+.fc_popup-heading .close-btn {
+    color: #fff;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    border: 2px solid #fff;
+    padding: 2px 6px 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+}
+@media screen and (max-width:1024px){
+  .fc_popup-heading img{
+    max-height: 60px;
+    width: 310px;
+  }
+}
+@media screen and (max-width:767px){
+  .fc_popupBox{
+    max-width:90%;
+    max-height:90vh;
+    overflow: auto;
+    width: 100%;
+  }
+  .fc_popupBox p{
+    font-size: 12px;
+  }
+  .fc_popup-heading img{
+    width: 240px;
+/*     display: none; */
+  }
+  .fc_popup-footer .fc_back-btn{
+    margin-bottom: 10px;
+    font-size: 14px;	
+  }
+  .fc_popup-heading .close-btn{
+/*     padding: 3px 8px 4px 8px; */
+  }
+  .fc_popupBox{
+    min-width: auto;
+  }
+}
+
+/* discount code list */
+.tag__button{background:0 0}.tag__button:hover{border-width:0}#discount-wrapper{display:none}.discount-button-wrapper{display:flex;clear:both;padding-bottom:20px;padding-top:15px}@media(max-width:1200px) and (min-width:1000px){.discount-button-wrapper{display:block}}.discount-button-wrapper .svg-wrapper{margin-right:7px}.discount-button-wrapper .discount-wrapper{flex-grow:1}.discount-button-wrapper .section__discount{background:#ebebeb;padding:0;margin-bottom:10px;border-radius:4px;display:flex;flex-direction:column}.discount-button-wrapper .section__discount-code{display:flex;padding:10px 13px}.discount-button-wrapper .discount-code-wrapper{display:flex;flex-grow:1;justify-content:space-between;align-items:center}.discount-code-wrapper .code-button{flex:0 0 75%}.discount-button-wrapper .field__input-btn{visibility:hidden;opacity:0}.discount-button-wrapper #apply-discount, .discount-button-wrapper #apply-cashback,.discount-button-wrapper .code-off{margin-bottom:0;font-size:13px;line-height:1;font-weight:600}.discount-button-wrapper .code-off{color:#707070}.discount-button-wrapper #apply-discount, .discount-button-wrapper #apply-cashback{color:#197bbd;text-transform:uppercase;cursor:pointer;text-align:center;margin-left:3px;}.discount-button-wrapper #apply-discount span:last-child{display:none}.discount-button-wrapper .applied-discount span:first-child{display:none}.discount-button-wrapper .applied-discount span:last-child{display:inline-block!important}.discount-button-wrapper .applied-discount #apply-discount{pointer-events:none}.discount-button-wrapper .code-button a{font-size:10px;letter-spacing:.1px;line-height:14px;color:#197bbd}.discount-button-wrapper .discount-details h5{font-size:10px;font-weight:600;padding:0}.discount-button-wrapper .section__discount-description{padding:10px 13px 15px;border-top:1px solid #fff}.discount-button-wrapper .details ul{padding-left:15px;margin-bottom:0}.discount-button-wrapper .details li{font-size:10px;line-height:15px}.discount-button-wrapper .disabled-discount #apply-discount, .discount-button-wrapper .disabled-discount #apply-cashback{pointer-events:none;color:#aeaeae}.mm__discount{font-size:16px;padding:1em .75em;border-radius:5px;text-align:center;margin:0 0 10px;font-weight:700}@media only screen and (max-width:949px){.mm__discount{font-size:16px}}@media (max-width:767px){.discount-button-wrapper .btn--disabled{display:none}}.mm__loader{position:fixed;display:none;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.54);z-index:1000}.mm__loader .mm__loader--text{position:fixed;text-align:center;top:50%;left:50%;background:#000;padding:10px;border-radius:10px;line-height:1;color:#fff}.cod_payment_charge{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#000;font-weight:600;letter-spacing:0;font-size:14px}.new-modal{display:none;position:fixed;z-index:9999;left:0;top:0;margin-top:0!important;max-width:100%!important;width:100%!important;height:100%!important;overflow:hidden}@media (min-width:481px) and (max-width:767px){.new-modal{overflow-y:scroll}}.otp-content{background-color:rgba(0,0,0,.6);margin:auto;padding:0;display:flex;height:100%;align-items:center;justify-content:center}@media only screen and (max-width:950px){.otp-content{overflow:hidden}}.otp-success{color:green}@media screen and (max-width:768px){.modal-content{width:100%!important;transform:unset;height:100%;overflow:hidden}}@media screen and (max-width:1120px) and (min-width:1024px){.modal-content{width:100%!important}}.mm-wrapper{display:flex;font-family:sans-serif;justify-content:center;align-items:center;padding:20px;background-color:transparent}@media screen and (max-width:480px){.mm-wrapper{width:100%}}.mm-wrapper .cod_modal{width:344px}@media screen and (max-width:480px){.mm-wrapper .cod_modal{width:100%}}.mm-wrapper .modal-header{background:#000;color:#fff;-webkit-border-radius:3px 3px 0 0;border-radius:3px 3px 0 0;padding:24px;overflow:hidden;max-height:128px;position:relative;z-index:3}.mm-wrapper .modal-header::before{content:"";left:0;right:0;bottom:0;top:0;position:absolute}.mm-wrapper .modal-close{position:absolute;right:0;top:0;cursor:pointer;font-size:27px;opacity:.8;color:#fff;width:24px;text-align:center;line-height:26px;z-index:1}.mm-wrapper .mm-logo{text-align:center;position:relative;padding:8px;width:64px;height:64px;background:#000;-webkit-border-radius:3px;border-radius:3px;line-height:62px;float:left;margin-right:24px;-webkit-box-shadow:0 1px 3px rgba(0,0,0,.1);box-shadow:0 1px 3px rgba(0,0,0,.1)}.mm-wrapper .mm-logo img{vertical-align:middle;max-height:100%;max-width:100%}.mm-wrapper .inner-head{white-space:nowrap;position:relative}@media only screen and (max-width:500px){.mm-wrapper .inner-head{white-space:unset}}.mm-wrapper .brand-name{text-overflow:ellipsis;overflow:hidden;font-size:14px;padding-top:10px}@media only screen and (max-width:500px){.mm-wrapper .brand-name{padding-top:0}}.mm-wrapper .brand-desc{padding-top:5px;text-overflow:ellipsis;overflow:hidden;opacity:.8}.mm-wrapper .brand-desc a{color:#fff}.mm-wrapper .mm-amount{font-size:11px;margin-top:10px}.mm-wrapper .form-wrapper{position:relative;z-index:1;-webkit-border-radius:0 0 3px 3px;border-radius:0 0 3px 3px;background:#fff}.mm-wrapper .inner-form{padding:20px 0 0;top:0;bottom:0}.mm-wrapper .skip-otp{display:none;cursor:pointer;text-align:center;padding-top:10px;width:100%;color:green;text-decoration:underline}.mm-wrapper .otp-block{padding:0 24px;-webkit-box-sizing:border-box;box-sizing:border-box}.mm-wrapper .element-wrap{height:65px}.mm-wrapper .contact-form{color:#424242;border-bottom:1px solid #ebedf0;position:relative}.mm-wrapper .contact-form .contact-icon{position:absolute;font-size:20px;bottom:6px;right:0;color:#8f8f8f;z-index:99}.mm-wrapper .contact-form .contact-label{-webkit-transform:scale(.86) translateY(-20px);-ms-transform:scale(.86) translateY(-20px);transform:scale(.86) translateY(-20px);-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0;color:#757575;left:0;font-size:11px;z-index:1;pointer-events:none;white-space:nowrap}.mm-wrapper .contact-form input{transition:.3s;font-size:inherit;border:none;outline:0;background:0 0;display:block;width:100%;line-height:19px;letter-spacing:1px;padding:4px 0 7px 0;margin:0;position:relative;color:inherit}.mm-wrapper .contact-form input::-webkit-input-placeholder{font-size:11px;letter-spacing:1px;color:#bbb;display:block!important}.mm-wrapper .contact-block{padding:0 24px;-webkit-box-sizing:border-box;box-sizing:border-box}.mm-wrapper .submit-btn{padding-top:20px;padding-bottom:20px}.mm-wrapper .submit-btn .btn{background:#197bbd;letter-spacing:1px;padding:10px;width:100%;border-radius:3px}.mm-wrapper .phone-icon{width:18px}.mm-wrapper .otp-icon{width:22px}.mm-wrapper .resend-wrapper{height:30px}.mm-wrapper .resend{text-align:right;display:inline-flex;padding-bottom:0;position:relative;font-size:10px;float:right}.mm-wrapper .pulse{display:block;width:25px;height:25px;border-radius:50%;background:#fff;border:1px solid #ddd;cursor:pointer;animation:pulse 2s infinite}.mm-wrapper .count{font-size:12px;position:absolute;font-weight:700}.mm-wrapper .resend-text{color:#242922;margin-top:-5px;font-size:11px;font-weight:500;cursor:pointer}.mm-wrapper .resend-text:disabled{color:#a2a2a2}.mm-wrapper .edit-icon{width:13px;padding-left:3px;padding-top:0}.mm-wrapper .edit-contact{text-decoration:underline}.mm-wrapper .inner-resend{align-items:center;vertical-align:middle;justify-content:center;width:30px;margin-top:-5px;padding-right:6px;display:flex}.mm-wrapper .otp-error{text-align:center;font-size:12px;color:#dd423f}.mm-wrapper .otp-error span{display:block}.section.gst-section{border:2px solid #ffea9c;padding-top:0;margin-top:20px;border-radius:7px}.section.gst-section .section__header{padding-top:10px;padding-left:15px;margin-bottom:5px;background:#ffea9c;padding-bottom:10px}.section.gst-section .section__content{padding:0 15px 15px 15px}.order-summary .smile-points-slider .smile-form{padding-left:0!important}.free-error{color:red;padding:1.5rem 0;text-align:center;max-width:400px;margin:0 auto}
+/* discount code list end */
+@media (min-width: 1000px){
+  .wrap {
+  	max-width: 88.5714285714em;
+  }
+}
+
+.old-customer-msg{
+	text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.logo__image{
+	width: 75%;
+}
+.disabled{
+	background: lightgrey;
+  	cursor: not-allowed;
+}
+.disabled, .disabled label{
+	cursor: not-allowed;
+}
+
+.alternate-mobile-no, .otp-mobile-no, .otp, .otp-email{
+  -webkit-appearance: none;
+  padding: 6px 8px;
+  width: 70%;
+  transition: border-color .1s ease-in-out;
+  background: 0 0;
+  font-size: 22px;
+  -moz-appearance: textfield;
+  line-height: 25px;
+  outline-width: 0;
+}
+
+.otp-email{
+  width: 80%;
+}
+
+.otp-mobile-no::-webkit-outer-spin-button,
+.otp-mobile-no::-webkit-inner-spin-button,
+.otp::-webkit-outer-spin-button,
+.otp::-webkit-inner-spin-button, {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.otp-mobile-no-prefix{
+    padding: 6px 8px;
+    font-size: 22px;
+    line-height: 25px;
+    color: #707070;
+}
+.alternate-mobile-no-section, .send-otp-section, .whatsapp-email-section, .cod-otp-section{
+	margin: 25px;
+  	color: #000;
+}
+
+.fc_mainContent h3.otp-title{
+  font-size: 14px;
+  margin: 10px 0;
+  color: #707070;
+  text-align: left;
+}
+
+/* thank you page product slider */
+
+.product__listing__slider{
+  visibility: hidden;
+  opacity: 0;
+  
+  .Carousel__Cell {
+    width: 49%;
+    height: 400px;
+    margin-left:1%;
+    margin-right:1%;
+  }
+  .flickity-viewport{
+    height: 450px !important;
+  }
+  @media only screen and (max-width: 480px) {
+    .Carousel__Cell {
+      width: 100%;
+    }
+    .flickity-viewport{
+    	height: 500px !important;
+    }
+  }
+}
+  
+.product__listing__slider .ProductItem__Info{
+	text-align: center;
+}
+
+.product__listing__slider h2.ProductItem__Title.Heading {
+    font-family: Montserrat,sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #1c1b1b;
+    transition: color .2s ease-in-out;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 1.65;
+    margin-bottom: 5px;
+}
+
+.product__listing__slider .flickity-prev-next-button{
+	width: 35px;
+  	height: 35px;
+}
+
+.product__listing__slider .slider-heading{
+	text-align: center;
+    font-size: 23px;
+    text-transform: uppercase;
+    font-family: Montserrat,sans-serif;
+    font-weight: 600;
+    letter-spacing: .2em;
+    padding: 10px;
+}
+
+/* thank you page product slider end */
+
+.step__footer__continue-btn{
+	padding: 20px;
+    font-size: 25px;
+}
+
+/* Phone Field */ 
+.contact_phone{
+  padding: 0;
+  margin-top: 15px;
+}
+
+.phone_error {
+    border-color: red !important;
+}
+
+/* COD OTP css */
+.lock-section{
+    background: #D9D9D9;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+}
+.lock-section .lock-icon{
+  margin: auto;
+}
+
+/* .lock-section .cross-icon{
+  position: absolute;
+  right: 15px;
+  top: 110px;
+  cursor: pointer;
+} */
+
+.otp-mobile-outer{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.m-b-70{
+  margin-bottom: 70px;
+}
+
+.otp-mobile-error{
+  border-color: red;
+}
+
+.otp-mobile-error input{
+  color: red !important;
+}
+
+.otp-verify-section h3{
+  margin: 30px 0 5px 0;
+}
+
+.otp-verify-section p, .otp-whatsapp-verify-section p, .otp-email-verify-section p{
+  color: #707070;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+
+.received-otp-phone{
+  font-size: 14px;
+}
+
+.change-mobile-no, .change-email{
+  font-size: 14px;
+  color: red;
+}
+.resend-otp{
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px 0 20px;
+  display: block;
+}
+.digit-group1 input:focus-visible{
+  outline: 1px solid #D0D0D0;
+}
+
+.submit-otp{
+  margin-bottom: 5px;
+}
+
+.otp-verify-section .resend-otp-whatsapp, .otp-sent{
+  color: #4CAF50;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+.otp-email-verify-section .resend-otp-email{
+  color: #DE5145;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+.otp-whatsapp-verify-section .resend-otp-sms{
+  color: #168FEF;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+.cross-icon{
+  position: absolute;
+  right: 20px;
+  top: 115px;
+  cursor: pointer;
+}
+.otp-verify-section .otp-error{
+  text-align: center;
+  font-weight: bold;
+}
+/* COD OTP css end*/

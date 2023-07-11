@@ -1,0 +1,94 @@
+<div class="Container">
+  <header class="PageHeader">
+    <div class="SectionHeader SectionHeader--center">
+      <h1 class="SectionHeader__Heading Heading u-h1" id="pageTitle">{{ page.title }}</h1>
+    </div>
+  </header>
+  <div class=" PageContent--extraNarrow" style="margin: 0 auto">
+    
+
+  
+    <form name="" class="Form Form--spacingTight" id='addRefundDetail' style="display: block">
+      <div class="Form__Item">
+        <input type="text" id='bankAccountNo' class="Form__Input" name="return_order[bank_ac_no]" placeholder="Bank Account No">
+        <label class="Form__FloatingLabel" style="left: 85px;">Bank Account No</label>
+      </div>
+      <div class="Form__Item">
+        <input type="text" id='bankIfsc' class="Form__Input" name="return_order[bank_ifsc]" placeholder="Bank IFSC">
+        <label class="Form__FloatingLabel" style="left: 85px;">Bank IFSC</label>
+      </div>
+      <button type="submit" class="Form__Submit Button Button--primary Button--full">Add</button>
+    </form>
+    
+  </div>
+</div>
+<script type="text/javascript">
+  
+  $(document).on('submit', '#addRefundDetail', function(event) {
+    event.preventDefault();
+    var bank_account_no = $('#bankAccountNo').val().trim();
+    var bank_ifsc = $('#bankIfsc').val().trim();
+    if(!(bank_account_no && bank_ifsc)){
+      alert('Please add refund details!!');
+      return false;
+    }
+
+    if(bank_ifsc.length != 11){
+      alert('IFSC code is invalid');
+      return false;
+    }
+    update_data = {
+      return_order: {
+        bank_ac_no: $('#bankAccountNo').val(),
+        bank_ifsc: $('#bankIfsc').val(),
+      },
+      id: window.location.pathname.split("/").pop(),
+      shopify_domain: 'french-crown-dress-sharp.myshopify.com'
+    }
+    $.ajax({
+      url: 'https://frenchcrownerp.com/api/v1/return_orders/update_refund_details',
+      type: 'POST',
+      dataType: 'json',
+      data: update_data,
+    })
+    .done(function(response) {
+      $('.Form__Alert').remove();
+      $('#addRefundDetail').before('<p class="Form__Alert Alert Alert--success">Bank Details are added successfully</p>');
+      setTimeout(function(){
+      	$('.Form__Alert').remove();
+      }, 2000)
+    })
+    .fail(function(response) {
+      $('.Form__Alert').remove();
+      $('#addRefundDetail').before('<p class="Form__Alert Alert Alert--error">'+response.responseJSON['errors'][0]['detail']+'</p>');
+    })
+    .always(function() {
+      console.log("complete");
+    });
+  });
+  $( document ).ready(function() {
+    $('#pageTitle').text($('#pageTitle').text() + '  for order ' + querystring('order'))
+    $.ajax({
+      url: 'https://frenchcrownerp.com/api/v1/return_orders/refund_details',
+      type: 'POST',
+      dataType: 'json',
+      data: {id: window.location.pathname.split("/").pop(), shopify_domain: 'french-crown-dress-sharp.myshopify.com'},
+    })
+    .done(function(response) {
+      $('#bankAccountNo').val(response['data']["bank_ac_no"]);
+      $('#bankIfsc').val(response['data']["bank_ifsc"]);
+    })
+    .fail(function(response) {
+      $('.Form__Alert').remove();
+      $('#addRefundDetail').before('<p class="Form__Alert Alert Alert--error">'+response.responseJSON['errors'][0]['detail']+'</p>');
+    })
+    .always(function() {
+      console.log("complete");
+    });
+  });
+  function querystring(key) {
+    key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+  }
+</script>

@@ -1,0 +1,37 @@
+{%if template contains 'collection'%}
+<script type="lazyload2">   
+  window._izq = window._izq || []; window._izq.push(["init" ]);
+  window._izq.push(["event","collection_viewed",{ 
+    "collection_title":"{{collection.title}}", 
+    "collection_link":"{{canonical_url}}", 
+    "collection_image":"https:{{collection.image | img_url: 'orignal'}}" 
+  }]); 
+</script>
+{% elsif template contains 'product' %}
+<script type="lazyload2"> 
+  window._izq = window._izq || []; window._izq.push(["init" ]);
+  window._izq.push(["event","product_viewed",{ 
+    "product_title":"{{product.title}}", 
+    "product_price":"{{product.price | money}}", 
+    "product_link":"{{canonical_url}}", 
+    "product_image":"https:{{product.featured_image | img_url: 'orignal'}}" 
+  }]); 
+</script>
+{% else %}
+<script type="lazyload2"> window._izq = window._izq || []; window._izq.push(["init" ]); </script>
+{% endif %}
+{%- unless template == 'product' -%}
+<script type="lazyload2">
+  $('[action="/cart/add"] [type="submit"]').on('click',function(event){
+    event.preventDefault();
+    window._izq = window._izq || []; window._izq.push(["init" ]);
+    window._izq.push(["event","added_to_cart",{ 
+      "product_title":"{{product.title}}", 
+      "product_price":"{{product.price | money}}",  /*optional*/
+      "product_image":"https:{{product.featured_image | img_url: 'orignal'}}",
+      "cart_url":"https://frenchcrown.in/cart" 
+    }]);
+    $(this).closest('.ProductItem__Wrapper').find('form').submit();
+  });
+</script>
+{% endunless %}

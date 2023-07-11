@@ -1,0 +1,732 @@
+{%- comment -%}
+Those are the option names for which we automatically detect swatch. For the color, we use them to display a swatch, while
+for size, we use it to display a size chart (if applicable)
+{%- endcomment -%}
+
+{%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' -%}
+{%- assign size_label = 'size,taille,bröße,tamanho,tamaño,koko,サイズ' | split: ',' -%}
+
+{%- assign size_chart_page = '' -%}
+{%- assign product_popovers = '' -%}
+{%- assign show_option_label = false -%}
+
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+{% assign low_make_to_order_ptypes = "Shirt,Boxer,Trousers,Lounge Pant,Nehru Jacket,Shorts,Jacket,Shirt Trouser,Shirt Short,Shirt Lounge Pant,Tshirt Short,Tshirt Lounge Pant,Woman Shirt,Woman Jacket,Woman Pant,Embroidery Shirt,Embroidery Tshirt,Jacket Short" | split: "," %}
+{% assign high_make_to_order_ptypes = "Sherwani,Jodhpuri,Indowestern,Wedding Kurta,Pajama,Dhoti,Sherwani Pajama,Jodhpuri Pajama,Indowestern Pajama,Wedding Kurta Pajama,Sherwani Dhoti,Jodhpuri Dhoti,Indowestern Dhoti,Wedding Kurta Dhoti,Kurta Jacket,Kurta Jacket Pajama,Kurta Jacket Dhoti,Blazer With Shawl,Suit With Shawl,Shawl,Woman Suit,Woman Blazer,Woman Trenchcoat,Trenchcoat,Trenchcoat Suit,WaistCoat,Blazer,Suit,Wedding Kurta Koti Lounge Pant,Wedding Kurta Koti Churi Pant,Wedding Kurta Indowestern Lounge Pant,Wedding Kurta Indowestern Churi Pant,Wedding Kurta Sherwani Lounge Pant,Wedding Kurta Sherwani Churi Pant,Indowestern Lounge Pant,Indowestern Churi Pant" | split: "," %}
+{% assign make_to_order_msg = '' %}
+{% if low_make_to_order_ptypes contains product.type %}
+  {% assign make_to_order_msg = "Your Selected product size is a 'make to order' item, please note that it'll take an additional 3 to 4 working days to manufacture your product before it's ready to ship. Thank you for your patience and understanding!" %}
+{% elsif high_make_to_order_ptypes contains product.type %}  
+  {% assign make_to_order_msg = "Your Selected product size is a 'make to order' item, please note that it'll take an additional 7 to 10 working days to manufacture your product before it's ready to ship. Thank you for your patience and understanding!" %}
+{% endif %}
+
+{%- form 'product', product, class: 'ProductForm' -%}
+<input type="hidden" class="pid" value="{{product.id}}">
+<input type="hidden" class="ptitle" value="{{product.title | remove: "'" | remove: '"'}}">
+{% assign productPantAddonsHandle = product.metafields.extra_pair.pant %}
+{% assign productWaistcoatAddonsHandle = product.metafields.extra_pair.waistcoat %}
+{% assign productExtraTie = product.metafields.extra_tie.tie %}
+  <div class="ProductForm__Variants">
+    {%- unless product.has_only_default_variant -%}
+      {%- for option in product.options_with_values -%}
+        {%- assign downcase_option = option.name | downcase -%}
+
+        {%- if section.settings.selector_mode == 'block' or color_label contains downcase_option and section.settings.show_color_swatch -%}
+          {%- assign show_option_label = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- for option in product.options_with_values -%}
+        {%- assign downcase_option = option.name | downcase -%}
+        {%- capture popover_id -%}popover-{{ product.id }}-{{ section.id }}-{{ option.name | handle }}{%- endcapture -%}
+
+        <div class="ProductForm__Option {% if show_option_label %}ProductForm__Option--labelled{% endif %}">
+          {%- if show_option_label -%}
+            {%- assign size_chart_page = pages['size-chart'] -%}
+
+            <span class="ProductForm__Label">
+              {{ option.name }}:
+
+              {% if color_label contains downcase_option and section.settings.show_color_swatch %}
+                <span class="ProductForm__SelectedValue">{{ option.selected_value }}</span>
+              {% endif %}
+
+              {%- if size_label contains downcase_option and size_chart_page != empty -%}
+                <button type="button" class="ProductForm__LabelLink Link Text--subdued" data-action="open-modal" aria-controls="modal-{{ size_chart_page.handle }}">
+                {{- 'product.form.size_chart' | t -}}
+              </button>
+              {%- endif -%}
+            </span>
+         
+          {%- endif -%}
+
+          {%- if color_label contains downcase_option and section.settings.show_color_swatch -%}
+            <ul class="ColorSwatchList HorizontalList HorizontalList--spacingTight">
+              {%- for value in option.values -%}
+                {%- assign downcase_value = value | downcase -%}
+
+                <li class="HorizontalList__Item">
+                  {%- assign color_swatch_name = value | handle | append: '.png' -%}
+                  {%- assign color_swatch_image = images[color_swatch_name] -%}
+
+                  <input id="option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}" class="ColorSwatch__Radio" type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if value == option.selected_value %}checked="checked"{% endif %} data-option-position="{{ option.position }}">
+                  <label for="option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}" class="ColorSwatch ColorSwatch--large {% if downcase_value == 'white' %}ColorSwatch--white{% endif %}" data-tooltip="{{ value | escape }}" style="background-color: {{ value | replace: ' ', '' | downcase }}; {% if color_swatch_image != blank %}background-image: url({{ color_swatch_image | img_url: '64x64' }}){% endif %}">
+                    <span class="u-visually-hidden">{{ value }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- elsif section.settings.selector_mode == 'block' -%}
+            <ul class="SizeSwatchList HorizontalList HorizontalList--spacingTight">
+              {%- for value in option.values -%}
+                <li class="HorizontalList__Item">
+                  <input id="option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}" class="SizeSwatch__Radio" type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if value == option.selected_value %}checked="checked"{% endif %} data-option-position="{{ option.position }}">
+                  <label for="option-{{ section.id }}-{{ forloop.parentloop.index0 }}-{{ forloop.index0 }}" class="SizeSwatch">{{ value }}</label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+          {% if product.type == 'Blazer' or product.type == 'Blazer With Shawl' %}
+          <span class="size-chart">BLAZER SIZE CHART ></span>
+          {% elsif product.type == 'Trenchcoat' %}
+            <span class="size-chart">TRENCHCOAT SIZE CHART ></span>
+          {% elsif option.name == 'Size' or option.name == 'size' or option.name == 'Shirt Size' or option.name == 'Tshirt Size' or option.name == 'Jacket Size' %}
+          <span class="size-chart">SIZE CHART ></span>
+          {% elsif option.name == 'Lounge Pant Size' %}
+          <span class="size-chart other">Lounge Pant SIZE CHART ></span>
+          {% elsif option.name == 'Short Size' %}
+          <span class="size-chart other">SHORT SIZE CHART ></span>
+          {% elsif option.name == 'Trouser Size' or option.name == 'trouser size' or option.name == 'Pant Size' %}
+          <span class="size-chart other">PANT SIZE CHART ></span>
+          {% elsif option.name == 'Top Garment Size' %}
+          <span class="size-chart">TOP GARMENT SIZE CHART ></span>
+          {% elsif option.name == 'Bottom Size' %}
+          <span class="size-chart other">BOTTOM SIZE CHART ></span>
+          {% elsif option.name == 'Indowestern And Kurta Size' or option.name == 'Jodhpuri And Kurta Size' or option.name == 'Kurta Jacket Size' or option.name == 'Sherwani And Kurta Size' %}
+            <span class="size-chart">{{ option.name | upcase }} CHART ></span>
+          {% elsif option.name != 'Blazer Size' and option.name != 'Trenchcoat Size' and option.name != 'Sleeves' %}
+            <span class="size-chart other">{{ option.name | upcase }} CHART ></span>
+          {% endif %}
+          {% if option.name == 'Blazer Size' or option.name == 'Trenchcoat Size' %}
+          	{% if product.type == 'Trenchcoat Suit' %}
+          		<span class="size-chart blazer">TRENCHCOAT SIZE CHART ></span>
+          	{% else %}
+          		<span class="size-chart blazer">BLAZER SIZE CHART ></span>
+            {% endif %}
+          {% endif %}
+            <button type="button" class="ProductForm__Item" aria-expanded="false" aria-controls="{{ popover_id }}">
+              
+              {% if option.name == 'Trouser Size' %}
+                <span class="ProductForm__OptionName">{% unless show_option_label %}Pant Size: {% endunless %}<span class="ProductForm__SelectedValue">{{ option.selected_value }}</span></span>
+              {% else %}
+                <span class="ProductForm__OptionName">{% unless show_option_label %}{{ option.name }}: {% endunless %}<span class="ProductForm__SelectedValue">{{ option.selected_value }}</span></span>
+              {% endif %}
+              
+              {%- include 'icon' with 'select-arrow' -%}
+            </button>
+          {% if option.name == 'Size' or option.name == 'size' or option.name == 'Trouser Size' or option.name == 'Blazer Size' or option.name == 'Shirt Size' %}
+            <span class="regular-fit">
+              {% if product.tags contains 'regular' %}
+                Regular fit
+              {% elsif product.tags contains 'slim' %}
+                Slim fit
+              {% elsif product.tags contains 'slim-tapered' %}
+                Slim Tapered fit
+              {% elsif product.tags contains 'skinny' %}
+                Skinny fit
+              {% elsif product.tags contains 'classic-fit' %}
+                Classic fit
+              {% else %}
+                Regular fit
+              {% endif %}
+            </span>
+            <p class="few-left"></p>
+          {% endif %}
+          <p class="make-to-order-msg" style="display: none;">{{ make_to_order_msg }}</p>
+            
+          {% if option.name == 'Top Garment Size' %}
+             <span class="regular-fit">Top Garment Means Sherwani, Jodhpuri, Indowestern Or Kurta</span>
+             <p class="few-left"></p>
+          {% endif %}
+
+          {% if option.name == 'Size' or option.name == 'size' or option.name == 'Trouser Size' or option.name == 'Shirt Size' %}
+            {% assign seconds = 8 | times: 24 | times: 60 | times: 60 %}
+          {% else %}
+            {% assign seconds = 13 | times: 24 | times: 60 | times: 60 %}
+          {% endif %}
+          <p class="expected-delivery-date" style="display: none;">
+            Expected delivery date :
+            {% assign current_date =  "now" | date: "%s" | plus: seconds %}
+            {% assign d = current_date | date: "%e" | strip %}
+            {% if d == "1" or d == "11" or d == "21" %}
+            {{ d }}st
+            {% elsif d == "2" or d == "22" %}
+            {{ d }}nd
+            {% elsif d == "3" or d ==  "23" %}
+            {{ d }}rd
+            {% else %}
+            {{ d }}th
+            {% endif %}
+            {{ current_date | date: "%B" }} 
+          </p>
+
+          {% if option.name == 'Bottom Size' %}
+             <span class="regular-fit">Bottom Garment Means  Pajamas Or Dhoti</span>
+          {% endif %}
+          
+          
+            {%- capture popover_html -%}
+              {%- if color_label contains downcase_option and section.settings.show_color_carousel -%}
+                {%- for value in option.values -%}
+                  {%- if value == option.selected_value -%}
+                    {%- assign initial_image_index = forloop.index0 -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- capture flickity_options -%}
+                {
+                  "prevNextButtons": true,
+                  "pageDots": true,
+                  "initialIndex": {{ initial_image_index }},
+                  "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+                }
+                {%- endcapture -%}
+
+                <div id="{{ popover_id }}" class="VariantSelector" aria-hidden="true">
+                  {%- capture option_index -%}option{{ option.position }}{%- endcapture -%}
+
+                  <div class="VariantSelector__Carousel Carousel" data-flickity-config='{{ flickity_options }}'>
+                    {%- for value in option.values -%}
+                      {%- for variant in product.variants -%}
+                        {%- if variant[option_index] == value -%}
+                          {%- assign variant_image = variant.image | default: product.featured_image -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+
+                      <div class="VariantSelector__Item Carousel__Cell {% if value == option.selected_value %}is-selected{% endif %}"
+                           data-background-color="{{ value | split: ' ' | last | handle }}"
+                           data-background-image="{{ value | handle | append: '.png' | asset_url }}"
+                           data-option-position="{{ option.position }}"
+                           data-option-value="{{ value | escape }}">
+                        <div class="VariantSelector__ImageWrapper AspectRatio AspectRatio--withFallback" style="max-width: {{ variant_image.width }}px; padding-bottom: {{ 100.0 | divided_by: variant_image.aspect_ratio }}%; --aspect-ratio: {{ variant_image.aspect_ratio }}">
+                          {%- include 'image-size', sizes: '200,400,600,800', image: variant_image -%}
+                          {%- assign image_url = variant_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+                          <img class="VariantSelector__Image Image--lazyLoad Image--fadeIn" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ variant_image.alt | escape }}">
+                          <span class="Image__Loader"></span>
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  </div>
+
+                  <div class="VariantSelector__Info">
+                    <div class="VariantSelector__ChoiceList">
+                      {%- for value in option.values -%}
+                        {%- assign min_price_for_variant = product.price_max -%}
+
+                        {%- for variant in product.variants -%}
+                          {%- if variant[option_index] == value -%}
+                            {%- assign min_price_for_variant = min_price_for_variant | at_most: variant.price -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+
+                        <div class="VariantSelector__Choice {% if value == option.selected_value %}is-selected{% endif %}">
+                          <div class="VariantSelector__ChoiceColor">
+                            {%- assign downcase_value = value | downcase -%}
+
+                            {%- assign color_swatch_name = value | handle | append: '.png' -%}
+                            {%- assign color_swatch_image = images[color_swatch_name] -%}
+
+                            <span class="VariantSelector__ColorSwatch {% if downcase_value == 'white' %}VariantSelector__ColorSwatch--white{% endif %}" style="background-color: {{ value | replace: ' ', '' | downcase }}; {% if color_swatch_image != blank %}background-image: url({{ color_swatch_image | img_url: '64x64' }}){% endif %}"></span>
+                            <span class="VariantSelector__ChoiceValue">{{ value }}</span>
+                          </div>
+
+                          <div class="VariantSelector__ChoicePrice">
+                            {%- if available_prices_for_option_value.size > 1 -%}
+                              {%- capture formatted_min_price -%}<span data-money-convertible>{{ min_price_for_variant | money_without_trailing_zeros }}</span>{%- endcapture -%}
+                              <span class="Heading Text--subdued">{{ 'product.form.from_price_html' | t: min_price: formatted_min_price }}</span>
+                            {%- else -%}
+                              <span class="Heading Text--subdued" data-money-convertible>{{ min_price_for_variant | money_without_trailing_zeros }}</span>
+                            {%- endif -%}
+                          </div>
+                        </div>
+                      {%- endfor -%}
+                    </div>
+
+                    <button type="button" class="VariantSelector__Button Button Button--primary Button--full" data-action="select-variant">{{- 'product.form.select_model' | t -}}</button>
+                  </div>
+                </div>
+              {%- else -%}
+                <div id="{{ popover_id }}" class="OptionSelector Popover Popover--withMinWidth" aria-hidden="true">
+                  <header class="Popover__Header">
+                    <button type="button" class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover">{% include 'icon' with 'close' %}</button>
+                    <span class="Popover__Title Heading u-h4">Select size</span>
+                  </header>
+                  <div class="Popover__Content">
+                    <div class="Popover__ValueList" data-scrollable>
+                      {%- for value in option.values -%}
+                        {%- unless value == 'Customize Now' -%}
+                          <button type="button" class="Popover__Value {% if value == option.selected_value %}is-selected{% endif %} Heading Link Link--primary u-h6"
+                                  data-value="{{ value | escape }}"
+                                  data-option-position="{{ option.position }}"
+                                  data-action="select-value">
+                            {{- value | escape -}}
+                          </button>
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    </div>
+
+                    {%- assign size_chart_page = pages['size-chart'] -%}
+
+                    {%- if show_option_label == false and size_label contains downcase_option and size_chart_page != empty -%}
+                      <button type="button" class="Popover__FooterHelp Heading Link Link--primary Text--subdued u-h6" data-action="open-modal" aria-controls="modal-{{ size_chart_page.handle }}">
+                        {{- 'product.form.size_chart' | t -}}
+                      </button>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endcapture -%}
+
+            {%- assign product_popovers = product_popovers | append: popover_html -%}
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+
+      <div class="no-js ProductForm__Option">
+        <div class="Select Select--primary">
+          {%- include 'icon' with 'select-arrow' -%}
+
+          <select id="product-select-{{ product.id }}" class="variant_list" name="id" title="Variant">
+            {%- for variant in product.variants -%}
+              <option data-quantity="{{variant.inventory_quantity}}" {% if variant == selected_variant %}selected="selected"{% endif %} {% unless variant.available %}disabled="disabled"{% endunless %} value="{{ variant.id }}" data-sku="{{ variant.sku }}">{{ variant.title }} - {{ variant.price | money }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+    {%- else -%}
+      <input type="hidden" name="id" data-sku="{{ selected_variant.sku }}" value="{{ selected_variant.id }}">
+    {%- endunless -%}
+    
+    {%- if product.type == 'Suit' or product.type == 'Trenchcoat Suit' -%}
+      {% unless product.tags contains 'extra-pant-hide' %}
+          {% assign pant_addon_price = 199700 %}
+          {%- if productPantAddonsHandle != blank -%}
+            {% assign productPantAddonsInfo = all_products[productPantAddonsHandle] %}
+            {%- if productPantAddonsInfo.available == true -%}
+              {% assign pant_addon_price = productPantAddonsInfo.price %}
+          <label style="display:block"><input type="checkbox" value="true" name="extra_pair" class="extra_pair"><b> Add One Extra Pair of Pants for {{ pant_addon_price | money_without_trailing_zeros }} Only.</b></label>
+              <p>( Pants get more wear and tear than jackets so if you wear your suits on a regular rotation, it is recommended that you have an extra pair of pants for each suits.)</p>
+            {%- endif -%}
+          {%- endif -%}
+      {% endunless %}
+    {%- endif -%}
+    
+    {%- if product.type == 'Suit' or product.type == 'Blazer' or product.type == 'Trenchcoat Suit' or product.type == 'Trenchcoat' -%}
+      {% unless product.tags contains 'extra-waist-hide' %}
+          {% assign waistcoat_addon_price = 349700 %}
+          {%- if productWaistcoatAddonsHandle != blank -%}
+            {% assign productWaistcoatAddonsInfo = all_products[productWaistcoatAddonsHandle] %}
+            {%- if productWaistcoatAddonsInfo.available == true -%}
+              {% assign waistcoat_addon_price = productWaistcoatAddonsInfo.price %}
+          <label style="display:block"><input type="checkbox" value="true" name="button_vest" class="button_vest"><b> Add Waistcoat for {{ waistcoat_addon_price | money_without_trailing_zeros}} Only.</b></label>
+            {%- endif -%}
+          {%- endif -%}
+          
+      {% endunless %}
+      {% unless product.tags contains 'extra-tie-hide' %}
+        {%- if productExtraTie != blank -%}
+          {% assign productTieAddonsInfo = all_products[productExtraTie] %}
+          {%- if productTieAddonsInfo.available == true -%}
+              <label style="display:block"><input type="checkbox" value="true" name="button_tie" class="button_tie" data-tie-id="{{productTieAddonsInfo.selected_or_first_available_variant.id }}"><b> Add Matching Tie and Pocket Square for {{productTieAddonsInfo.price | money_without_trailing_zeros}} Only.</b></label>
+          {%- endif -%}
+        {%- endif -%}
+      {% endunless %}
+    {%- endif -%}
+    
+    {%- if product.type == 'Blazer' or product.type == 'Trenchcoat' -%}
+        {% unless product.tags contains 'extra-pant-hide' %}
+          {%- if productPantAddonsHandle != blank -%}
+            {% assign productBlazerAddonsInfo = all_products[productPantAddonsHandle] %}
+            {%- if productBlazerAddonsInfo.available == true -%}
+              <label style="display:block"><input type="checkbox" value="true" name="matching_pair" class="matching_pair"><b> Add Matching Pair of Pants for {{productBlazerAddonsInfo.price | money_without_trailing_zeros}} Only.</b></label>
+              <div class="matching-pair-section" style="display: none;">
+                <p><b> Pant Size : </b></p>
+                <select class="matching_pant_size">
+                  <option value="">Select Pant Size</option>
+                  {%- for variant in productBlazerAddonsInfo.variants -%}
+                  {%- if variant.available -%}<option value="{{variant.id}}">{{variant.title}}</option>{%- endif -%}
+                  {%- endfor -%}
+                </select>
+              </div>
+            {% else %}
+<!--               <label style="display:block"><input type="checkbox" value="true" name="matching_pair" class="matching_pair"><b> Add Matching Pair of Pants for {{ 199900 | money_without_trailing_zeros}} Only.</b></label>
+              <div class="matching-pair-section" style="display: none;">
+                <p><b> Pant Size : </b></p>
+                <select class="matching_pant_size">
+                  <option value="">Select Pant Size</option>
+                  <option value="39246298382387">28</option>
+                  <option value="39246298415155">30</option>
+                  <option value="39246298447923">32</option>
+                  <option value="39246298480691">34</option>
+                  <option value="39246298513459">36</option>
+                  <option value="39246298546227">38</option>
+                  <option value="39246298578995">40</option>
+                  <option value="39246298611763">42</option>
+                  <option value="39246298644531">44</option>
+                </select>
+              </div> -->
+            {%- endif -%}
+          {% else %}
+<!--             <label style="display:block"><input type="checkbox" value="true" name="matching_pair" class="matching_pair"><b> Add Matching Pair of Pants for {{ 199900 | money_without_trailing_zeros}} Only.</b></label>
+            <div class="matching-pair-section" style="display: none;">
+              <p><b> Pant Size : </b></p>
+              <select class="matching_pant_size">
+                <option value="">Select Pant Size</option>
+                <option value="39246298382387">28</option>
+                <option value="39246298415155">30</option>
+                <option value="39246298447923">32</option>
+                <option value="39246298480691">34</option>
+                <option value="39246298513459">36</option>
+                <option value="39246298546227">38</option>
+                <option value="39246298578995">40</option>
+                <option value="39246298611763">42</option>
+                <option value="39246298644531">44</option>
+              </select>
+            </div> -->
+          {%- endif -%}
+      {% endunless %}
+    {%- endif -%}
+    {%- if section.settings.show_quantity_selector -%}
+      {%- if show_option_label -%}
+        <span class="ProductForm__Label">{{ 'product.form.quantity' | t }}:</span>
+      {%- endif -%}
+
+      <div class="ProductForm__QuantitySelector">
+        <div class="QuantitySelector QuantitySelector--large">
+          {%- assign quantity_minus_one = line_item.quantity | minus: 1 -%}
+
+          <span class="QuantitySelector__Button Link Link--secondary" data-action="decrease-quantity">{% include 'icon' with 'minus' %}</span>
+          <input type="text" class="QuantitySelector__CurrentQuantity" pattern="[0-9]*" name="quantity" value="1">
+          <span class="QuantitySelector__Button Link Link--secondary" data-action="increase-quantity">{% include 'icon' with 'plus' %}</span>
+        </div>
+      </div>
+    {%- else -%}
+      <input type="hidden" name="quantity" value="1">
+    {%- endif -%}
+
+    {%- if section.settings.show_inventory_quantity -%}
+      {%- assign hide_inventory_quantity_by_default = false -%}
+      
+      {%- if selected_variant.inventory_management == blank or selected_variant.inventory_quantity <= 0 -%}
+        {%- assign hide_inventory_quantity_by_default = true -%}
+      {%- endif -%}
+
+      {%- if section.settings.inventory_quantity_threshold != 0 and selected_variant.inventory_quantity > section.settings.inventory_quantity_threshold -%}
+        {%- assign hide_inventory_quantity_by_default = true -%}
+      {%- endif -%}
+
+      <p class="ProductForm__Inventory Text--subdued" {% if hide_inventory_quantity_by_default %}style="display: none"{% endif %}>
+        {%- if section.settings.inventory_quantity_threshold == 0 -%}
+          {{- 'product.form.inventory_quantity_count' | t: count: selected_variant.inventory_quantity -}}
+        {%- else -%}
+          {{- 'product.form.low_inventory_quantity_count' | t: count: selected_variant.inventory_quantity -}}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  ADD TO CART BUTTON
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  <button type="submit" class="ProductForm__AddToCart Button {% if selected_variant.available and section.settings.show_payment_button == false %}Button--primary{% else %}Button--secondary{% endif %} Button--full" {% if selected_variant.available %}data-action="add-to-cart"{% else %}disabled="disabled"{% endif %}>
+    {%- if selected_variant.available -%}
+      <span>{% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}{{ 'product.form.add_to_cart' | t }}{% endif %}</span>
+
+      {%- if section.settings.show_price_in_button -%}
+        <span class="Button__SeparatorDot"></span>
+        <span data-money-convertible>{{ selected_variant.price | money_without_trailing_zeros }}</span>
+      {%- endif -%}
+    {%- else -%}
+      {{- 'product.form.sold_out' | t -}}
+    {%- endif -%}
+  </button>
+  {% comment %}
+  {%- if product.type == 'Blazer' or product.type == 'Trenchcoat' or product.type == 'Waistcoat' -%}
+    <div style="margin-top: 10px;font-size: 20px;font-weight: bold;">'Cash on delivery' service is not available for 36, 38, 50, 52, 54, 56, 58, 60 sizes.</div>  
+  {%- elsif product.type == 'Suit' or product.type == 'Trenchcoat Suit' -%}
+    <div style="margin-top: 10px;font-size: 20px;font-weight: bold;">'Cash on delivery' service is not available for 36, 38, 50, 52, 54, 56, 58, 60 Blazer sizes.</div>
+  {%- endif -%}
+  {% endcomment %}
+  {% include 'customize_product_text' %}
+  {%- if section.settings.show_payment_button and product.template_suffix != 'pre-order' -%}
+    {%- if selected_variant.available -%}
+      <input type="button" value="Buy it now" class="ProductForm__AddToCart Button Button--secondary Button--full buy-now-1"/>
+    {% else %}
+      <input type="button" value="Buy it now" class="ProductForm__AddToCart Button Button--secondary Button--full buy-now-1" style="display: none;"/>
+    {% endif %}
+  <div style="display:none;">{{ form | payment_button }}</div>
+  {%- endif -%}
+{%- if section.settings.delivery_instruction != blank -%}
+<div class="delivery-instructions">
+  {{section.settings.delivery_instruction}}
+</div>
+{%- endif -%}
+
+
+<div class="sticky-bottom">
+    {% unless product.has_only_default_variant %}
+    <a class="btn show-swatch ProductForm__AddToCart Button Button--primary">{{ 'product.form.add_to_cart' | t }}</a>
+    {% else %}
+      {% if product.selected_or_first_available_variant.available %}
+        <a class="btn show-swatch ProductForm__AddToCart Button Button--primary">{{ 'product.form.add_to_cart' | t }}</a>
+      {% else %}
+        <a class="btn show-swatch ProductForm__AddToCart Button Button--primary btn-disabled">{{ 'products.product.sold_out' }}</a>
+      {% endif %}
+    {% endunless %}
+
+  {%- comment -%}{% unless product.has_only_default_variant %}
+    <a class="btn buy-now ProductForm__AddToCart Button Button--primary">buy it now</a>
+    {% else %}
+      {% if product.selected_or_first_available_variant.available %}
+        <a class="btn buy-now ProductForm__AddToCart Button Button--primary">buy it now</a>
+      {% else %}
+        <a class="btn buy-now ProductForm__AddToCart Button Button--primary btn-disabled">buy it now</a>
+      {% endif %}
+    {% endunless %}{%- endcomment -%}
+</div>
+
+{%- endform -%}
+
+{%- if size_chart_page != empty -%}
+  {%- comment -%}If we have a size chart we capture the modal content (it must be displayed outside the form for proper positioning){%- endcomment -%}
+
+  {%- capture product_modals -%}
+    <div id="modal-{{ size_chart_page.handle }}" class="Modal Modal--dark Modal--fullScreen Modal--pageContent" aria-hidden="true" role="dialog" data-scrollable>
+      <header class="Modal__Header">
+        <h2 class="Modal__Title Heading u-h1">{{ size_chart_page.title }}</h2>
+      </header>
+
+      <div class="Modal__Content Rte">
+        <div class="Container Container--extraNarrow">
+          {{- size_chart_page.content -}}
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- if section.settings.show_payment_button and selected_variant.available == false -%}
+  <style>
+    #shopify-section-{{ section.id }} .shopify-payment-button {
+      display: none;
+    }
+  </style>
+{%- endif -%}
+<style>
+{%- if product.type == 'Suit' or product.type == 'Blazer' or product.type == 'Trenchcoat Suit' or product.type == 'Trenchcoat' -%}
+  
+     .cod-terms{
+       display: none;
+     }
+    .Product__Tabs {
+        margin: 25px 0;
+    }
+    .non-suit-days{
+    display: none;
+  }
+  .suit-days{
+    display: block;
+  }
+ 
+{% else %}
+  .suit-days{
+    display: none;
+  }
+  .non-suit-days{
+    display: block;
+  }
+{%- endif -%}
+  
+  {%- if product.type == 'Shirt' -%}
+    .shirt-note{display: block;}
+  {% else %}
+    .shirt-note{display: none;}
+  {% endif %}
+  
+  {%- if product.type == 'Trousers' -%}
+    .trouser-note{display: block;}
+  {% else %}
+    .trouser-note{display: none;}
+  {% endif %}
+  .suit-blazer-waist-coat-note{display: none;}
+  {% comment %}
+  {% assign make_to_order_ptype = "Suit,Blazer,WaistCoat,Trenchcoat,Trenchcoat Suit,Embroidery Shirt,Embroidery Tshirt,Sherwani,Jodhpuri,Indowestern,Wedding Kurta,Pajama,Dhoti,Sherwani Pajama,Jodhpuri Pajama,Indowestern Pajama,Wedding Kurta Pajama,Sherwani Dhoti,Jodhpuri Dhoti,Indowestern Dhoti,Wedding Kurta Dhoti,Kurta Jacket,Kurta Jacket Pajama,Kurta Jacket Dhoti,Blazer With Shawl,Suit With Shawl,Shawl,Wedding Kurta Koti Lounge Pant,Wedding Kurta Koti Churi Pant,Wedding Kurta Indowestern Lounge Pant,Wedding Kurta Indowestern Churi Pant,Wedding Kurta Sherwani Lounge Pant,Wedding Kurta Sherwani Churi Pant,Indowestern Lounge Pant,Indowestern Churi Pant,Koti,Churi Pant" | split:"," %}
+  {%- if make_to_order_ptype contains product.type -%}
+    .suit-blazer-waist-coat-note{display: block;}
+  {% else %}
+    .suit-blazer-waist-coat-note{display: none;}
+  {% endif %}
+  {% endcomment %}
+  {%- if product.type == 'Lounge Pant' -%}
+    .lounge-pant-note{display: block;}
+  {% else %}
+    .lounge-pant-note{display: none;}
+  {% endif %}
+   </style>
+   <script>
+      {% if low_make_to_order_ptypes contains product.type or high_make_to_order_ptypes contains product.type %}
+          $.ajax({
+            type: "GET",
+            url: 'https://frenchcrownerp.com/miscellaneous/make_to_order_sizes',
+            data: {
+              pid: "{{product.id}}"
+            },
+            success: function (data) {
+              $('.size-note').html(data['msg']);
+              $('.size-note').after("<div class='mto-sizes' style='display: none;'>"+data['sizes']+"</div>");
+            }
+          });
+      {% endif %}
+      $.ajax({
+            type: "GET",
+            url: 'https://frenchcrownerp.com/api/internal/v1/products/get_global_price',
+            data: {
+              pid: "{{product.id}}",
+              shopify_domain: "{{ shop.permanent_domain }}"
+            },
+            success: function (data) {
+              if(data['price']){
+                var global_url = window.location.href.replace('.in', '.com');
+                $("<div style='margin: 10px 0;font-size: 11px;'>(Price for USA and Countries other than India: <span style='color: blue'>$"+parseInt(data['price'])+" USD </span> + International shipping + International duties + VAT or other applicable Taxes. If you are not in India, visit our <a href='"+global_url+"' style='color: blue'>global store here</a>)</div>").insertAfter($('.ProductMeta__PriceList'));
+              }
+            }
+          });
+    </script>
+
+<div class="size-wrapper">
+<div class="size-swatch-group" data-pro-handle="{{ product.handle }}">
+    {% unless product.has_only_default_variant %}
+    <select name="id" id="productSelect-{{ product.id }}" class="product-single__variants">
+
+      {% for variant in product.variants %}
+      {% if variant.available %}
+
+      {% comment %}
+      Note: if you use option_selection.js, your <select> tag will be overwritten, meaning what you have inside <option> will not reflect what you coded below.
+      {% endcomment %}
+      <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" data-option1="{{ variant.option1 }}" data-option2="{{ variant.option2 }}" data-available="{{ variant.available }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+      {% else %}
+      <option disabled="disabled">
+        {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+      </option>
+      {% endif %}
+      {% endfor %}
+      </select>
+
+      {% for option in product.options %}
+
+      {% include 'swatch' with option %}
+
+      {% endfor %}
+      {% comment %}
+      {% if product.tags contains 'sleeves_half_full' %}
+
+      <div class="swatch" data-next data-product-type="{{product.type}}">
+        <div class="heading-wrapper">
+          <div class="header">Select Sleeves</div>
+          <div class="close-swatch">x</div>
+          <div class="clear"></div>
+        </div>
+        <div class="swatch-lisitng">
+          <div class="swatch-element half-sleeve available">
+            <div class="sleeve-section">
+              <label><input type="radio" id="radio1" name="Sleeves" value="full"/><span>Full</span></label>
+            </div>
+          </div>
+          <div class="swatch-element half-sleev available">
+            <div class="sleeve-section">                
+              <label><input type="radio" id="radio2" name="Sleeves" value="half"/><span>Half / Short</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <button class="btn" data-back-btn>Back</button>
+          <button class="btn" data-atc>ADD</button>
+        </div>
+      </div>
+      {% endif %}
+      {% endcomment %}
+      {% else %}
+      <input type="hidden" name="id" data-sku="{{ selected_variant.sku }}" value="{{ selected_variant.id }}">
+      {% endunless %}
+      <button type="submit" name="add" id="AddToCart" class="btn Button--secondary" style="display:none;">
+        <span id="AddToCartText">{{ 'product.form.add_to_cart' | t }}</span>
+      </button>
+
+    </div>
+  </div>
+{% comment %}
+------------------------------------------------------------------------------
+Product Data. This must be outputted for all products (including home page).
+
+IMPORTANT: THIS CODE IS VITAL. DO NOT EDIT IT NOT REMOVE IT. MAKE SURE TO KEEP
+THE EXACT SAME ATTRIBUTES.
+------------------------------------------------------------------------------
+{% endcomment %}
+
+<script type="application/json" data-product-json>
+  {
+    "product": {{ product | json }},
+    "selected_variant_id": {{ selected_variant.id }}
+    {%- if section.settings.show_inventory_quantity -%}
+      ,"inventories": {
+        {%- for variant in product.variants -%}
+          {%- assign inventory_message = '' -%}
+
+          {%- if section.settings.inventory_quantity_threshold == 0 -%}
+            {%- capture inventory_message -%}{{- 'product.form.inventory_quantity_count' | t: count: variant.inventory_quantity -}}{%- endcapture -%}
+          {%- else -%}
+            {%- capture inventory_message -%}{{- 'product.form.low_inventory_quantity_count' | t: count: variant.inventory_quantity -}}{%- endcapture -%}
+          {%- endif -%}
+
+          "{{ variant.id }}": {
+            "inventory_management": {{ variant.inventory_management | json }},
+            "inventory_policy": {{ variant.inventory_policy | json }},
+            "inventory_quantity": {{ variant.inventory_quantity | json }},
+            "inventory_message": {{ inventory_message | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      }
+    {%- endif -%}
+  }
+</script>
+
+{%- if productPantAddonsHandle != blank -%}
+  {% assign productPantAddonsInfo = all_products[productPantAddonsHandle] %}
+  {% if productPantAddonsInfo.available == true %}
+    <script type="application/json" data-product-pants-addons-json>
+              {
+                "product": {{ productPantAddonsInfo | json }}
+              }
+    </script>
+  {% endif %}
+{%- endif -%}
+  
+  
+{%- if productWaistcoatAddonsHandle != blank -%}
+  {% assign productWaistcoatAddonsInfo = all_products[productWaistcoatAddonsHandle] %}
+  {% if productWaistcoatAddonsInfo.available == true %}
+    <script type="application/json" data-product-waistcoat-addons-json>
+              {
+                "product": {{ productWaistcoatAddonsInfo | json }}
+              }
+    </script>
+  {%- endif -%}
+{%- endif -%}

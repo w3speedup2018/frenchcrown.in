@@ -1,0 +1,41 @@
+{% assign single_item_amount = product.price | divided_by: 100  %}
+{% case product.type %}
+  {% when "Wallet", "Belt", "Footwear" %}
+  	{% assign tax = 12 %}
+  {% when "Boxer" %}
+  	{% if single_item_amount > 1050 %}
+	  	{% assign tax = 12 %}
+  	{% else %}
+	  	{% assign tax = 5 %}
+  	{% endif %}
+  {% when "Perfume" %}
+  	{% assign tax = 18 %}
+  {% when "Accessories" %}
+    {% assign sku_first_letter = product.variants.first.sku | slice: 0 %}
+  	{% if sku_first_letter == 'P' %}
+  		{% assign tax = 18 %}
+  	{% else %}
+	  	{% if single_item_amount > 1050 %}
+		  	{% assign tax = 12 %}
+	  	{% else %}
+		  	{% assign tax = 5 %}
+	  	{% endif %}
+  	{% endif %}
+  {% else %}
+  	{% if single_item_amount > 1050 %}
+	  	{% assign tax = 12 %}
+  	{% else %}
+	  	{% assign tax = 5 %}
+  	{% endif %}
+{% endcase %}
+{% assign amount = 100 | plus: tax %}
+{% assign exclusive_gst_price = single_item_amount | times: 100 | divided_by: amount %}
+<span class="ProductItem__Price Price Text--subdued" data-money-convertible>{{ exclusive_gst_price | times: 100 | money_without_trailing_zeros }} excl. GST</span>
+{%- if product.compare_at_price > product.price -%}
+  {% assign discount_price = product.compare_at_price | minus: product.price %}
+  {% assign discount_percentage = discount_price | times: 100.0 %}
+  {% assign discount_percentage = discount_percentage | divided_by: product.compare_at_price | round %}
+  <span class="ProductItem__Price Price Text--subdued inclusive-price" data-money-convertible>{{ product.price | money_without_trailing_zeros }} incl. GST M.R.P: <span style="text-decoration: line-through;">{{ product.compare_at_price | money_without_trailing_zeros }}</span> ({{ discount_percentage }}% off)</span>
+{% else %}
+  <span class="ProductItem__Price Price Text--subdued inclusive-price" data-money-convertible>{{ product.price | money_without_trailing_zeros }} incl. GST</span>
+{% endif %}

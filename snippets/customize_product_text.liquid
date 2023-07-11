@@ -1,0 +1,37 @@
+<!-- check all sizes available or not -->
+	{% comment %}
+	  {%- assign product_available = true -%}
+      {%- if product.type != 'Face Mask' and product.type != 'Jeans' -%}
+        {% for variant in product.variants %}
+          {% unless variant.available %}
+            {% assign product_available = false %}
+          {% endunless %}
+        {% endfor %}
+      {%- endif -%}
+	{% endcomment %}
+
+	{%- if product.type != 'Face Mask' and product.type != 'Jeans' and product.type != 'Designer Jeans' and product.type != 'Belt' and product.type != 'Accessories' and product.type != 'Tshirt' and product.type != 'Wallet' and product.type != 'Footwear' and product.type != 'Kurta' and product.type != 'Shoes' and product.type != 'Socks' and product.type != 'Perfume' -%}
+       {%- if product.variants.last.available -%}
+		<div class="customize_product_text" style="margin-top: 10px;">
+          <b>Customization is possible in this item. Go through following instructions for customisation.</b>
+          <ul>
+            <li>Customization is possible for Prepaid Orders Only. Customization is not Possible for COD orders.</li>
+            <li>Select any standard size and click on 'add to cart'.</li>
+            <li>In your cart, you will find "<span style="font-size: 18px;font-weight: bold;color: blue;">Add Customisation/Order Note</span>". Add your customisation instructions in this section. </li>
+            <li>You can ask for any type of Size as well as Pattern customisations. </li>
+            <li>If you want to give any Reference image then mention in note that "you will provide reference image in email <b style="color: darkgreen">within 24 hrs</b>". then drop us an email on <a href="mailto:contact@frenchcrown.com" style="color: blue;">contact@frenchcrown.com</a>.</li>
+<!--             <li>You can place the order and then mail us <b style="color: darkgreen">within 24 Hours</b> at <a href="mailto:contact@frenchcrown.com" style="color: blue;">contact@frenchcrown.com</a> with order number and your custom requirements. We will customize it and then dispatch.</li> -->
+            <li>There is no extra cost of customization.</li>
+            {%- if product.type == 'Suit' or product.type == 'Blazer' or product.type == 'Trenchcoat Suit' or product.type == 'Trenchcoat' %}
+              <li>Customized Products will be shipped within 7 to 10 working days of placing the order.</li>
+            {% else %}
+              <li>Customized Products will be shipped within 3 to 4 working days of placing the order.</li>
+            {% endif %}
+          </ul>
+         </div>
+      {% else %}
+          <div class="customize_product_text" style="margin-top: 10px;">
+            <b>Customization is <strong>NOT</strong> possible in this item</b>
+         </div>
+      {%- endif -%}
+	{%- endif -%}

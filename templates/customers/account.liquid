@@ -1,0 +1,542 @@
+<div class="Container Container--narrow">
+  <header class="PageHeader">
+    <a href="/account/logout" class="PageHeader__Back Heading Text--subdued Link Link--primary u-h7">{{ 'customer.account.logout' | t }}</a>
+
+    <div class="SectionHeader">
+      <h1 class="SectionHeader__Heading Heading u-h1">{{ 'customer.account.title' | t }}</h1>
+      <p>{{ 'customer.account.welcome' | t: first_name: customer.first_name }}</p>
+      <div class="Segment__ButtonWrapper">
+        <a href="/pages/rewards" class="Button Button--primary">Check Your Cashback Balance</a>
+      </div>
+      <div class="final_message">
+        <p>Your request has been submitted. Our agent will call you on your registered mobile number to confirm your exchange/refund.</p>
+      </div>
+    </div>
+    
+  </header>
+
+  <div class="PageLayout PageLayout--breakLap">
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    ORDER HISTORY
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    <div class="PageLayout__Section">
+      {%- if customer.orders.size == 0 -%}
+        <div class="Segment">
+          <h2 class="Segment__Title Heading u-h7">{{ 'customer.account.no_orders_title' | t }}</h2>
+
+          <div class="Segment__Content">
+            <p>{{ 'customer.account.no_orders_content' | t }}</p>
+          </div>
+        </div>
+      {%- else -%}
+        {%- paginate customer.orders by 25 -%}
+          <div class="TableWrapper">
+            <table class="AccountTable Table Table--large">
+              <thead class="Text--subdued">
+                <tr>
+                  <th>{{ 'customer.orders.order_number' | t }}</th>
+                  <th>{{ 'customer.orders.date' | t }}</th>
+<!--                   <th>{{ 'customer.orders.payment_status' | t }}</th> -->
+                  <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                  <th class="Text--alignRight">{{ 'customer.orders.total' | t }}</th>
+                  <th class="hidden-phone"></th>
+                </tr>
+              </thead>
+
+              <tbody class="Heading u-h7">
+                {%- for order in customer.orders -%}
+                {% assign curent_date =  "now" | date: "%Y-%m-%d" %}
+                {% assign last_date = order.created_at | date: "%s" | plus: 2592000 | date: "%Y-%m-%d" %}
+                  <tr>
+                    <td class="order-id" data-order="{{ order.id }}" data-order-name="{{ order.name }}">
+                      <a href="{{ order.customer_url }}" class="Link Link--underline">{{ order.name }}</a>
+                    </td>
+                    <td>{{ order.created_at | date: format: 'month_day_year' }}</td>
+<!--                     <td>{{ order.financial_status_label }}</td> -->
+                    <td>{%if order.fulfillment_status_label == 'Unfulfilled' %}Not Shipped{%else%}Shipped{%endif%}</td>
+                    <td class="Text--alignRight">{{ order.total_price | money_without_trailing_zeros }}</td>
+                    <td class="return-btn">
+                      {% unless order.cancelled_at %}
+                        {%- if order.tags contains 'return-requested' -%}
+                          <button class="Button Button--primary return-detail" data-order-id="{{ order.id }}" style="margin-right:5px;margin-bottom:5px;">Return / Exchange Detail</button>
+                        {% else %}
+                          <button class="Button Button--primary btn-return" style="margin-right:5px;margin-bottom:5px;">Return / Exchange Detail</button>
+                        {% endif %}
+                        {%- if order.fulfillment_status_label == 'Unfulfilled' and order.cancelled_at == blank and order.financial_status != "paid" -%}
+                          <button class="Button Button--primary btn-cancle" data-order="{{ order.id }}">Cancel</button>
+                        {%- endif -%}
+                      {%- endunless -%}
+                    </td>
+                </tr>
+                {%- unless order.tags contains 'return-requested' -%}
+                <tr>
+                  <td class="return_form" colspan="6">
+                    <form class="line-items return_form" style="display:none;" method="post" action="" data-order-id="{{ order.id }}">
+                      {% comment %}
+                        <h1 id="" class="main-heading">New Return for order <span class="order-name">{{ order.id }}</span></h1>
+                      {% endcomment %}
+                      <div class="m-10">
+                        <label class="heading">order id:</label><span class="order-name">{{order.id}}</span>
+                      </div>
+                      <div class="m-10">
+                         <label class="heading">customer name:</label><span class="detail cust_name">{{customer.name}}</span>
+                      </div>
+                      <div class="m-10">
+                        <label class="heading">customer email:</label><span class="detail cust_email">{{customer.email}}</span>
+                      </div>
+                      <p class="heading">customer address</p>
+                      {{ customer.default_address | format_address | replace: '<p>', '<p class="AccountAddress"><span>' | replace_first: '<br>', '</span><br>' }}
+                      <input type="hidden" name="order_id" value="{{order.id}}">
+                      <input type="hidden" name="email" value="{{customer.email}}">
+                      <p><b>ITEMS DETAIL:</b></p>
+                     	{%- for item in order.line_items -%}
+	                      <div class="item-wrapper">
+	                        {% if item.product.type != 'Boxer' and item.product.type != 'Perfume' %}
+	                        	<div class="item-list">
+		                          <input type="checkbox" name="refund_items" id="item-{{item.id}}" data-item-return data-item-id="{{ item.id }}">
+		                          <label for="item-{{item.id}}">{{item.title}}</label>
+		                        </div>
+		                        <div class="info">
+			                        <div class="resolution">
+			                          <div class="d-inline-block" style="width:180px;">
+			                            <p class="title">Resolution<span class="required">*</span></p>
+			                          </div>
+			                          <div class="d-inline-block">
+
+			                            <div>
+			                              <input name="line_item[][id]-{{ item.id }}" value="{{item.id}}" type="hidden">
+			                            </div>
+			                            
+			                            <div>
+			                              <input class="exchange fc_resolution" type="radio" name="resolution[{{ item.id }}]" value="exchange" id="exchange-{{item.id}}" disabled="disabled">
+			                              <label for="exchange-{{item.id}}">Exchange</label>
+			                            </div>
+			                            <div>
+			                              <input class="fc_resolution" type="radio" name="resolution[{{ item.id }}]" value="refund" id="refund-{{item.id}}" disabled="disabled">
+			                              <label for="refund-{{item.id}}">Refund</label>
+			                            </div>
+
+			                          </div>
+			                        </div>
+			                        <div class="refund" data-api style="display:none;">
+			                          <div class="d-inline-block" style="width:180px;">
+			                              <p class="title">Reason to refund<span class="required">*</span></p>
+			                          </div>
+			                          <div class="listing d-inline-block">
+			                            <div>
+			                              <input type="radio" class="refund_by_size" name="reason_to_refund[{{ item.id }}]" id="size_issue-{{item.id}}" value="Size issue" disabled="disabled">
+			                                <label for="size_issue-{{item.id}}">Size issue</label>
+			                            </div>
+			                            <div>
+			                                <input type="radio" id="fabric_quality-{{item.id}}" name="reason_to_refund[{{ item.id }}]" value="Fabric Quality" disabled="disabled">
+			                              <label for="fabric_quality-{{item.id}}">Fabric Quality</label>
+			                            </div>
+			                            <div>
+			                                <input type="radio" id="stiching_quality-{{item.id}}" name="reason_to_refund[{{ item.id }}]" value="Stiching Quality issue" disabled="disabled">
+			                              <label for="stiching_quality-{{item.id}}">Stitching Quality issue</label>
+			                            </div>
+			                            <div>
+			                                <input id="wrong_product-{{item.id}}" type="radio" name="reason_to_refund[{{ item.id }}]" value="Wrong Product resived" disabled="disabled">
+			                              <label for="wrong_product-{{item.id}}">Wrong Product received</label>
+			                            </div>
+			                            <div>
+			                                <input id="other-{{item.id}}" type="radio" name="reason_to_refund[{{ item.id }}]" value="Other">
+			                                <label for="other-{{item.id}}">Other</label>
+			                            </div>
+			                          </div>
+
+			                        </div>
+			                     
+			                        <div class="exchange-by " data-api>
+			                          <div class="d-inline-block" style="width:180px;">
+			                            <p class="title">Exchange by<span class="required">*</span></p>
+			                          </div>
+			                          <div class="listing d-inline-block">
+			                            <div>
+			                              <input class="ex_size exchange_by" type="radio" name="exchange[{{ item.id }}]" id="exchange_by_size-{{item.id}}" value="size" disabled="disabled">
+			                              <label for="exchange_by_size-{{item.id}}">Exchange by size</label>
+			                            </div>
+			                            <div>
+			                              <input class="exchange_by" type="radio" name="exchange[{{ item.id }}]" id="exchange_by_pro-{{item.id}}" value="product" disabled="disabled">
+			                               <label for="exchange_by_pro-{{item.id}}">Exchange by another product</label>
+			                            </div>
+			                          </div>
+			                          <div class="exchange-note">
+			                              <p class="note"><b>Note: Our agent will call you on your registered mobile number to confirm your exchange.</b></p>
+			                              <div class="exchange-by-size">
+			                                <label class="title">Mention Your Exchange Size<span class="required">*</span></label >
+			                                <input type="text" name="exchange_size_{{item.id}}" disabled="disabled">
+			                              </div>
+			                              <div class="exchange-by-another" style="display:none;">
+			                                <label class="title">Mention Your Exchange Product Name<span class="required">*</span></label>
+			                                <input type="text" name="exchange_product_{{item.id}}" disabled="disabled">
+			                              </div>
+			                          </div>
+			                        </div>
+			                        <div class="txt-comment">
+			                          <label class="title">Comment<span class="required">*</span></label>
+			                          <textarea name="comment_{{item.id}}" disabled></textarea>
+			                        </div>
+			                      </div>
+			                    {% else %}
+			                    	<div class="item-list">
+		                          <input type="checkbox" name="refund_items" id="item-{{item.id}}" data-item-return data-item-id="{{ item.id }}" disabled>
+		                          <label for="item-{{item.id}}">{{item.title}}</label>
+		                        </div>
+			                    	<p class="note" style="margin-bottom: 10px;"><b>Note: Exchange/Return is not acceptable in case of perfumes and boxers categories.</b></p>
+		                      {% endif %}
+	                      </div>
+                      {%- endfor -%}
+                     
+                      <div class="refund-bank">
+                        <hr>
+                        <div>
+                          <label for="bank-account">Bank account no<span class="required">*</span></label>
+                          <input type="number" id="bank-account" name="bank_ac_no">
+                        </div>
+                        <div>
+                          <label for="bank-ifsc">Bank IFSC Code<span class="required">*</span></label>
+                          <input type="text" id="bank-ifsc" name="bank-ifsc" maxlength="11">
+                          
+                        </div>
+                        
+                      </div>
+                      <div>
+                        <a href="#" class="Button Button--primary submit-return" disbaled="disabled">Submit</a>
+                        <a href="#" class="Button Button--primary back-btn">Back</a>
+                      </div>
+                      
+                      
+                    </form>
+                    </td></tr>
+                {%- endunless -%}
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+
+          {%- include 'pagination' -%}
+        {%- endpaginate -%}
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    ADDRESS
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    <div class="PageLayout__Section PageLayout__Section--secondary">
+      <div class="Segment">
+        {%- if customer.addresses_count == 0 -%}
+          <h2 class="Segment__Title Heading u-h7">{{ 'customer.account.no_addresses_title' | t }}</h2>
+
+          <div class="Segment__Content">
+            <p>{{ 'customer.account.no_addresses_content' | t }}</p>
+
+            <div class="Segment__ButtonWrapper">
+              <a href="/account/addresses" class="Button Button--primary">{{ 'customer.account.manage_addresses' | t }}</a>
+            </div>
+          </div>
+        {%- else -%}
+          <h2 class="Segment__Title Heading u-h7">{{ 'customer.account.default_address' | t }}</h2>
+
+          <div class="Segment__Content">
+            {{ customer.default_address | format_address | replace: '<p>', '<p class="AccountAddress"><span>' | replace_first: '<br>', '</span><br>' }}
+            <div class="Segment__ButtonWrapper">
+              <a href="/account/addresses" class="Button Button--primary">{{ 'customer.account.edit_addresses' | t }}</a>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  
+  function refund_bank_show_hide(){
+    refund_bank_flag = 0;
+    $('.item-wrapper .info .resolution').each(function(){
+      var item_val = $(this).find('input:checked').val();
+      if(item_val == 'refund'){
+        refund_bank_flag = 1;
+      }
+    });
+    if(refund_bank_flag == 1){
+      $('.refund-bank').show();
+    }else{
+      $('.refund-bank').hide();
+    }
+  }
+  $('.btn-return').on('click',function(){
+    alert('are you sure you want to return this order?');
+    $(this).parents('tr').next('tr').find('.return_form').show();
+    var email= '{{customer.email}}';
+    var order = $(this).parents('td').siblings('.order-id').data('order');
+    var order_name = $(this).parents('td').siblings('.order-id').data('order-name');
+
+
+  }); 
+  $('body').on('click','.back-btn', function(){
+    $(this).parents('.return_form').hide();
+  });
+  
+  $('.item-wrapper .item-list input').on('change', function(){
+    var $this = $(this);
+    if($this.prop('checked') == true){
+      $this.parents('.item-list').next('.info').find('.resolution .d-inline-block div .exchange').prop("checked", true);
+      $this.parents('.item-list').next('.info').find('.exchange-by .d-inline-block div .ex_size').prop("checked", true);
+      $('.submit-return').prop('disabled', false);
+      $this.parents('.item-list').next('.info').find('.txt-comment textarea').removeAttr('disabled');
+      var info = $this.parents('.item-list').next('.info');
+      info.find('input').each(function(){
+       $(this).removeAttr('disabled');
+      });
+    } else {
+      $this.parents('.item-list').next('.info').find('.resolution .d-inline-block div .exchange').prop("checked", false);
+      $this.parents('.item-list').next('.info').find('.exchange-by .d-inline-block div .ex_size').prop("checked", false);
+      $('.submit-return').prop('disabled', true);
+      $this.parents('.item-list').next('.info').find('.txt-comment textarea').attr('disabled','disabled');
+      var info = $this.parents('.item-list').next('.info');
+      info.find('input').each(function(){
+       $(this).attr('disabled','disbaled');
+      });
+    }
+    refund_bank_show_hide();
+  });
+ 
+  $('.item-wrapper .info .resolution input').on('change', function(){
+    var $this = $(this);
+    var val =  $this.val();
+    if(val == 'refund'){
+       $this.parents('.info').find('.refund').show();
+//        $this.parents('form').find('.refund-bank').show();
+       $this.parents('.info').find('.exchange-by').hide();
+       $this.parents('.info').find('.exchange-note').hide();
+       $this.parents('.info').find('.txt-comment').show();
+       $this.parents('.info').find('.refund .d-inline-block div .refund_by_size').prop("checked", true);
+    } else {
+       $this.parents('.info').find('.refund').hide();
+//        $this.parents('form').find('.refund-bank').hide();
+       $this.parents('.info').find('.exchange-by').show();
+       $this.parents('.info').find('.exchange-note .exchange-by-size').show();
+       $this.parents('.info').find('.exchange-note').show();
+       $this.parents('.info').find('.txt-comment').show();
+       $this.parents('.info').find('.refund .d-inline-block div .refund_by_size').prop("checked", false);
+    }
+    refund_bank_show_hide();
+  
+  
+  });
+  $('.item-wrapper .info .exchange-by input').on('change', function(){
+    var $this = $(this);
+    var val = $this.val();
+    if(val == 'size'){
+       $this.parents('.info').find('.exchange-note .note').show();
+       $this.parents('.info').find('.exchange-note').show();
+       $this.parents('.info').find('.exchange-by-size').show();
+       $this.parents('.info').find('.exchange-by-another').hide();
+    } else if(val == 'product'){
+       $this.parents('.info').find('.exchange-note').show();
+       $this.parents('.info').find('.exchange-note .note').show();
+       $this.parents('.info').find('.exchange-by-another').show();
+       $this.parents('.info').find('.exchange-by-size').hide();
+    }
+  });
+
+  
+  $('.submit-return').on('click', function(e){
+    e.preventDefault();
+    flag = 0;
+    var $form = $(this).parents('form');
+   
+    
+    if (typeof $form.find('.item-list input:checked').val() === "undefined") {
+      alert('Select at least one item');
+      flag=1;
+    }
+    $form.find('.item-wrapper .item-list').each(function(){
+      if($(this).find('input').prop('checked') == true){
+        var fc_item_wrapper = $(this).parents('.item-wrapper');
+        if(fc_item_wrapper.find('.fc_resolution:checked').val() == 'exchange'){
+          if(fc_item_wrapper.find('.exchange_by:checked').val() == 'size' && fc_item_wrapper.find('.exchange-by-size input').val() == ''){
+            alert("Mention Your Exchange Size");
+            flag=1;
+          }else if(fc_item_wrapper.find('.exchange_by:checked').val() == 'product' && fc_item_wrapper.find('.exchange-by-another input').val() == ''){
+            alert("Mention Your Exchange Product Name");
+            flag=1;
+          }
+          if(fc_item_wrapper.find('.txt-comment textarea').val() == ''){
+            alert("Comment Required");
+            flag=1;
+          }
+        }else if(fc_item_wrapper.find('.fc_resolution:checked').val() == 'refund'){
+          if(fc_item_wrapper.find('.txt-comment textarea').val() == ''){
+            alert("Comment Required");
+            flag=1;
+          }
+        }
+      }
+    });
+    
+    if($form.find('#bank-account:visible').length > 0){
+     var bank_ac = $form.find('#bank-account').val();
+       pattern = /^[0-9]*$/;
+       if(bank_ac == '' || !pattern.test(bank_ac)){
+         flag =1;
+      alert('Bank Account No is Missing or Invalid');
+       }
+    }
+    
+    if($form.find('#bank-ifsc:visible').length > 0){
+       var bank_ifsc = $form.find('#bank-ifsc').val();
+       pattern = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+       if(bank_ifsc == ''){
+         flag =1;
+      alert('Bank IFSC Code Required');
+       }else if(!pattern.test(bank_ifsc)){
+         flag =1;
+        alert('IFSC Code is Wrong');
+       }
+    }
+    
+    if(flag == 0){
+      var is_refund = localStorage.getItem("is_refund");
+      var item_array = [];
+      var form = new FormData();
+      var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+      form.append("order_id", $form.data('order-id'));
+      form.append("email", $form.find('.cust_email').text());
+      form.append("bank_ac_no", $form.find('#bank-account').val());
+      form.append("bank_ifsc", $form.find('#bank-ifsc').val());
+      form.append("shopify_domain", shopify_domain);
+
+
+      $form.find('.item-wrapper .item-list [data-item-return]').each(function(){
+        if($(this).prop('checked') == true){
+          line_item = {};
+          var id = $(this).data('item-id');
+          item_wrapper = $(this).parents('.item-wrapper');
+          form.append("line_items[][id]", id);
+          var resolution = item_wrapper.find("input[name='resolution["+id+"]']:checked").val();
+          form.append("line_items[][resolution]", resolution);
+          if(resolution == 'refund'){
+            form.append("line_items[][reason_to_refund]", item_wrapper.find("input[name='reason_to_refund["+id+"]']:checked").val());
+          }else{
+            form.append("line_items[][exchange_size]",item_wrapper.find("input[name='exchange_size_"+id+"']").val());
+            form.append("line_items[][exchange_product]",item_wrapper.find("input[name='exchange_product_"+id+"']").val());
+          }
+          form.append("line_items[][comment]", item_wrapper.find("textarea[name='comment_"+id+"']").val());
+        }
+      });
+      $.ajax({
+        type: "POST",
+        url: 'https://frenchcrownerp.com/miscellaneous/return_order',
+        "processData": false,
+        "contentType": false,
+        "mimeType": "multipart/form-data",
+        "data": form,
+        success: function (data) {
+          $('.return_form').hide();
+          $(window).scrollTop(0);
+          $('.final_message').show();
+          setTimeout(function(){
+            $('.final_message').hide();
+          }, 30000);
+          // location.reload(true);
+        },
+        error: function (textStatus, errorThrown) {
+          console.log(textStatus[msg],'status');
+          console.log(errorThrown,'error');
+        }  
+      });
+    
+       }
+
+  });
+  
+  var width_ = $('body').width();
+  $('.return_form').css('max-width', width_ - 48+'px');
+  $('.return_form input[type=text]').css('max-width', width_ - 48+'px');
+  $('.return_form textarea').css('max-width', width_ - 48 +'px');
+  
+  $('.btn-cancle').on('click', function(){
+    var $this = $(this);
+    var order_id = $this.attr('data-order');
+    var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+
+    $.ajax({
+      type: "POST",
+      url: 'https://frenchcrownerp.com/miscellaneous/cancel_order',
+       "data": {
+        "id": order_id,
+        "shopify_domain": shopify_domain
+      },
+      success: function (data) {
+        $(window).scrollTop(0);
+        $('.final_message p').html('Your order has been cancelled successfully');
+        $('.final_message').show();
+        setTimeout(function(){
+          $('.final_message').hide();
+        }, 30000);
+      },
+      error: function (textStatus, errorThrown) {
+        console.log(textStatus[msg],'status');
+        console.log(errorThrown,'error');
+      }  
+    });
+  });
+
+  $('.return-detail').on('click', function(){
+    $this = $(this);
+    $(this).attr('disabled', true);
+    var order_id = $(this).attr('data-order-id');
+    var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+
+    $.ajax({
+      type: "GET",
+      url: 'https://frenchcrownerp.com/miscellaneous/rma_details',
+       "data": {
+        "order_id": order_id,
+        "shopify_domain": shopify_domain
+      },
+      success: function (data) {
+        $this.attr('disabled', false);
+        $('.rma-details').remove();
+        var html = '<tr class="rma-details"><td colspan="5" style="padding-top: 12px;"><div class="TableWrapper"><table class="AccountTable Table Table--noBorder"><thead class="Text--subdued"><tr><th style="border-right: none">Order Line Item</th><th class="Text--alignRight">Resolution Details</th></tr></thead><tbody>'
+
+        $.each(data, function( key, return_order) {
+          $.each(return_order, function( index, return_item) {
+              html += '<tr><td><div class="CartItem__ImageWrapper AspectRatio"><div class="AspectRatio" style="--aspect-ratio: 0.8"><img class="CartItem__Image" src="'+return_item["image"]+'"></div></div><div class="CartItem__Info"><h2 class="CartItem__Title Heading"><a href="'+return_item["url"]+'">'+return_item["name"]+'</a></h2><div class="CartItem__Meta Heading Text--subdued"><p class="CartItem__Variant"><b>Ticket ID:</b> '+key+'</p><p class="CartItem__Variant"><b>Status:</b> '+return_item["status"]+'</p><p class="CartItem__Variant">'+return_item["sku"]+'</p><p class="CartItem__PriceList">Rs. '+return_item["price"]+'</p><p class="CartItem__PriceList">Qty: '+return_item["qty"]+'</p><p class="CartItem__PriceList">RMA Date: '+return_item["created_at"]+'</p></div></div></td><td class="Text--alignRight Heading Text--subdued"><p>'+return_item["resolution"]+'</p><p style="min-width: 250px">'
+              if(return_item["resolution"] == 'refund'){
+                html += '<b>Reason:</b> '+return_item["reason_to_refund"]+'</p>'
+              }else{
+                if(return_item["exchange_sku"] != ''){
+                  html += '<b>SKU:</b> '+return_item["exchange_sku"]+'</p>'
+                }else if (return_item["exchange_product"] != ''){
+                  html += '<b>Product:</b> '+return_item["exchange_product"]+'</p>'
+                }else{
+                  html += '<b>Size:</b> '+return_item["exchange_size"]+'</p>'
+                }
+              }
+              html += '</td></tr>';
+          })
+        });
+        html += '<tr><td colspan="5">In case of any query, Please call/whatsapp us on mobile no 9723325522</td></tr></tbody></table></div></td></tr>';
+        if(!$.isEmptyObject(data)){
+          $this.parents('tr').after(html);
+        }
+      },
+      error: function (textStatus, errorThrown) {
+        console.log(textStatus[msg],'status');
+        console.log(errorThrown,'error');
+      }
+    });
+  });
+</script>

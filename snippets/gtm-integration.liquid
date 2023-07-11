@@ -1,0 +1,30 @@
+<!-- Google Tag Manager -->
+<!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NPRV7F4');</script> -->
+<!-- End Google Tag Manager -->
+<!--
+<script>
+  dataLayer.push({
+    event: 'view_cart',
+    ecommerce: {
+      currency: "INR",
+      value: '{{ checkout.total_price | money }}',
+      items: [
+        {%- for line_item in checkout.line_items -%}
+          {
+          'item_id': '{{ line_item.sku || line_item.product_id }}',
+          'item_name': '{{ line_item.product.title }}',
+          'discount': {{ line_item.line_level_total_discount | divided_by: 100.00 }},
+          'item_variant': '{{ line_item.variant.title }}',
+          'price': {{ line_item.final_price | divided_by: 100.00 }},
+          'quantity': {{ line_item.quantity }}
+          },
+        {% endfor %}
+      ]
+    }
+  });
+</script>
+-->

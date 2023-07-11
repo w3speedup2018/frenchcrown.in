@@ -1,0 +1,277 @@
+{%- if template.name == 'page' or template.name == 'blog' or template == 'customers/account' or template == 'customers/order' or template == 'customers/addresses' -%}
+  {%- assign add_top_margin = true -%}
+{%- else -%}
+  {%- assign add_top_margin = false -%}
+{%- endif -%}
+
+{%- if template == 'page.collections' -%}
+  {%- assign add_top_margin = false -%}
+{%- endif -%}
+{% if template.name == "index" %} 
+  <div class="homepage-content" style="margin-top: 15px;padding:30px;font-size:15px;">
+    <h1 style="font-weight: bold;">Welcome to French Crown India - Men’s and Women’s Premium Clothing Store </h1>
+      The ultimate destination for fashion enthusiasts! With our impeccable designs and premium
+      collections, we offer a shopping experience like no other.
+    
+    <h2 style="font-weight: bold;margin-top: 15px;">The Best of Men's and Women's Collection</h2>
+      At French Crown India, we take pride in our extensive range of menswear and womenswear.
+      From ethnic to casual, formal to festive, we cater to every taste and style. Our collections are a
+      perfect blend of traditional and modern elements, making them ideal for Indian customers.
+      At French Crown India, we give you an experience that makes us stand out and be
+      extraordinary among the premium clothing brands online India has to offer.
+    
+    <h2 style="font-weight: bold;margin-top: 15px;">Unmatched Shopping Experience</h2>
+      At the French Crown India brand, we understand the importance of a hassle-free shopping
+      experience, and hence we ensure that our customers get nothing but the best. From easy
+      navigation on our website to fast and secure delivery, we strive to make your shopping
+      experience with us smooth and memorable.
+      
+    <h2 style="font-weight: bold;margin-top: 15px;">Exquisite Designs and Patterns</h2>
+      We believe that fashion is all about creativity and innovation, and that's why our collections are
+      a reflection of the same. Our designers create unique and exquisite patterns that are sure to
+      make you stand out from the crowd.
+    
+    <h2 style="font-weight: bold;margin-top: 15px;">Amazing Sale Collections</h2>
+      Who doesn't love a good sale? At French Crown India, we offer amazing <a href="https://frenchcrown.in/collections/sale" target="_blank" style="text-decoration: underline;">discounts on our
+      menswear category</a> and <a href="https://frenchcrown.in/collections/women-sale" target="_blank" style="text-decoration: underline;">womenswear sale collections</a> from time to time. Keep an eye out for
+      our festive season sales, and get ready to add some new outfits to your wardrobe!
+
+   <h2 style="font-weight: bold;margin-top: 15px;">Expanding To Women’s Collection</h2>
+    We are constantly evolving and expanding our collections to offer the latest trends in fashion.
+    Our new mens and <a href="https://frenchcrown.in/collections/all-women-products" target="_blank" style="text-decoration: underline;">womens clothing collections</a> are a perfect blend of classic and
+    contemporary, making them ideal for fashion-forward individuals.
+    
+    <h2 style="font-weight: bold;margin-top: 15px;">French Crown India’s Philosophy</h2>
+    At the French Crown India brand, we believe in providing the best quality products at affordable
+    prices. We strive to create a sustainable fashion ecosystem by reducing waste and focusing on
+    a zero deadstock supply chain. Our team of 500+ members works tirelessly to achieve our goal
+    of delivering the best to our customers.
+
+    French Crown online shopping is proud to offer our services in over 80 countries and have a
+    fast delivery network in major Indian cities like Bangalore, Delhi, Hyderabad, Chennai,
+    Ahmedabad, and many more. We also provide Cash on Delivery facility and have over 3000+
+    live designs on our website. Additionally, we offer customized and plus-size products to cater to
+    every customer's needs. Also, we provide occasion based discounts like diwali , holi and indian
+    festival offers on all the products.
+
+    Come, be a part of the French Crown India family, and experience the joy of fashion like never
+    before! Indulge in the opulent world of fashion with French Crown India - the epitome of style
+    and sophistication. With an impeccable blend of traditional and modern elements, our
+    collections exude sheer elegance, making them perfect for every fashion-savvy Indian.
+  </div>
+{% endif %}
+<footer id="section-{{ section.id }}" class="Footer {% if section.blocks.size <= 2 %}Footer--center{% endif %} {% if add_top_margin %}Footer--withMargin{% endif %}" role="contentinfo">
+  <div class="Container">
+    {%- if section.blocks.size > 0 -%}
+      <div class="Footer__Inner">
+        {%- for block in section.blocks -%}
+          <div class="Footer__Block Footer__Block--{{ block.type }}" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                {%- if block.settings.title != blank -%}
+                  <h5 class="Footer__Title Heading u-h6">{{ block.settings.title | escape }}</h5>
+                {%- endif -%}
+
+                {%- if block.settings.content != blank -%}
+                  <div class="Footer__Content Rte">
+                    {{ block.settings.content }}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.show_social_media -%}
+                  {% include 'social-media', class: 'Footer__Social', spacing: 'loose' %}
+                {%- endif -%}
+
+              {%- when 'links' -%}
+                {%- assign linklist = linklists[block.settings.menu] -%}
+
+                {%- if linklist != empty -%}
+                  <h5 class="Footer__Title Heading u-h6">{{ linklist.title | escape }}</h5>
+
+                  <ul class="Linklist">
+                    {%- for link in linklist.links -%}
+                      <li class="Linklist__Item">
+                        <a href="{{ link.url }}" target="_blank" class="Link Link--primary">{{ link.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+
+              {%- when 'newsletter' -%}
+                {%- if block.settings.title != blank -%}
+                  <h5 class="Footer__Title Heading u-h6">{{ block.settings.title | escape }}</h5>
+                {%- endif -%}
+
+                {%- if block.settings.content != blank -%}
+                  <div class="Footer__Content Rte">
+                    {{ block.settings.content }}
+                  </div>
+                {%- endif -%}
+
+                {%- form 'customer', id: 'footer-newsletter', class: 'Footer__Newsletter Form' -%}
+                  {%- if form.posted_successfully? -%}
+                    <p class="Form__Alert Alert Alert--success">{{ 'footer.newsletter.success' | t }}</p>
+                  {%- else -%}
+                    {%- if form.errors -%}
+                      <p class="Form__Alert Alert Alert--error">{{ form.errors.messages['email'] }}</p>
+                    {%- endif -%}
+
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+                    <input type="email" name="contact[email]" id="email" class="Form__Input" aria-label="{{ 'footer.newsletter.input' | t }}" placeholder="{{ 'footer.newsletter.input' | t }}" required>
+<!--                <input type="text" name="contact[phone]" id="mobile_no" class="Form__Input phone-no" aria-label="Enter your Phone no." placeholder="Enter your Phone no." required> -->
+                <button type="submit" class="Form__Submit Button Button--primary">{{ 'footer.newsletter.submit' | t }}</button>
+                  {%- endif -%}
+                {%- endform -%}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="Footer__Aside">
+      <div class="Footer__Copyright">
+        <a target="_blank" href="{{ shop.url }}" class="Footer__StoreName Heading u-h7 Link Link--secondary">© {{'now' | date: '%Y' }}-{{ 'now' | date: '%y' | plus: 1 }} French Crown Store. All Rights Reserved.</a>
+
+        {%- capture powered_by_link -%}{{ powered_by_link }}{%- endcapture -%}
+      </div>
+
+      {%- if section.settings.show_payment_methods -%}
+        {%- capture payment_methods -%}
+          {%- for type in shop.enabled_payment_types -%}
+            <li class="HorizontalList__Item">{{ type | payment_type_svg_tag }}</li>
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%- if payment_methods != blank -%}
+          <ul class="Footer__PaymentList HorizontalList">
+            {{ payment_methods }}
+          </ul>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+<script type="lazyload2">
+  $('#footer-newsletter').on('submit',function(e){
+//     var mobile = $('#mobile_no').val();
+    var email= $('#email').val();
+    if(mobile != '' && email != ''){
+      $.ajax({
+        type: "POST",
+        url: 'https://frenchcrownerp.com/miscellaneous/subscribe_list',
+        data: {
+//           mobile_no : mobile,
+          email: email,
+          shopify_domain: 'french-crown-dress-sharp.myshopify.com'
+        },
+        success: function (data) {
+          console.log(data);
+          // location.reload(true);
+        },
+        error: function (textStatus, errorThrown) {
+          console.log(textStatus[msg],'status');
+          console.log(errorThrown,'error');
+        }  
+      });
+    }else{
+      return true;
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "shopify-section--footer",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_payment_methods",
+      "label": "Show payment methods",
+      "info": "Payment method icons are automatically displayed based on your Shopify payment methods.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text / social media",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "About the shop"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme settings.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social_media",
+          "label": "Show social media",
+          "info": "Make sure to have properly configured your social media in the theme settings.",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "links",
+      "name": "Links",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "This menu won't show dropdown items."
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Customers who subscribe will have their email address added to the \"accepts marketing\" [customer list](/admin/customers?query=&accepts_marketing=1)."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Newsletter"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p>A short sentence describing what someone will receive by subscribing</p>"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "text",
+        "settings": {}
+      },
+      {
+        "type": "links",
+        "settings": {
+          "menu": "footer"
+        }
+      },
+      {
+        "type": "newsletter",
+        "settings": {}
+      }
+    ]
+  }
+}
+{% endschema %}

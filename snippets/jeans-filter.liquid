@@ -1,0 +1,98 @@
+{%- if section.settings.jeans_style_taglist != blank -%}
+{%comment%}<!--  Jeans style      -->{%endcomment%}
+<div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+    Style <span class="Collapsible__Plus"></span>
+  </button>
+
+  <div class="Collapsible__Inner">
+    <div class="Collapsible__Content">
+      <ul class="Linklist">
+        {%- assign  style_tag_lists = section.settings.jeans_style_taglist | split: ','  -%}
+        {%- for tag_name in style_tag_lists -%}
+
+        {%- assign tag_value = tag_name | handleize -%}
+        {%- assign flag = false -%}
+        {%- for tag in current_tags -%}
+        {%- if tag == tag_value -%}
+        {%- assign flag = true -%}
+        {%- endif -%}
+        {%- endfor -%}
+        <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+            {{- tag_name -}}
+          </button>
+        </li>
+
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{%- if section.settings.jeans_fade_taglist != blank -%}
+{%comment%}<!--  Jeans Fade      -->{%endcomment%}
+<div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+    Fade <span class="Collapsible__Plus"></span>
+  </button>
+
+  <div class="Collapsible__Inner">
+    <div class="Collapsible__Content">
+      <ul class="Linklist">
+        {%- assign  fade_tag_lists = section.settings.jeans_fade_taglist | split: ','  -%}
+        {%- for tag_name in fade_tag_lists -%}
+
+        {%- assign tag_value = tag_name | handleize -%}
+        {%- assign flag = false -%}
+        {%- for tag in current_tags -%}
+        {%- if tag == tag_value -%}
+        {%- assign flag = true -%}
+        {%- endif -%}
+        {%- endfor -%}
+        <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+            {{- tag_name -}}
+          </button>
+        </li>
+
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{%- if section.settings.jeans_shade_taglist != blank -%}
+{%comment%}<!--  Jeans Color Shade      -->{%endcomment%}
+<div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+    Color Shade <span class="Collapsible__Plus"></span>
+  </button>
+
+  <div class="Collapsible__Inner">
+    <div class="Collapsible__Content">
+      <ul class="Linklist">
+        {%- assign  shade_tag_lists = section.settings.jeans_shade_taglist | split: ','  -%}
+        {%- for tag_name in shade_tag_lists -%}
+
+        {%- assign tag_value = tag_name | handleize -%}
+        {%- assign flag = false -%}
+        {%- for tag in current_tags -%}
+        {%- if tag == tag_value -%}
+        {%- assign flag = true -%}
+        {%- endif -%}
+        {%- endfor -%}
+        <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+            {{- tag_name -}}
+          </button>
+        </li>
+
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+{%- endif -%}

@@ -1,0 +1,24 @@
+<div class="EmptyState">
+  <div class="Container">
+    <h3 class="EmptyState__Title Heading u-h5">{{ '404.general.title' | t }}</h3>
+    <p class="EmptyState__Description Text--subdued">{{ '404.general.content' | t }}</p>
+    <a href="/" class="EmptyState__Action Button Button--primary">{{ '404.general.button' | t }}</a>
+  </div>
+  <div class="Container">
+    <div class="EmptyState__Action">
+      <a href="/collections/shirts" class="Button Button--secondary">Shop Shirts</a>
+      <a href="/collections/trousers" class="Button Button--secondary">Shop Trousers</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  var pageURL = $(location).attr("href");
+  console.log(pageURL);  
+  var a = pageURL.indexOf("collection");
+  console.log(a,'indexof');
+  if(a > 0 ){
+   
+  }
+
+</script>

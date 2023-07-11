@@ -1,0 +1,153 @@
+<link rel="stylesheet" data-href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+<script type="lazyload2" data-src="{{ 'flickity.pkgd.min.js' | asset_url }}"></script>
+
+{% assign today =  "now" | date: "%s" | date: "%a" %}
+{% if today == 'Wed' %}
+  <a href="/discount/SUNDAYSALE7?redirect=/collections/wedding-evening-partywear-collection" target="_blank">
+    <div class="AnnouncementBar topBar sunday-sale" style="font-weight: bold;width:100%;position:fixed;top:0;z-index: 9999;color: #000;line-height: normal;background: lightgrey">
+      <p class="AnnouncementBar__Content" style="text-transform: uppercase;font-size: 14px;padding: 10px 0px !important;display:flex;align-items:center;height: 48px;">
+        <marquee direction="left"><span style="color: black">Every Wednesday Get 12% off  on Wedding/Evening/Partywear Collection. Use Coupon Code : WED12 <button style="padding: 5px;border: 1px solid lightgrey;font-size: 14px;background: black;color:white;">SHOP COLLECTION</button></a></marquee>
+      </p>
+    </div>
+  </a>
+{% endif %}
+
+{% if today == 'Fri' %}
+  <div class="AnnouncementBar topBar friday-sale" style="font-weight: bold;background: maroon;width:100%;position:fixed;top:0;z-index: 9999;color: #fff;line-height: normal;">
+    <p class="AnnouncementBar__Content" style="text-transform: uppercase;font-size: 14px;padding: 10px 0px !important;display:flex;align-items:center;height: 39px;">
+      <marquee direction="left">Get 15% Off Every Friday. Use Coupon code: FRENCH<span style="color: #f6f310">FRI</span>15</marquee>
+    </p>
+  </div>
+{% endif %}
+
+{% if today == 'Sun' %}
+  <a href="/discount/SUNDAYSALE7?redirect=/collections/sale-all" target="_blank">
+    <div class="AnnouncementBar topBar sunday-sale" style="font-weight: bold;background: yellow;width:100%;position:fixed;top:0;z-index: 9999;color: #000;line-height: normal;">
+      <p class="AnnouncementBar__Content" style="text-transform: uppercase;font-size: 14px;padding: 10px 0px !important;display:flex;align-items:center;height: 51px;">
+        <marquee direction="left"><span style="color: red">SUNDAY SALE : </span>Get Upto 70% off Every Sunday. Also Get additional 7% off by using Coupon Code : Sunday<span style="color: red">Sale</span>7 <button style="padding: 5px;border: 1px solid;font-size: 14px;background: #000;color:yellow;">SHOP SUNDAY SALE</button></a></marquee>
+      </p>
+    </div>
+  </a>
+{% endif %}
+
+<!-- <script type="lazyload2" data-src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> -->
+{%- if section.settings.enable_bar -%}
+  {%- unless section.settings.home_page_only and template != 'index' -%}
+<!-- <div class="AnnouncementBar topBar" style="font-weight: bold;background: red;width:100%;position:fixed;top:0;z-index: 9999;">
+    <p class="AnnouncementBar__Content" style="text-transform: uppercase;font-size: 14px;padding: 5px 0px 0px;">
+      <marquee direction="left">Because of festive season in india, our store will remain closed from 23rd oct to 30th oct. All orders placed during this time period will be dispatched after 31st oct.</marquee>
+    </p>
+</div> -->
+{%if section.settings.topbarText != blank %}
+<section {% if today == 'Fri' %}style="margin-top: 39px"{% elsif today == 'Sun' or today == 'Wed' %}style="margin-top: 48px"{% endif %} {% if today == 'Fri' or today == 'Sun' or today == 'Wed' %}class="section-top-bar"{% endif %}>
+  <div class="AnnouncementBar topBar" style="font-weight: bold;">
+      <p class="AnnouncementBar__Content">
+        <marquee direction="left">{{ section.settings.topbarText}}</marquee>
+      </p>
+  </div>
+</section>
+{% endif %}
+
+    <section id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="announcement-bar" {% if today == 'Fri' %}style="margin-top: 39px"{% elsif today == 'Sun' or today == 'Wed' %}style="margin-top: 48px"{% endif %} {% if today == 'Fri' or today == 'Sun' or today == 'Wed' %}class="section-top-bar"{% endif %}>
+      
+      
+      <div class="AnnouncementBar">
+        <div class="AnnouncementBar__Wrapper">
+          {%- for block in section.blocks -%}
+          <div id="Slide{{ block.id }}" class="Slideshow__Slide Carousel__Cell">
+            <p class="AnnouncementBar__Content Heading">
+              {%- if block.settings.link -%}
+              <a href="{{ block.settings.link }}">{{ block.settings.content }}</a>
+              {%- else -%}
+              {{ block.settings.content }}
+              {%- endif -%}
+            </p>
+          </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+
+    <style>
+      #section-{{ section.id }} {
+        background: {{ section.settings.background }};
+        color: {{ section.settings.text_color }};
+      }
+    </style>
+
+    <script type="lazyload2">
+      document.documentElement.style.setProperty('--announcement-bar-height', document.getElementById('shopify-section-announcement').offsetHeight + 'px');
+      $('.AnnouncementBar__Wrapper').flickity({
+        // options
+        cellAlign: 'left',
+        contain: true,
+        pageDots: false,
+        wrapAround: true,
+        autoPlay: 5000,
+        prevNextButtons: true,
+      });
+    </script>
+  {%- endunless -%}
+{%- endif -%}
+
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_bar",
+      "label": "Enable bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "home_page_only",
+      "label": "Home page only",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+        "type": "header",
+      "content": "TopBar"
+
+    },
+    {
+        "type": "text",
+        "id": "topbarText",
+        "label": "TopBar content",
+        "default": "Secure Payment with PayPal | Free shipping | 60 Days free Returns"
+    }
+  ],
+  "blocks": [
+  {
+    "type": "Slider",
+    "name": "text",
+    "settings": [
+      {
+        "type": "text",
+        "id": "content",
+        "label": "Text",
+        "default": "Buy any 2 products and get 10% off"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      }
+  ]
+  }]
+}
+{% endschema %}

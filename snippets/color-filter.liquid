@@ -1,0 +1,85 @@
+{%- assign color_tag_lists = '' -%}
+{%- if collection.handle contains 'tshirt' -%}
+  {%- assign color_tag_lists = section.settings.tshirt_color_taglist | split: ',' -%}
+{% elsif collection.handle contains 'women' %}
+  {%- if collection.handle contains 'shirt' or collection.handle contains 'top' or collection.handle contains 'jacket' or collection.handle contains 'dress' or collection.handle contains 'suit' or collection.handle contains 'blazer' or collection.handle contains 'pant' or collection.handle contains 'sale' or collection.handle contains 'new' or collection.handle contains 'all' -%}
+	{%- assign color_tag_lists = section.settings.shirt_color_taglist | split: ',' -%}
+  {%- endif -%}
+{%- elsif collection.handle contains 'shirts' or collection.handle contains 'kurtas' or collection.handle contains 'jackets' or collection.handle contains 'accessories' or collection.handle contains 'socks' or collection.handle contains 'co-ords' or collection.handle contains "sherwani-sets-wedding-engagement" or collection.handle contains "jodhpuri-sets-wedding-engagement" or collection.handle contains 'indowestern-sets-wedding-engagement' or collection.handle contains 'kurta-sets-wedding-engagement' or collection.handle contains 'jodhpuris' or collection.handle contains 'sherwanis' or collection.handle contains 'indowesterns' or collection.handle contains 'pajamas' or collection.handle contains 'dhotis' or collection.handle contains 'wedding-kurtas' or collection.handle contains 'kurta-jacket-sets-wedding-engagement' or collection.handle contains 'kurta-jackets' or collection.handle contains 'wedding-engagement' or collection.handle contains 'co-ord-sets' -%}
+	{% if section.settings.shirt_color_taglist != empty %}
+  		{%- assign color_tag_lists = section.settings.shirt_color_taglist | split: ',' -%}
+	{% endif %}
+{%- elsif collection.handle contains 'boxer' -%}
+  {%- assign color_tag_lists = section.settings.boxer_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'lounge_pant' -%}
+  {%- assign color_tag_lists = section.settings.lounge_pants_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'waistcoat' -%}
+  {%- assign color_tag_lists = section.settings.waistcoat_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'pant' -%}
+  {%- assign color_tag_lists = section.settings.trousers_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'short' -%}
+  {%- assign color_tag_lists = section.settings.shorts_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'sale' or collection.handle == 'new' and section.settings.sale_color_taglist != empty -%}
+  {%- assign color_tag_lists = section.settings.sale_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'jeans' -%}
+  {% if collection.handle contains 'women' %}
+    {%- assign color_tag_lists = section.settings.jeans_woman_color_taglist | split: ',' -%}
+  {% else %}
+    {%- assign color_tag_lists = section.settings.jeans_color_taglist | split: ',' -%}
+  {% endif %}
+{%- elsif collection.handle contains 'wallet' or collection.handle contains 'footwear' -%}
+  {%- assign color_tag_lists = section.settings.wallets_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'suit' or collection.handle contains 'blazer' -%}
+  {%- assign color_tag_lists = section.settings.suit_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'accessories' -%}
+  {%- assign color_tag_lists = section.settings.cufflink_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'face-masks' -%}
+  {%- assign color_tag_lists = section.settings.mask_color_taglist | split: ',' -%}
+{%- elsif collection.handle contains 'belt' -%}
+  {%- assign color_tag_lists = section.settings.belt_color_taglist | split: ',' -%}
+{%- endif -%}
+
+{%- if color_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      {{ section.settings.color_title }} <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in color_tag_lists -%}
+          {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%- if section.settings.cufflink_color_taglist != empty and collection.handle == 'accessories' -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+        {{ section.settings.suit_cufflink_color_title }}  <span class="Collapsible__Plus"></span>
+    </button>
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- assign  color_tag_lists = section.settings.cufflink_color_taglist | split: ','  -%}
+          {%- for tag_name in color_tag_lists -%}
+            {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

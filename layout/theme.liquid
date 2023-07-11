@@ -1,0 +1,195 @@
+<!doctype html> 
+<html class="no-js" lang="{{ shop.locale }}">
+    <head>
+      {% render 'gokwik' %}
+      	{% render 'canonical-seo' %}
+      	{%- if settings.favicon -%}
+          	<link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+        {%- endif -%}	
+        {% render '404-redirection' %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+        <meta name="theme-color" content="{{ settings.accent_color }}">
+
+        <title>{{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}</title>
+
+        {%- if page_description -%}
+          	<meta name="description" content="{{ page_description | escape }}">
+        {%- endif -%}
+
+        {% render 'social-meta-tags' %}
+        {% render 'integration-scripts' %}
+        {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
+            {{ content_for_header }}
+        {%- else -%}
+        	{% capture content_for_header2 %}{{ content_for_header }}{% endcapture %}
+        	{{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload2" ' | replace: " src=", " data-src=" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('wnw_load', asyncLoad, false);" | replace: "DOMContentLoaded", "DOMContentLoaded2" | replace: "addEventListener('load', prefetchAssets);", "addEventListener('wnw_load', prefetchAssets);" }}
+        	<script>var trekkie=[];trekkie.integrations=!0;window.BOOMR={},window.BOOMR.version=true;</script>
+        {%- endif -%}
+        {% render 'critical-css' %}
+        {% render 'font-css' %}
+        <link rel="stylesheet" data-href="{{ 'theme.min.css' | asset_url }}">
+
+        <script>
+            // This allows to expose several variables to the global scope, to be used in scripts
+            window.theme = {
+              template: {{ template.name | json }},
+              shopCurrency: {{ shop.currency | json }},
+              moneyFormat: {{ shop.money_format | json }},
+              moneyWithCurrencyFormat: {{ shop.money_with_currency_format | json }},
+              useNativeMultiCurrency: {% if shop.enabled_currencies.size > 1 %}true{% else %}false{% endif %},
+              currencyConversionEnabled: {% if shop.enabled_currencies.size > 1 %}false{% else %}{{ settings.currency_conversion_enabled | json }}{% endif %},
+              currencyConversionMoneyFormat: {{ settings.currency_conversion_money_format | json }},
+              currencyConversionRoundAmounts: {{ settings.currency_conversion_round_amounts | json }},
+              productImageSize: {{ settings.product_image_size | json }},
+              searchMode: {{ settings.search_mode | json }},
+              showPageTransition: {{ settings.show_page_transition | json }},
+              showElementStaggering: {{ settings.show_element_staggering | json }},
+              showImageZooming: {{ settings.show_image_zooming | json }}
+            };
+
+            window.languages = {
+              cartAddNote: {{ 'cart.general.add_note' | t | json }},
+              cartEditNote: {{ 'cart.general.edit_note' | t | json }},
+              productImageLoadingError: {{ 'product.slideshow.image_loading_error' | t | json }},
+              productFormAddToCart: {% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t | json }}{% else %}{{ 'product.form.add_to_cart' | t | json }}{% endif %},
+              productFormUnavailable: {{ 'product.form.unavailable' | t | json }},
+              productFormSoldOut: {{ 'product.form.sold_out' | t | json }},
+              shippingEstimatorOneResult: {{ 'cart.shipping_estimator.one_result_title' | t | json }},
+              shippingEstimatorMoreResults: {{ 'cart.shipping_estimator.more_results_title' | t | json }},
+              shippingEstimatorNoResults: {{ 'cart.shipping_estimator.no_results_title' | t | json }}
+            };
+
+            window.lazySizesConfig = {
+              loadHidden: false,
+              hFac: 0.5,
+              expFactor: 2,
+              ricTimeout: 150,
+              lazyClass: 'Image--lazyLoad',
+              loadingClass: 'Image--lazyLoading',
+              loadedClass: 'Image--lazyLoaded'
+            };
+
+            document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+            document.documentElement.style.setProperty('--window-height', window.innerHeight + 'px');
+
+            // We do a quick detection of some features (we could use Modernizr but for so little...)
+            (function() {
+				document.documentElement.className += ((window.CSS && window.CSS.supports('(position: sticky) or (position: -webkit-sticky)')) ? ' supports-sticky' : ' no-supports-sticky');
+				document.documentElement.className += (window.matchMedia('(-moz-touch-enabled: 1), (hover: none)')).matches ? ' no-supports-hover' : ' supports-hover';
+            }());
+
+            // This code is done to force reload the page when the back button is hit (which allows to fix stale data on cart, for instance)
+            if (performance.navigation.type === 2) {
+				location.reload(true);
+            }
+        </script>
+        {% render 'jquery-min' %}
+        <script data-src="{{ 'lazysizes.min.js' | asset_url }}" type="lazyload2"></script>
+
+        {% if settings.currency_conversion_enabled %}
+            <script src="//cdn.shopify.com/s/javascripts/currencies.js" defer></script>
+        {% endif %}
+
+        {%- if template == 'customers/addresses' -%}
+          <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+          <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
+        {%- endif -%}
+
+        <script type="lazyload2" data-src="https://cdn.polyfill.io/v3/polyfill.min.js?unknown=polyfill&features=fetch,Element.prototype.closest,Element.prototype.remove,Element.prototype.classList,Array.prototype.includes,Array.prototype.fill,Object.assign,CustomEvent,IntersectionObserver,IntersectionObserverEntry,URL"></script>
+        <script type="lazyload2" data-src="{{ 'libs.min.js' | asset_url }}"></script>
+        <script type="lazyload2" data-src="{{ 'theme.js' | asset_url }}"></script>
+        <script type="lazyload2" data-src="{{ 'custom.js' | asset_url }}"></script>
+        <script type="lazyload2" data-src="{{ 'jquery-equal-height.min.js' | asset_url }}"></script>
+        <script type="lazyload2" src="{{ 'option_selection.js' | shopify_asset_url }}"></script>
+        <script type="lazyload2" data-src="{{ 'api.jquery.js' | shopify_asset_url }}"></script>
+        {% comment %}{% render 'app-header-block' %}
+    	{% include 'storebundle-header' %}{% endcomment %}
+        {% include 'otRegion' %}            
+        
+        {% render 'custom-css' %}
+
+{% render 'gsf-conversion-pixels' %}
+</head>
+    <body class="prestige--v4 {% if template.directory %}template-{{ template.directory | handle }}{% endif %} template-{{ template.name | handle }}">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPRV7F4"
+                          height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+      	<a class="PageSkipLink u-visually-hidden" href="#main">{{ 'header.navigation.skip_to_content' | t }}</a>
+        <span class="LoadingBar"></span>
+        <div class="PageOverlay"></div>
+        <div class="PageTransition"></div>
+
+        {% section 'popup' %}
+        {% section 'sidebar-menu' %}
+
+        {%- if template != 'cart' -%}
+			{% render 'cart-drawer' %}
+        {%- endif -%}
+        <div class="PageContainer">
+			{% section 'announcement' %}
+			{% section 'header' %}
+			<main id="main" role="main">
+            {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
+            	{{ content_for_layout }}
+            {%- else -%}
+            	{% capture content_for_layout2 %}{{ content_for_layout }}{% endcapture %}
+            	{{ content_for_layout2 | replace: 'src="https://www.youtube.com/', 'data-src="https://www.youtube.com/'  }}
+            {%- endif -%}
+            </main>
+			{% section 'footer' %}
+        </div>
+        {% render 'footer-script'%}
+        {% unless template == 'product' %}
+            <script type="lazyload2">
+                function equal_height() {
+                //  $('.jQueryEqualHeight').jQueryEqualHeight('.ProductItem .ProductItem__Info .ProductItem__Title');
+                  $('.jQueryEqualHeight').jQueryEqualHeight('.ProductItem');
+                  $('.jQueryEqualHeight').jQueryEqualHeight();
+                }
+                setTimeout(function() {
+                  equal_height();
+                },5000);
+                $(window).resize(function(event) {
+                  equal_height();
+                });
+            </script>
+            {% render 'linked-options' %}
+        {% endunless %}
+        {% section 'searchtap' %}
+        {% render 'promotion-popup'%}
+        {% render 'checkout-phone-popup'%}
+<!--         <script type="lazyload2">
+            setTimeout(function() {
+                var hero_media = document.querySelectorAll("video");
+                hero_media.forEach(function(val) {
+            		val.load();
+            		val.muted="muted";
+                    val.play();
+                });
+            });
+        </script> -->
+       <div class="page-loader"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/page-loader-3.gif?v=1680067148"></div>
+       <script>
+        $(window).load(function() {
+          $(".page-loader").fadeOut("slow");
+        });
+       </script>
+     {% render 'snapmint' %}
+     <script type="lazyload2">
+		setTimeout(function() {
+            var lazyVideos = document.querySelectorAll("video");
+            lazyVideos.forEach(function(lazyVid) {
+              lazyVid.load();
+              lazyVid.muted= true;
+              lazyVid.play();
+            });
+		});
+      </script>
+      <script src="//swopstore.com/wrapper.php?method=container&shopId=1083" type="text/javascript"></script>
+	</body>
+</html>
+{{ 'wnw-optimization.js' | asset_url | script_tag }}

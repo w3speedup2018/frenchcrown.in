@@ -1,0 +1,180 @@
+<div class="timer-banner">
+<!--   <img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/Sold.jpg?v=1685423851" class="hidden-phone">
+  <img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/sold_out_mobile.jpg?v=1685361672" class="hidden-tablet-and-up"> -->
+  <div class="timer-desc">
+    <div class="timer-decription">
+      <div class="main-title-timer">
+        "<span class="design-count">1005</span>+ designs went out of stock last week"
+      </div>
+      <div class="sub-title-timer">
+        "Grab your favourite one right now before it gets out of stock"
+      </div>
+    </div>
+    <div class="timer-code">
+      <div class="countdown">
+         <div class="count-div">
+          <span class="number hours"></span>
+          <span>Hours</span>
+        </div>
+         <div class="count-div">
+          <span class="number minutes"></span>
+          <span>Minutes</span>
+        </div>
+         <div class="count-div">
+          <span class="number seconds"></span>
+          <span>Seconds</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var design_count = Math.floor(Math.random() * 701 ) + 700;
+  document.querySelector(".design-count").innerHTML = design_count;
+  const newDate = new Date('sep 12 23 23:59:59').getTime()
+  const countdown = setInterval(() =>{
+    const date = new Date().getTime()
+    const diff = newDate - date
+    const hours =  Math.floor(diff % (1000 * 60 * 60 * 24) / (1000 * 60 * 60))
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+    document.querySelector(".seconds").innerHTML = seconds < 10 ? '0' + seconds : seconds
+    document.querySelector(".minutes").innerHTML = minutes < 10 ? '0' + minutes :minutes
+    document.querySelector(".hours").innerHTML = hours < 10 ? '0' + hours : hours
+  }, 1000)
+</script>
+
+<style>
+  .timer-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Montserrat,sans-serif;
+    margin: 20px 0;
+  }
+  .timer-desc {
+/*     position: absolute; */
+    background-color: #000;
+    width: 100%;
+    height: 141px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 44px;
+  }
+  .main-title-timer, .sub-title-timer, .design-count {
+      font-size: 30px !important;
+      color: #ffff !important;
+      text-align: center !important;
+  }
+  .countdown {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .sub-title-timer {
+    margin-top: 12px;
+  }
+  .timer-banner .countdown > div {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.25);
+    width: 80px;
+    border-radius: 5px;
+    z-index: 4;
+    padding: 5px 0;
+  }
+  .timer-banner .number {
+    font-weight: 500;
+    font-size: 44px;
+    color: #f51c2d;
+    line-height: 42px;
+  }
+  .timer-banner div span:last-of-type {
+    font-size: 12px;
+      color: #000;
+  }
+  .timer-banner img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: fill;
+    overflow: hidden;
+  }
+  @media screen and (max-width: 1410px){
+    .timer-desc {
+      height: 120px;
+    }
+    .main-title-timer, .sub-title-timer, .design-count {
+      font-size: 22px !important;
+    }
+  }
+  @media screen and (max-width: 1199px){
+    .timer-desc {
+      width: 100%;
+      height: 191px;
+    }
+    .main-title-timer, .sub-title-timer, .design-count {
+      font-size: 21px !important;
+    }
+    .timer-banner .countdown > div {
+      width: 73px;
+    }
+    .timer-banner .number {
+      font-size: 34px;
+      line-height: 32px;
+    }
+  }
+  @media screen and (max-width: 992px) {
+    .main-title-timer, .sub-title-timer, .design-count {
+        font-size: 16px !important;
+        margin-top: 5px !important;
+    }
+    .timer-banner .number {
+      font-size: 27px;
+      line-height: 23px;
+    }
+    .timer-desc {
+      height: 191px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .countdown > div {
+      width: 59px;
+    }
+    .timer-banner img {
+      height: 165px;
+    }
+    .timer-desc {
+      display: block;
+    }
+    .timer-code {
+      display: flex;
+      justify-content: center;
+    }
+    .timer-decription {
+      margin: 25px 0;
+    }
+    .timer-banner .number {
+      font-size: 24px;
+      line-height: 26px;
+    }
+  }
+  @media screen and (max-width: 575px) {
+    .timer-banner img {
+        height: 185px;
+    }
+    .timer-decription {
+      margin: 20px 15px;
+    }
+    .main-title-timer, .sub-title-timer, .design-count {
+      font-size: 12px !important;
+    }
+  }
+</style>

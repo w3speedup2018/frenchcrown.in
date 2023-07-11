@@ -1,0 +1,124 @@
+{%- capture section_settings -%}
+{
+  "type": {{ settings.cart_type | json }},
+  "itemCount": {{ cart.item_count }},
+  "drawer": true,
+  "hasShippingEstimator": false
+}
+{%- endcapture -%}
+
+<div id="sidebar-cart" class="Drawer Drawer--fromRight" aria-hidden="true" data-section-id="cart" data-section-type="cart" data-section-settings='{{ section_settings }}'>
+  <div class="Drawer__Header Drawer__Header--bordered Drawer__Container">
+      <span class="Drawer__Title Heading u-h4">{{ 'cart.general.title' | t }}</span>
+
+      <button class="Drawer__Close Icon-Wrapper--clickable" data-action="close-drawer" data-drawer-id="sidebar-cart" aria-label="{{ 'header.navigation.close_cart' | t }}">
+        {%- render 'icon' with 'close' -%}
+      </button>
+  </div>
+
+  <form class="Cart Drawer__Content" action="/cart" method="POST" novalidate>
+    <div class="Drawer__Main" data-scrollable>
+      {%- if settings.cart_show_free_shipping_threshold -%}
+        {%- assign threshold_in_cents = settings.cart_free_shipping_threshold | times: 100 -%}
+
+        <div class="Cart__ShippingNotice Text--subdued">
+          <div class="Drawer__Container">
+            {%- if cart.total_price >= threshold_in_cents -%}
+              <p>{{- 'cart.general.free_shipping' | t -}}</p>
+            {%- else -%}
+              {%- capture remaining_amount -%}<span data-money-convertible>{{ cart.total_price | minus: threshold_in_cents | abs | money_without_trailing_zeros }}</span>{%- endcapture -%}
+              <p>{{- 'cart.general.free_shipping_remaining_html' | t: remaining_amount: remaining_amount -}}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if cart.item_count == 0 -%}
+        <p class="Cart__Empty Heading u-h5">{{ 'cart.general.empty' | t }}</p>
+      {%- else -%}
+        <div class="Drawer__Container">
+          <input type="hidden" name="attributes[collection_mobile_items_per_row]" value="">
+          <input type="hidden" name="attributes[collection_desktop_items_per_row]" value="">
+
+          {% render 'cart-items' %}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- unless cart.item_count == 0 -%}
+      {% assign non_customize_ptypes = "Face Mask, Jeans, Designer Jeans, Belt, Accessories, Tshirt, Wallet, Footwear, Kurta, Shoes, Socks, Perfume" | split: ", " %}
+      {%- for line_item in cart.items -%}
+        {% unless non_customize_ptypes contains line_item.product.type  %}
+          {% assign is_customize = true %}
+          {% break %}
+        {% endunless %}
+      {% endfor %}
+      <div class="Drawer__Footer" data-drawer-animated-bottom>
+        {%- capture shipping_and_taxes_notice -%}{{ 'cart.general.shipping_and_taxes_notice' | t }}{%- endcapture -%}
+
+        {%- if settings.cart_enable_notes or shipping_and_taxes_notices != blank -%}
+          {%- if settings.cart_enable_notes -%}
+            {% if is_customize %}
+              {%- if cart.note == blank -%}
+                <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">{{ 'cart.general.add_note' | t }}</button>
+              {%- else -%}
+                <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">{{ 'cart.general.edit_note' | t }}</button>
+              {%- endif -%}
+            {% else %}
+              {%- if cart.note == blank -%}
+                <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">Add Order Note</button>
+              {%- else -%}
+                <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">Edit Order Note</button>
+              {%- endif -%}
+            {% endif %}
+          {%- endif -%}
+
+          {%- if cart.cart_level_discount_applications != blank -%}
+            {%- for discount_application in cart.cart_level_discount_applications -%}
+              <p class="Cart__Discount">{%- include 'icon' with 'sale' -%} {{ 'cart.general.discount' | t }} ({{ discount_application.title }}): -<span data-money-convertible>{{ discount_application.total_allocated_amount | money_without_trailing_zeros }}</span></p>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endif -%}
+
+       <p class="price-flx">Subtotal:<span>{{ cart.total_price | money_without_trailing_zeros }}</span></p>
+        <p class="cashback-msg" style="color: blue;font-weight: bold;">(You will get <span>₹{{ cart.total_price | times: 0.001 | round }}</span> cashback which can be used in next order)</p>
+       <button type="submit" name="checkout" class="Cart__Checkout Button Button--primary Button--full" style="display: flex;flex-direction: row;gap: 15px;align-items: center;">
+          <span class="btn-text">
+            <span style="font-size: 15px;">{%if settings.btnTxt%}{{settings.gk-merchant-btnText}}{%else%}{{- 'cart.general.checkout' | t -}}{%endif%}</span>
+            <span class="subtextt">5% extra discount on prepaid</span>
+         </span>
+         <span class="pay-opt-icon" style="display: flex;gap: 10px;">
+             <img src="https://cdn.gokwik.co/v4/images/upi-icons.svg">
+             <img src="https://cdn.gokwik.co/v4/images/right-arrow.svg">
+         </span>
+      <!--            <span class="Button__SeparatorDot"></span>
+          <span data-money-convertible>{{ cart.total_price | money_without_trailing_zeros }}</span>  -->
+  
+        </button>
+        {% comment %}{% render 'gokwik-checkout' %}{% endcomment %}
+<!--         <button type="submit" name="checkout" class="Cart__Checkout Button Button--primary Button--full">
+          <span>{%if settings.btnTxt%}{{settings.gk-merchant-btnText}}{%else%}{{- 'cart.general.checkout' | t -}}{%endif%}</span>
+          {%comment%}<span class="Button__SeparatorDot"></span>
+          <span data-money-convertible>{{ cart.total_price | money_without_trailing_zeros }}</span>{%endcomment%}
+        </button> -->
+
+
+        {%- if settings.cart_enable_notes -%}
+          <div class="Cart__OffscreenNoteContainer" aria-hidden="true">
+            {%- if cart.note == blank -%}
+              <span class="Cart__NoteButton">{{ 'cart.general.add_note' | t }}</span>
+            {%- else -%}
+              <span class="Cart__NoteButton">{{ 'cart.general.edit_note' | t }}</span>
+            {%- endif -%}
+            <span class="order-note-close" data-action="toggle-cart-note">X</span>
+            <div class="Form__Item">
+              <textarea class="Cart__Note Form__Textarea" name="note" id="cart-note" rows="7" placeholder="{{ 'cart.general.note_placeholder' | t }}" data-scrollable>{{ cart.note }}</textarea>
+            </div>
+
+            <button type="button" class="Button Button--primary Button--full" data-action="toggle-cart-note">{{ 'cart.general.save_note' | t }}</button>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+  </form>
+</div>

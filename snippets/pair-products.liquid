@@ -1,0 +1,82 @@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+<div class="" >
+  
+      <header class="SectionHeader SectionHeader--center">
+        <div class="Container">
+          <h3 class="SectionHeader__Heading Heading u-h3">Pair it with</h3>
+        </div>
+      </header>
+   <div class="pair-products">     
+           {%- assign product_handle_name = product.metafields.product_pair.pair -%}
+           {%- assign product_handle = product_handle_name | split:','  -%}
+     		{%- assign all_product = '' -%}
+	     
+           {%- for product_name in product_handle -%}
+     	   {%- assign split_product_name = product_name | strip %}
+           {%- assign product = all_products[split_product_name] -%}
+     {% if product.handle == blank %}{% continue %}
+     {% endif %}
+<!--      {% if product != blank %}
+      {% assign all_product = all_product | append : product.handle | append: ',' %}
+     {% endif %} -->
+
+             <div class="Carousel__Cell jQueryEqualHeight">
+               
+               {% include 'product-grid-item' %}
+             </div>
+           {%- endfor -%}
+    </div>
+</div>
+<style>
+  .pair-products .Carousel__Cell{
+    width:25% !important;
+    padding:0 30px !important;
+  }
+/*    .pair-products .AspectRatio{
+    padding-top:100%; 
+   } */
+ .pair-products .AspectRatio .ProductItem__Image{
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%,-50%) !important;
+    min-width: 100%;
+    max-width: none;
+    object-fit: contain;
+ }
+  @media only screen and (max-width: 767px) {
+    .pair-products .Carousel__Cell{
+      width:100% !important;
+      padding:0 30px !important;
+  	}
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .pair-products .Carousel__Cell{
+      width:50% !important;
+      padding:0 30px !important;
+  	}
+  }
+</style>
+  <script>
+  $('.pair-products').flickity({
+    // options
+    cellAlign: 'left',
+    contain: true,
+    pageDots: false,
+    wrapAround: true,
+
+  });
+  </script>
+
+  
+
+  
+    
+
+   
+  
+
+

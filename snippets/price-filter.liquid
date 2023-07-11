@@ -1,0 +1,63 @@
+{%- if collection.handle contains 'tshirt' -%}
+  {%- assign price_tag_lists = section.settings.tshirt_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'shirt' or collection.handle contains 'jackets'  -%}
+  {%- assign price_tag_lists = section.settings.shirt_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'suit' -%}
+  {%- assign price_tag_lists = section.settings.suit_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'blazer' -%}
+  {%- assign price_tag_lists = section.settings.blazer_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'accessories' -%}
+  {%- assign price_tag_lists = section.settings.accessories_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'footwear' -%}
+  {%- assign price_tag_lists = section.settings.footwear_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'belt' -%}
+  {%- assign price_tag_lists = section.settings.belt_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'wallet' -%}
+  {%- assign price_tag_lists = section.settings.wallet_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'waistcoat' -%}
+  {%- assign price_tag_lists = section.settings.waistcoat_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'pant' -%}
+  {%- assign price_tag_lists = section.settings.pant_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'shorts' or collection.handle contains 'boxer' -%}
+  {%- assign price_tag_lists = section.settings.shorts_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'jeans' -%}
+  {%- assign price_tag_lists = section.settings.jeans_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'lounge_pant' -%}
+  {%- assign price_tag_lists = section.settings.lounge_pant_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'kurtas' -%}
+  {%- assign price_tag_lists = section.settings.shirt_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'perfume' -%}
+  {%- assign price_tag_lists = section.settings.perfume_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'co-ords' -%}
+  {%- assign price_tag_lists = section.settings.coords_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'socks' -%}
+  {%- assign price_tag_lists = section.settings.socks_price_taglist | split: ','  -%}
+{%- elsif collection.handle contains 'sherwani-sets-wedding-engagement' or collection.handle contains 'kurta-jacket-sets-wedding-engagement' or collection.handle contains 'kurta-jackets' or collection.handle contains 'jodhpuri-sets-wedding-engagement' or collection.handle contains 'indowestern-sets-wedding-engagement' or collection.handle contains 'kurta-sets-wedding-engagement' or collection.handle contains 'jodhpuris' or collection.handle contains 'sherwanis' or collection.handle contains 'indowesterns' or collection.handle contains 'pajamas' or collection.handle contains 'dhotis' or collection.handle contains 'wedding-kurtas' or collection.handle contains 'wedding-engagement' -%}
+  {%- assign price_tag_lists = section.settings.wedding_price_taglist | split: ','  -%}
+{% else %}
+  {%- assign price_tag_lists = section.settings.shirt_price_taglist | split: ','  -%}
+{%- endif -%}
+
+
+{%- if price_tag_lists != empty -%}
+  <div class="Collapsible Collapsible--padded Collapsible--autoExpand shirt-size">
+    <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+      Price Range <span class="Collapsible__Plus"></span>
+    </button>
+
+    <div class="Collapsible__Inner">
+      <div class="Collapsible__Content">
+        <ul class="Linklist">
+          {%- for tag_name in price_tag_lists -%}
+            {%- assign tag_value = tag_name | handleize -%}
+            <li class="Linklist__Item {% if current_tags contains tag_value %}is-selected{% endif %}">
+              <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag_value %}is-active{% endif %}" data-tag="{{ tag_value }}" data-action="toggle-tag">
+                {{- tag_name -}}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

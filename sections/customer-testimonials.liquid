@@ -1,0 +1,182 @@
+{%- capture flickity_options -%}
+{
+  "prevNextButtons": true,
+  "wrapAround": true,
+  "dragThreshold": 16,
+  "groupCells": true,
+  "pageDots": true,
+  "autoPlay": {% if section.settings.autoplay %}{{ section.settings.cycle_speed | times: 1000 }}{% else %}false{% endif %},
+  "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+}
+{%- endcapture -%}
+
+<section class="Section Section--spacingNormal TestimonialList--carousel customer-testimonials" id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="testimonials"> 
+    <header class="SectionHeader SectionHeader--center">
+      <div class="Container">
+      {%- if settings.home_review_title != blank or settings.product_review_title != blank -%}
+        {% if template == 'index' %}
+          {%- assign title = settings.home_review_title -%}
+        {%- else -%}
+          {%- assign title = settings.product_review_title -%}
+        {%- endif -%}
+        <h3 class="SectionHeader__SubHeading Heading u-h1">{{ title | escape }}</h3>
+      {%- endif -%}
+      </div>
+    </header>
+    <div class="TestimonialList Carousel Carousel--fadeIn" data-flickity-config='{{ flickity_options }}'>
+      {%- if settings.review_image_1 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_1 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_2 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <div class="Container">
+            <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_2 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+          </div>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_3 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_3 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_4 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_4 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_5 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_5 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_6 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_6 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_7 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_7 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_8 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_8 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_9 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_9 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_10 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_10 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_11 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_11 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if settings.review_image_12 != blank -%}
+        <div class="Carousel__Cell Testimonial" data-slide-index="{{ forloop.index0 }}">
+          <a href="{{ section.settings.btn_url }}" target="_blank">
+            <div class="Container">
+              <img class="Testimonial__Logo lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ settings.review_image_12 | img_url: 'master' }}" alt="Slide {{ forloop.index }}">
+            </div>
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="Container">
+      <div class="SectionFooter">
+        <a href="{{ section.settings.btn_url }}" class="Button Button--primary" target="_blank">{{ section.settings.btn_text }}</a>
+      </div>
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer Testimonials",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto rotate between testimonials",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "cycle_speed",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change testimonials every",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Title",
+      "default": "View All Reviews"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    }
+
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Customer Testimonials"
+    }
+  ]
+}
+{% endschema %}

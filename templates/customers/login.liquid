@@ -1,0 +1,418 @@
+<section data-section-id="login" data-section-type="login" class="contact-us send-otp-section">
+  <div class="Container ">
+    <div class="PageContent PageContent--fitScreen PageContent--extraNarrow">
+      <div class="Form Form--spacingTight">
+        <div class="send-otp-section cod-otp-section" style="display: block">
+          <header class="Form__Header">
+            <p style="color: blue;font-size: 16px;display:none" class="marketplace-points-msg">Receive ₹500 cashback in your French Crown wallet by logging into FrenchCrown website.</p>
+            <h1 class="Form__Title Heading u-h1">Login with OTP</h1>
+            <p class="Form__Legend">Enter your log in details</p>
+          </header>
+          <div class="Form__Item">
+            <div class="fc_mainContent fc_center m-b-70">
+              <div class="lock-section">
+                <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+              </div>
+              <h3 class="otp-title">Mobile Number</h3>
+              <div class="otp-mobile-outer">
+                <img class="india-flag" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/india_flag.png?v=1673522055">
+                <div class="otp-mobile-no-prefix">+91</div>
+                <input class="otp-mobile-no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" placeholder="Enter Number" autocomplete="tel">
+              </div>
+              <div class="otp-error" style="display: none">Please enter valid Mobile Number</div>
+            </div>
+          </div>
+  
+          <button type="button" class="Form__Submit Button Button--primary Button--full send-otp-btn" data-otp-type="sms">Send OTP</button>
+        </div>
+        
+        <div class="send-whatsapp-otp-section cod-otp-section" style="display: none">
+          <header class="Form__Header">
+            <h1 class="Form__Title Heading u-h1">Login with OTP</h1>
+            <p class="Form__Legend">Enter your log in details</p>
+          </header>
+          <div class="Form__Item">
+            <div class="fc_mainContent fc_center m-b-70">
+              <div class="lock-section">
+                <img class="lock-icon" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/lock.png?v=1673517189">
+              </div>
+              <h3 class="otp-title">Mobile Number</h3>
+              <div class="otp-mobile-outer">
+                <img class="india-flag" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/india_flag.png?v=1673522055">
+                <div class="otp-mobile-no-prefix">+91</div>
+                <input class="otp-mobile-no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" placeholder="Enter Number" autocomplete="tel">
+              </div>
+              <div class="otp-error" style="display: none">Please enter valid Mobile Number</div>
+            </div>
+          </div>
+          <button type="button" class="Form__Submit Button Button--primary Button--full send-otp-btn" data-otp-type="sms">Send OTP</button>
+        </div>
+
+        <div class="otp-verify-section cod-otp-section digit-group1" style="display: none">
+          <div class='fc_mainContent fc_center'>
+            <header class="Form__Header">
+              <h1 class="Form__Title Heading u-h1">Enter One Time Password</h1>
+              <p class="Form__Legend">We have send OTP on your mobile number</p>
+            </header>
+            <h3><span class="received-otp-phone"></span><a href="#" class="change-mobile-no"> Change Number</a></h3>
+            <div class="otp-sent" style="display: none">OTP sent successfully</div>
+            <div class="otp-error" style="display: none"></div>
+            <input type="number" id="digit-1" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-1" data-next="digit-2" />
+            <input type="number" id="digit-2" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+            <input type="number" id="digit-3" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+            <a href="#" class="resend-otp" data-otp-type="sms">Resend OTP</a>
+            <button class='submit-otp' type="button">Submit</button>
+          </div>
+    
+          <div class='fc_popup-footer'>
+            <div class="fc_center footer-btn">
+                <p class="unable-receive-otp">Unable to receive OTP on SMS?</p>
+                <a href="#" class="resend-otp-whatsapp" data-otp-type="whatsapp"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/whatsapp-icon.png?v=1673530244"> Resend OTP on WhatsApp</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="otp-whatsapp-verify-section cod-otp-section digit-group1" style="display: none">
+          <div class='fc_mainContent fc_center'>
+            <header class="Form__Header">
+              <h1 class="Form__Title Heading u-h1">Enter One Time Password</h1>
+              <p class="Form__Legend">We have send OTP on your mobile number</p>
+            </header>
+            <h3><span class="received-otp-phone"></span><a href="#" class="change-mobile-no"> Change Number</a></h3>
+            <div class="otp-sent" style="display: none">OTP sent successfully</div>
+            <div class="otp-error" style="display: none"></div>
+            <input type="number" id="digit-1" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-1" data-next="digit-2" />
+            <input type="number" id="digit-2" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+            <input type="number" id="digit-3" maxlength="1" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+            <a href="#" class="resend-otp" data-otp-type="sms">Resend OTP</a>
+            <button class='submit-otp' type="button">Submit</button>
+          </div>
+    
+          <div class='fc_popup-footer'>
+            <div class="fc_center footer-btn">
+                <p class="unable-receive-otp">Unable to receive OTP on SMS?</p>
+                <a href="#" class="resend-otp-sms" data-otp-type="sms"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/phone-icon.png?v=1673530237"> Resend OTP on SMS</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="email-section cod-otp-section" style="display: none">
+          <header class="Form__Header">
+            <h1 class="Form__Title Heading u-h1">Enter Account Details</h1>
+          </header>
+          <div class="Form__Item">
+            <div class="fc_mainContent fc_center m-b-70">
+              <h3 class="otp-title">Email</h3>
+              <input type="email" class="login-otp-email" placeholder="email">
+              <div class="email-error" style="display: none">Please enter valid Email</div>
+            </div>
+          </div>
+  
+          <button type="button" class="Form__Submit Button Button--primary Button--full create-customer">Update</button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  function send_otp(){
+    var otp_send_type = sessionStorage.getItem("otp_send_type");
+    if(typeof otp_send_type == 'undefined'){
+      sessionStorage.setItem("otp_send_type", "sms");
+      otp_send_type = 'sms';
+    }
+    if(otp_send_type == 'sms' || otp_send_type == ''){
+      var otp_phone_no = $.trim($('.send-otp-section .otp-mobile-no').val());
+      if(sessionStorage.getItem("otp_sms_send_count") != null && parseInt(sessionStorage.getItem("otp_sms_send_count")) > 4){
+        $(".otp-error").html('You have reached maximum limit').show();
+        setTimeout(function(){
+          $(".otp-error").fadeOut();
+        }, 5000);
+        return false;
+      }
+    }else if(otp_send_type == 'whatsapp'){
+      var otp_phone_no = $.trim($('.send-whatsapp-otp-section .otp-mobile-no').val());
+      if(sessionStorage.getItem("otp_whatsapp_send_count") != null && parseInt(sessionStorage.getItem("otp_whatsapp_send_count")) > 2){
+        $(".otp-error").html('You have reached maximum limit').show();
+        setTimeout(function(){
+          $(".otp-error").fadeOut();
+        }, 5000);
+        return false;
+      }
+    }
+    if(otp_send_type == 'sms' && (otp_phone_no == '' || otp_phone_no.length < 10)){
+      $('.cod-otp-section').hide();
+      $('.send-otp-section').show();
+      $(".otp-error").show();
+      $('.send-otp-section .otp-mobile-outer').addClass('otp-mobile-error');
+      setTimeout(function(){
+        $(".otp-error").fadeOut();
+      }, 5000);
+    }else if(otp_send_type == 'whatsapp' && (otp_phone_no == '' || otp_phone_no.length < 10)){
+      $('.cod-otp-section').hide();
+      $('.send-whatsapp-otp-section').show();
+      $(".otp-error").show();
+      $('.send-whatsapp-otp-section .otp-mobile-outer').addClass('otp-mobile-error');
+      setTimeout(function(){
+        $(".otp-error").fadeOut();
+      }, 5000);
+    }else{
+      $('.otp-mobile-outer').removeClass('otp-mobile-error');
+      // sessionStorage.setItem("alternate_mobile_no", otp_phone_no);
+      sessionStorage.setItem("checkout_phone", otp_phone_no);
+      $('.send-otp-btn').html('<img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/loader.gif?v=1676470993" style="width: 25px">');
+      $.ajax({
+        url: 'https://frenchcrownerp.com/miscellaneous/send_cod_otp',
+        type: 'POST',
+        dataType: 'json',
+        data: {phone_no: otp_phone_no, otp_send_type: sessionStorage.getItem("otp_send_type"), page: 'sign_in'},
+      })
+      .done(function(response) {
+        $('.send-otp-btn').html('Send OTP');
+        if(response === undefined){
+          $('.edit_checkout')[0].submit();
+        }else{
+          if(otp_send_type == 'sms'){
+            if(sessionStorage.getItem("otp_sms_send_count") == null){
+              sessionStorage.setItem("otp_sms_send_count", 1);
+            }else{
+              sessionStorage.setItem("otp_sms_send_count", parseInt(sessionStorage.getItem("otp_sms_send_count")) + 1)
+            }
+          }else if(otp_send_type == 'whatsapp'){
+            if(sessionStorage.getItem("otp_whatsapp_send_count") == null){
+              sessionStorage.setItem("otp_whatsapp_send_count", 1);
+            }else{
+              sessionStorage.setItem("otp_whatsapp_send_count", parseInt(sessionStorage.getItem("otp_whatsapp_send_count")) + 1)
+            }
+          }
+          console.log("response==>", response);
+          $('.cod-otp-section').hide();
+          
+          if(otp_send_type == 'sms'){
+            $('.otp-verify-section input').val('');
+            $('.otp-verify-section').show();
+            $('.otp-verify-section .received-otp-phone').text("+91 "+sessionStorage.getItem("checkout_phone"));
+          }else if(otp_send_type == 'whatsapp'){
+            $('.otp-verify-section input').val('');
+            $('.otp-whatsapp-verify-section').show();
+            $('.otp-whatsapp-verify-section .received-otp-phone').text("+91 "+sessionStorage.getItem("checkout_phone"));
+            $('.send-whatsapp-otp-section .back-btn').attr('data-back-section', 'otp-whatsapp-verify-section')
+          }
+          $('.otp-sent').show();
+          setTimeout(function(){
+            $(".otp-sent").fadeOut();
+          }, 5000);
+          $('.resend-otp, .resend-otp-whatsapp, .change-mobile-no, .resend-otp-sms').attr('style', 'pointer-events: none');
+          var timeleft = 15;
+          var downloadTimer = setInterval(function(){
+            timeleft--;
+            if(timeleft < 10){
+              time = "0"+timeleft;  
+            }else{
+              time = timeleft;
+            }
+            $(".resend-otp").html('Resend OTP in 00:<span class="countdown-timer">'+time+'</span>');
+            if(timeleft <= 0){
+              $('.resend-otp, .resend-otp-whatsapp, .change-mobile-no, .resend-otp-sms').attr('style', '');
+              $(".resend-otp").html('Resend OTP');
+              clearInterval(downloadTimer);
+            }
+          },1000);
+        }
+      })
+      .fail(function() {
+        console.log("error");
+        $('.edit_checkout')[0].submit();
+      });
+    }
+  }
+
+  function customer_sign_in(email = ''){
+    var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    $.ajax({
+      url: 'https://frenchcrownerp.com/api/v1/sign_in',
+      type: 'POST',
+      dataType: 'json',
+      data: {email: email, shopify_domain: shopify_domain, phone_no: $('.otp-mobile-no').val(), code: code},
+      success: function (response) {
+        setTimeout(function(){
+          $('.submit-otp').html('Submit');
+          $('.create-customer').html('Update');
+        }, 2000);
+        if(typeof response['token'] !== 'undefined'){
+          window.location.href = 'https://frenchcrown.in/account/login/multipass/'+response['token']+'?return_to=/pages/rewards?code='+code
+        }
+      },
+      error: function (data) {
+        setTimeout(function(){
+          $('.submit-otp').html('Submit');
+          $('.create-customer').html('Update');
+        }, 2000);
+        var msg = data.responseJSON.errors[0]['message']
+        $('.otp-error').html(msg).show();
+        $(".email-error").html(msg).show();
+        setTimeout(function(){
+          $(".email-error").fadeOut();
+          $(".otp-error").fadeOut();
+        }, 5000);
+      }
+    });
+  }
+
+  function isValidEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const code = urlParams.get('code');
+  if(code != null){
+    $('.marketplace-points-msg').show();
+  }
+  
+  $(document).on('click','.resend-otp-sms', function(e){
+    e.preventDefault();
+    var otp_type = $(this).attr('data-otp-type');
+    sessionStorage.setItem("otp_send_type", otp_type);
+    
+    if($('.send-otp-section .otp-mobile-no').val() == ''){
+      $('.cod-otp-section').hide();
+      $('.send-otp-section').show();
+    }else{
+      send_otp();
+    }
+  });
+
+  $(document).on('click','.resend-otp-whatsapp', function(e){
+    e.preventDefault();
+    var otp_type = $(this).attr('data-otp-type');
+    sessionStorage.setItem("otp_send_type", otp_type);
+    if($('.send-whatsapp-otp-section .otp-mobile-no').val() == ''){
+      $('.cod-otp-section').hide();
+      $('.send-whatsapp-otp-section').show();
+    }else{
+      send_otp();
+    }
+  });
+
+  $(document).on('click','.back-btn', function(e){
+    e.preventDefault();
+    $('.cod-otp-section').hide();
+    back_class = $(this).attr('data-back-section');
+    $('.'+back_class).show();
+  });
+
+  $(document).on('click','.change-mobile-no', function(e){
+    e.preventDefault();
+    $('.cod-otp-section').hide();
+    $('.send-otp-section').show();
+  });
+
+  $(document).on('click','.change-whatsapp-no', function(e){
+    e.preventDefault();
+    $('.cod-otp-section').hide();
+    $('.send-whatsapp-otp-section').show();
+  });
+    
+  $(document).on('change','.otp-mobile-no', function(e){
+    $('.otp-mobile-no').val($(this).val());
+  });
+
+  $(document).on('click','.send-otp-btn, .resend-otp', function(e){
+    e.preventDefault();
+    sessionStorage.setItem("otp_send_type", $(this).attr('data-otp-type'));
+    send_otp();
+  })
+
+  $('.digit-group1, .digit-group2, .digit-group3').find('input').each(function() {
+      $(this).attr('maxlength', 1);
+      $(this).on('keyup', function(e) {
+        var parent = $($(this).parent());
+        
+        if(e.keyCode === 8 || e.keyCode === 37) {
+          var prev = parent.find('input#' + $(this).data('previous'));
+          
+          if(prev.length) {
+            $(prev).select();
+          }
+        } else if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
+          var next = parent.find('input#' + $(this).data('next'));
+          
+          if(next.length) {
+            $(next).select();
+          } else {
+            if(parent.data('autosubmit')) {
+              parent.submit();
+            }
+          }
+        }
+      });
+    });
+
+  $(document).on('click','.submit-otp', function(e){
+    var otp = '';
+    var otp_blank = false
+    $(this).parents('.cod-otp-section').find('input').each(function() {
+      if($(this).val() == ''){
+        otp_blank = true;
+      }else{
+        otp += $(this).val().toString();
+      }
+    });
+    if (otp_blank){
+      $(".otp-error").html('Please Add OTP').show();
+      setTimeout(function(){
+        $(".otp-error").fadeOut();
+      }, 5000);
+    }else{
+      $('.submit-otp').html('<img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/loader.gif?v=1676470993" style="width: 25px">');
+      $.ajax({
+        url: 'https://frenchcrownerp.com/api/v1/sign_in/verify_otp',
+        type: 'POST',
+        dataType: 'json',
+        data: {otp: otp, otp_send_type: sessionStorage.getItem("otp_send_type"), phone_no: $('.otp-mobile-no').val()},
+        success: function (response) {
+          if(response['success']){
+            customer_sign_in();
+          }
+        },
+        error: function (data) {
+          setTimeout(function(){
+            $('.submit-otp').html('Submit');
+          }, 2000);
+          var msg = data.responseJSON.errors[0]['message']
+          if(msg == "OTP doesn't match"){
+            $(".otp-error").html("OTP doesn't match").show();
+            setTimeout(function(){
+              $(".otp-error").fadeOut();
+            }, 5000);
+          }else if(msg == "Customer not present"){
+            $('.otp-verify-section').hide();
+            $('.email-section').show();
+          }
+        }
+      });
+    }
+  });
+
+  $(document).on('click','.create-customer', function(e){
+    var email = $.trim($('.login-otp-email').val());
+    if(email == ''){
+      $(".email-error").html('Please Add Email').show();
+      setTimeout(function(){
+        $(".email-error").fadeOut();
+      }, 5000);
+    }else if(!isValidEmail(email)){
+      $(".email-error").html('Please Enter Valid Email').show();
+      setTimeout(function(){
+        $(".email-error").fadeOut();
+      }, 5000);
+    }else{
+      $('.create-customer').html('<img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/loader.gif?v=1676470993" style="width: 25px">');
+      customer_sign_in(email);
+    }
+  });
+</script>

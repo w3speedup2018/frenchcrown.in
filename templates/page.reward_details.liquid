@@ -1,0 +1,364 @@
+<div class="Container">
+  <header class="PageHeader">
+    <div class="SectionHeader SectionHeader--center">
+      <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+    </div>
+  </header>
+  <div class="PageContent reward-points-page">
+    <div class="PageLayout PageLayout--breakLap">
+      <div class="PageLayout__Section">
+        <div class="Segment">
+          <h2 class="Segment__Title Heading">Reward Point History</h2>
+        </div>
+       <div class="TableWrapper">
+          <table class="reward-point-history-table Table Table Table--medium">
+            <tbody class="Heading u-h7">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="PageLayout__Section PageLayout__Section--secondary">
+        <div class="Segment">
+          <h2 class="Segment__Title Heading cashback-balance">Your Cashback Balance</h2>
+          <div class="Segment__Content">
+            <p class="point-balance"></p>
+            <a href="#" class="Button Button--primary redeem-points">Redeem</a>
+            <table class="reward-points-table Table medium">
+              <thead class="Text--subdued">
+                <tr>
+                  <th>Points</th>
+                  <th>Expire in (days)</th>
+                </tr>
+              </thead>
+              <tbody class="Heading u-h7">
+              </tbody>
+            </table>
+            
+            <p>
+            <table class="Table Table medium">
+              <thead class="Text--subdued">
+                <tr>
+                  <th><b>Refer a Friend</b></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="Heading u-h7">
+                <tr>
+                  <td colspan=2>Refer a friend and your friend will get ₹2000 off on first purchase of a Minimum ₹2999. Once your frined complete the purchase, you will also get ₹2000 off on your next purchase of a Minimum ₹2999.</td>
+                </tr>
+                <tr>
+                  <td colspan=2><a href="#" class="Button Button--primary referrel-share">Refer</a></td>
+                </tr>
+              </tbody>
+            </table>
+            </p>
+            <p>
+            <table class="reward-point-codes-table Table medium">
+              <thead class="Text--subdued">
+                <tr>
+                  <th><b>Active Discount Codes</b></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="Heading u-h7">
+              </tbody>
+            </table>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal redeem-popup">
+  <div class="modal-inner modal-inner-center">
+    <div class="modal-wht-header">
+      <div class="modal-txt">
+        Redeem Points
+      </div>
+      <div class="modal-buttons">
+        &nbsp;
+        <a class="close"> X </a>
+      </div>
+    </div>
+    <div class="" style="background: #000">
+      <div class="" style="padding: 15px;">
+        <input type="hidden" class="cid" value="{{ customer.id }}">
+        <ul>
+          <li>
+            <input type="radio" id="redeem_all" name="redeem_type" class="redeem_type" value="all" checked>
+            <input type="hidden" class="all-points" value="250">
+            <label for="redeem_all">Redeem All Points</label>
+          </li>
+          <li>
+            <input type="radio" id="redeem_partial" name="redeem_type" class="redeem_type" value="partial">
+            <label for="redeem_partial">Redeem Partial Points</label>
+          </li>
+        </ul>
+        <span class="error-text"></span>
+        <span class="success-text"></span>
+        <input type="number" class="points Form__Input" placeholder="How many points, you want to redeem?" style="display: none" min=1 step=1 onkeypress="return event.charCode >= 48">
+        <input type="button" class="redeem-point-submit" value="submit">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal referrel-popup">
+  <div class="modal-inner modal-inner-center">
+    <div class="modal-wht-header">
+      <div class="modal-txt">
+        Enter Your Friend's Details
+      </div>
+      <div class="modal-buttons">
+        &nbsp;
+        <a class="close"> X </a>
+      </div>
+    </div>
+    <div class="" style="background: #000">
+      <div class="" style="padding: 15px;">
+        <input type="hidden" class="cid" value="{{ customer.id }}">
+        <input type="hidden" class="cemail" value="{{ customer.email }}">
+<!--         <p>Enter Your Friend's Email Id</p> -->
+        <p>( Your friend need to use this email id only, while placing the order to avail the discount )</p>
+        <span class="error-text"></span>
+        <span class="success-text"></span>
+        <input type="email" class="points Form__Input referrel-email" placeholder="Enter Email">
+        <input class="points Form__Input referrel-phone" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" type="number" maxlength="10" placeholder="Enter Number" autocomplete="tel">
+        <button type="button" class="referrel-submit"> Share </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).on('ready', function(){
+    function isEmail(email) {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      return regex.test(email);
+    }
+    $(document).on('click', '.redeem-points', function(e){
+      e.preventDefault();
+      $('.redeem-popup').addClass('show');
+      $('.redeem-popup .success-text, .redeem-popup .error-text').text('');
+    })
+  
+    $(document).on('click', '.referrel-share', function(e){
+      e.preventDefault();
+      $('.referrel-popup').addClass('show');
+      $('.referrel-popup .success-text, .referrel-popup .error-text').text('');
+    })
+  
+    $(document).on('change', '.redeem_type', function(e){
+      if($('.redeem_type:checked').val() == 'all'){
+        $('.points').hide();
+      }else{
+        $('.points').show();
+      }
+    })
+    
+    $(document).on('change', '.points', function(){
+      if($(this).val() < 1){
+        $(this).addClass('error');
+      }else{
+        $(this).removeClass('error');
+      }
+    });
+  
+    $('.redeem-point-submit').on('click',function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      $(this).attr('disabled', true);
+      var redeem_type = $('.redeem_type:checked').val();
+      if(redeem_type == 'all'){
+        var points = $('.all-points').val();
+      }else{
+        var points = $('.points').val();
+      }
+      if(points < 1){
+        $('.points').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }
+      var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+      var data = { "points": points, "shopify_domain": shopify_domain, "cid": $('.cid').val() }
+      $.ajax({
+        type: "POST",
+        url: 'https://frenchcrownerp.com/api/internal/v1/reward_point_codes',
+        data : data,
+        success: function (data) {
+          $('.redeem-popup .error-text').text('');
+          $('.redeem-popup .success-text').text(data['message']);
+          $('.redeem-point-submit').attr('disabled', false);
+          $('.points').val('');
+        },
+        error: function (data) {
+          $('.redeem-popup .error-text').text(data.responseJSON.errors[0]['message']);
+          $('.redeem-popup .success-text').text('');
+          $('.redeem-point-submit').attr('disabled', false);
+          $('.points').val('');
+        }  
+      });
+      return false;
+    });
+  
+    $('.referrel-submit').on('click',function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      $(this).attr('disabled', true);
+      var referrel_email = $.trim($('.referrel-email').val());
+      var referrel_phone = $.trim($('.referrel-phone').val());
+      var cemail = $.trim($('.cemail').val());
+      if(referrel_email == ''){
+        $('.error-text').text('Email is required');
+        $('.referrel-email').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }else if(referrel_phone == ''){
+        $('.error-text').text('Phone is required');
+        $('.referrel-phone').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }else if(!isEmail(referrel_email)){
+        $('.error-text').text('Enter Valid Email');
+        $('.referrel-email').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }else if(referrel_phone < 0 || referrel_phone.length != 10){
+        $('.error-text').text('Enter Valid Phone No');
+        $('.referrel-phone').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }else if(cemail == referrel_email){
+        $('.error-text').text('You are not able to use your own email');
+        $('.referrel-email').addClass('error');
+        $(this).attr('disabled', false);
+        return;
+      }else{
+        $('.referrel-submit').html('<img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/black-loader.gif?v=1681550751" style="width: 25px">').css('padding', '7px 15px');
+        var shopify_domain = 'french-crown-dress-sharp.myshopify.com';
+        var data = { "email": referrel_email, "phone": referrel_phone, "shopify_domain": shopify_domain, "cid": $('.cid').val() }
+        $.ajax({
+          type: "POST",
+          url: 'https://frenchcrownerp.com/api/internal/v1/reward_point_codes/share_referrel_code',
+          data : data,
+          success: function (data) {
+            $('.referrel-popup .error-text').text('');
+            $('.referrel-popup .success-text').text(data['message']);
+            $('.referrel-submit').attr('disabled', false);
+            $('.points').val('');
+            $('.referrel-submit').html('Share').removeAttr('style');
+          },
+          error: function (data) {
+            $('.referrel-popup .error-text').text(data.responseJSON.errors[0]['message']);
+            $('.referrel-popup .success-text').text('');
+            $('.referrel-submit').attr('disabled', false);
+            $('.points').val('');
+            $('.referrel-submit').html('Share').removeAttr('style');
+          }  
+        });
+      }
+      return false;
+    });
+
+    $.ajax({
+      type: "GET",
+      url: 'https://frenchcrownerp.com/api/internal/v1/reward_point_codes',
+      data : {cid: $('.cid').val(), shopify_domain: 'french-crown-dress-sharp.myshopify.com'},
+      success: function (data) {
+        var reward_point_histories = '';
+        $.each( data['reward_point_histories'], function(i, value) {
+          reward_point_histories += '<tr><td>'+value['created_at']+'</td><td>'+value['description']+'</td></tr>';
+        });
+        if(reward_point_histories == ''){
+          reward_point_histories = '<tr><td>No records found</td><td></td></tr>';
+        }
+        $('.reward-point-history-table tbody').html(reward_point_histories);
+        var reward_point_codes = ''
+        $.each( data['reward_point_codes'], function(i, value) {
+          if(value['discount_type'] == 'percentage'){
+            reward_point_codes += '<tr><td>'+value['discount_code']+'</td><td>'+value['points']+'%</td></tr>';
+          }else{
+            reward_point_codes += '<tr><td>'+value['discount_code']+'</td><td>₹'+value['points']+'</td></tr>';
+          }
+        });
+
+        if(reward_point_codes == ''){
+          reward_point_codes = '<tr><td>No records found</td><td></td></tr>';
+        }
+        $('.reward-point-codes-table tbody').html(reward_point_codes);
+        
+        var reward_points = '';
+        $.each( data['reward_points'], function(i, value) {
+          reward_points += '<tr><td>'+value['remaining_points']+'</td><td>'+value['expire_days']+'</td></tr>';
+        });
+        if(reward_points == ''){
+          $('.reward-points-table').hide();
+        }else{
+          $('.reward-points-table tbody').html(reward_points);  
+        }
+        $('.point-balance').text("₹"+data['point_balance']);
+        $('.all-points').val(data['point_balance']);
+      }
+    });
+  })
+</script>
+<style type="text/css">
+  .redeem-popup.modal, .referrel-popup.modal{
+    z-index: 999999;
+  }
+  .redeem-popup.modal .modal-inner, .referrel-popup.modal .modal-inner{
+    min-width: 350px;
+  }
+  .redeem-popup ul li{
+    list-style-type: none;
+    margin-bottom: 5px;
+  }
+  .redeem-popup ul li label, .referrel-popup p{
+    color: #fff;
+    font-size: 16px;
+  }
+  .points{
+    padding: 10px 6px !important;
+    margin-top: 10px;
+    background: #fff !important;
+  }
+  .redeem-popup .redeem-point-submit, .referrel-popup .referrel-submit{
+    background: #fff;
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: center;
+    letter-spacing: .2em;
+    font-family: Montserrat,sans-serif;
+    width: 100px;
+  }
+  .error{
+    border: 3px solid red;
+  }
+  .error-text{
+    color: red;
+    font-weight: bold;
+    display: block;
+  }
+  .success-text{
+    color: green;
+    font-weight: bold;
+    display: block;
+  }
+  .ActiveDiscountCodeTable .Heading{
+    text-transform: none;
+  }
+  .cashback-balance{
+    margin-bottom: 18px;
+  }
+  .redeem-popup .modal-txt, .referrel-popup .modal-txt{
+    margin-left: 20px !important;
+    font-size: 18px !important;
+  }
+  .reward-points-page .Table th, .reward-points-page .Rte table th, .reward-points-page .Table td, .reward-points-page .Rte table td{
+    padding: 12px 10px;
+    font-size: 10px;
+  }
+</style>

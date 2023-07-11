@@ -1,0 +1,1497 @@
+{% assign today =  "now" | date: "%s" | date: "%a" %}
+{%- capture flickity_options -%}
+{
+  "prevNextButtons": false,
+  "lazyLoad": true,
+  "pageDots": false,
+  "autoPlay": true,
+  "autoPlay": 3000
+}
+{%- endcapture -%}
+
+{%- assign reviewSider = 0 -%}
+{%- assign PromoSlider = 0 -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'review_slider' -%}
+    {%- assign reviewSider = reviewSider | plus: 1 -%}
+  {%- endif -%}
+  {%- if block.type == 'promotion_slider' -%}
+    {%- assign PromoSlider = PromoSlider | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if section.settings.show_layout_switch -%}
+  {%- assign desktop_items_per_row = cart.attributes.collection_desktop_items_per_row | default: section.settings.grid_desktop_items_per_row | times: 1 -%}
+  {%- assign mobile_items_per_row  = cart.attributes.collection_mobile_items_per_row | default: section.settings.grid_mobile_items_per_row | times: 1 -%}
+
+  {%- if desktop_items_per_row >= 3 and desktop_items_per_row != section.settings.grid_desktop_items_per_row -%}
+    {%- assign desktop_items_per_row = section.settings.grid_desktop_items_per_row -%}
+  {%- endif -%}
+{%- else -%}
+  {%- assign desktop_items_per_row = section.settings.grid_desktop_items_per_row | times: 1 -%}
+  {%- assign mobile_items_per_row  = section.settings.grid_mobile_items_per_row | times: 1 -%}
+{%- endif -%}
+
+{%- if desktop_items_per_row == 4 -%}
+  {%- assign tablet_items_per_row = 3 -%}
+{%- else -%}
+  {%- assign tablet_items_per_row = 2 -%}
+{%- endif -%}
+
+{%- capture collection_inner -%}
+<div class="selected_tag_list"></div>
+  {%- comment -%}This is the common part to both template{%- endcomment -%}
+
+  {%- if collection.products_count > 0 -%}
+
+  {%- assign flagProduct = false -%}
+    {%- paginate collection.products by section.settings.grid_items_per_page -%}
+      <div class="ProductListWrapper">
+        {% assign collection_handle = collection.handle %}
+        {%- assign collection_url = content_for_header| split:'"pageurl":"' | last -%}
+        {%- assign filter = false -%}
+        {%- if collection_url contains '+' -%}
+          {%- assign filter = true -%}
+        {%- endif -%}
+      
+        {% assign pageurl = content_for_header| split:'"pageurl":"' | last | split:'"' | first | split: collection_handle | last | remove: '\/' | split: '?' | first | split: '+' %}
+        <div data-list-selectcallback class="custom-selectcallback ProductList ProductList--grid {% if paginate.pages > 1 %}ProductList--removeMargin{% endif %} Grid" data-mobile-count="{{ mobile_items_per_row }}" data-desktop-count="{{ desktop_items_per_row }}">
+          {% assign pr_count = 0 %}
+          {%- for product in collection.products -%}
+            {%- assign show = true -%}
+
+            {%- for size_color in pageurl -%} 
+                {%- for variant in product.variants -%}
+                 {%- assign variant_title = variant.title | handleize -%}
+                  {%- if variant_title contains size_color and variant.inventory_quantity < 1 -%}
+                      {%- assign show = false -%}               
+                  {%- endif -%}
+                {%- endfor -%}
+            {%- endfor -%}
+
+            {%- if show -%}
+              {%- assign flagProduct = true -%}
+            {%- endif -%}
+
+             {%- if filter == true and show == true and product.available -%}
+                {% unless product.tags contains 'hidden' or product.tags contains 'no-ad' %}
+                  {% if product.tags contains 'listing-2' or product.tags contains 'listing-3' %}
+                    {% if product.tags contains 'listing-2' %}
+                      {% assign loop_count = 2 %}
+                    {% else %}
+                      {% assign loop_count = 3 %}
+                    {% endif %}
+                    {% for i in (1..loop_count) %}
+                      {% if i == 1 %}
+                        {% assign listing_image = 0 %}
+                      {% elsif i == 2 %}
+                        {% assign listing_image = 2 %}
+                      {% elsif i == 3 %}
+                        {% assign listing_image = 4 %}
+                      {% endif %}
+                      {% assign pr_count = pr_count | plus: 1 %}
+                      {% assign big_grid_cell = pr_count | modulo: 7 %}
+                      <div data-product="{{product.id}}" class="{{ loop_count }} {{ pr_count }} jQueryEqualHeight Grid__Cell {% if big_grid_cell == 0 %}Big_Grid__Cell {% endif %} 1/{{ mobile_items_per_row }}--phone 1/{{ tablet_items_per_row }}--tablet-and-up 1/{{ desktop_items_per_row }}--{% if section.settings.filter_position == 'drawer' %}lap-and-up{% else %}desk{% endif %}">
+                        {%- include 'product-item', big_grid_cell: big_grid_cell, show_product_info: true, show_vendor: section.settings.show_vendor, show_color_swatch: section.settings.show_color_swatch, show_labels: true, listing_image: listing_image -%}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% assign listing_image = false %}
+                    {% assign pr_count = pr_count | plus: 1 %}
+                    {% assign big_grid_cell = pr_count | modulo: 7 %}
+                    <div data-product="{{product.id}}" class="{{ pr_count }} jQueryEqualHeight Grid__Cell {% if big_grid_cell == 0 %}Big_Grid__Cell {% endif %} 1/{{ mobile_items_per_row }}--phone 1/{{ tablet_items_per_row }}--tablet-and-up 1/{{ desktop_items_per_row }}--{% if section.settings.filter_position == 'drawer' %}lap-and-up{% else %}desk{% endif %}">
+                        {%- include 'product-item', big_grid_cell: big_grid_cell, show_product_info: true, show_vendor: section.settings.show_vendor, show_color_swatch: section.settings.show_color_swatch, show_labels: true -%}
+                    </div>
+                  {% endif %}
+                {% endunless %}
+            {%- endif -%}
+
+            {%- if section.settings.enabled_review and reviewSider > 0 and forloop.index == 10 -%}
+              <div class="jQueryEqualHeight Grid__Cell 1/{{ mobile_items_per_row }}--phone 1/{{ tablet_items_per_row }}--tablet-and-up 1/{{ desktop_items_per_row }}--{% if section.settings.filter_position == 'drawer' %}lap-and-up{% else %}desk{% endif %}">
+               <div  data-section-type="slideshow" class="ProductItem ">
+                 <div class="Slideshow" style="height:100%;">
+                   <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--insideDots flickity-enabled is-draggable" style="height:100%;"
+             data-flickity-config='{{ flickity_options }}'>
+                   {%- for block in section.blocks -%}
+                    {%- if block.type == 'review_slider' -%}
+                        {%- if block.settings.image -%}
+                        <div class="Carousel__Cell"
+                            style="height:100%; width: 100%;">
+                          {% assign image_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+                          <img class="Slideshow__Image reviewBgImage Image--lazyLoad hide-no-js"
+                               data-src="{{ image_url }}"
+                               data-optimumx="1.2"
+                               data-widths="[400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200]"
+                               data-sizes="auto"
+                               alt="{{ block.settings.image.alt | escape }}">
+                          {%if block.settings.review_text != blank and block.settings.customer != blank %}
+                          <div class="reviewContainer">
+                            {% if section.settings.logo != blank %}<img class="reviewLogo" src="{{section.settings.logo | img_url: '300x' }}" alt="{{shop.name}}"/>{% endif %}
+                            <h2 class="reviewTitle">Customer review</h2>
+                            <h3 class="review">{{block.settings.review_text}}</h3>
+                            <span class="customer">- {{block.settings.customer}}</span>
+                          </div>
+                          {%endif%}
+                        </div>
+                        {%- endif -%}
+
+                    {%- endif -%}
+                {%- endfor -%}
+                   </div>
+                 </div>
+              </div>
+
+            </div>
+            {%- endif -%}
+
+            {%- if section.settings.enabled_promo and PromoSlider > 0 and forloop.index == 20 -%}
+              <div class="jQueryEqualHeight Grid__Cell 1/{{ mobile_items_per_row }}--phone 1/{{ tablet_items_per_row }}--tablet-and-up 1/{{ desktop_items_per_row }}--{% if section.settings.filter_position == 'drawer' %}lap-and-up{% else %}desk{% endif %}">
+               <div  data-section-type="slideshow" class="ProductItem ">
+                 <div class="Slideshow" style="height:100%;">
+                   <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--insideDots flickity-enabled is-draggable" style="height:100%;"
+             data-flickity-config='{{ flickity_options }}'>
+                   {%- for block in section.blocks -%}
+                    {%- if block.type == 'promotion_slider' -%}
+                        {%- if block.settings.image -%}
+                        <div class="Carousel__Cell"
+                            style="height:100%; width: 100%;">
+                          {% assign image_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+                          <img class="Slideshow__Image Image--lazyLoad hide-no-js"
+                               data-src="{{ image_url }}"
+                               data-optimumx="1.2"
+                               data-widths="[400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200]"
+                               data-sizes="auto"
+                               alt="{{ block.settings.image.alt | escape }}" style="height:100%; object-fit: contain; width:100%;">
+
+                          <noscript>
+                            <img class="Slideshow__Image" src="{{ block.settings.image | img_url: '1000x' }}" alt="{{ block.settings.image.alt | escape }}">
+                          </noscript>
+                        </div>
+                        {%- endif -%}
+
+                    {%- endif -%}
+                {%- endfor -%}
+                   </div>
+                 </div>
+              </div>
+
+            </div>
+            {%- endif -%}
+            
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- include 'pagination' -%}
+    {%- endpaginate -%}
+  
+  {%- unless flagProduct -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'collection.general.no_products' | t }}</h1>
+        <button class="EmptyState__Action Button Button--primary" data-action="reset-tags">{{ 'collection.general.reset' | t }}</button>
+      </div>
+    </div>
+  {%- endunless -%}
+
+  {%- else -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'collection.general.no_products' | t }}</h1>
+        <button class="EmptyState__Action Button Button--primary" data-action="reset-tags">{{ 'collection.general.reset' | t }}</button>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if template == 'collection.ajax' -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR AJAX ALTERNATE TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- layout none -%}
+  {{- collection_inner -}}
+
+{%- else -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR NORMAL TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- assign active_tags = '' -%}
+
+  {%- for tag in current_tags -%}
+    {%- assign tag_as_handle = tag | replace: '&#39;', '' | replace: '&#34;', '' | handle -%}
+    {%- assign active_tags = active_tags | append: tag_as_handle -%}
+
+    {%- unless forloop.last -%}
+      {%- assign active_tags = active_tags | append: '+' -%}
+    {%- endunless -%}
+  {%- endfor -%}
+
+  {%- capture section_settings -%}
+  {
+    "collectionUrl": {{ collection.url | default: '/collections/all' | json }},
+    "currentTags": {% if active_tags != blank %}{{ active_tags | split: '+' | json }}{% else %}[]{% endif %},
+    "sortBy": {{ collection.sort_by | default: collection.default_sort_by | json }},
+    "filterPosition": {{ section.settings.filter_position | json }}
+  }
+  {%- endcapture -%}
+
+  <section data-section-id="{{ section.id }}" data-section-type="collection" data-section-settings='{{ section_settings }}'>
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION INFO
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {%- if section.settings.show_collection_info and collection.all_products_count > 0 -%}
+      {%- if section.settings.show_collection_image and collection.image and collection.template_suffix != 'no-image' -%}
+        <div class="FlexboxIeFix">
+        <header class="PageHeader PageHeader--withBackground {% if section.settings.collection_image_size != 'normal' %}PageHeader--{{ section.settings.collection_image_size }}{% endif %}" style="background: url({{ collection.image | img_url: '1x1', format: 'jpg' }})">
+          <div class="PageHeader__ImageWrapper Image--lazyLoad Image--fadeIn {% if section.settings.apply_overlay %}Image--contrast{% endif %}"
+               data-optimumx="1.2"
+               data-bgset="{{ collection.image | img_url: 'x600' }} 600w, {{ collection.image | img_url: '800x' }} 800w, {{ collection.image | img_url: '1200x' }} 1200w, {{ collection.image | img_url: '1400x' }} 1400w, {{ collection.image | img_url: '1600x' }} 1600w">
+          </div>
+
+          <noscript>
+            <div class="PageHeader__ImageWrapper {% if section.settings.apply_overlay %}Image--contrast{% endif %}" style="background-image: url({{ collection.image | img_url: '800x' }})"></div>
+          </noscript>
+
+          <div class="Container">
+            <div class="SectionHeader SectionHeader--center">
+              <h1 class="SectionHeader__Heading Heading u-h1">
+                {% if collection.handle == 'all-products' %}
+                  All Clothing Product
+                {% elsif collection.handle == 'sale-all' %}
+                  {% if today == 'Sun' %} Sunday {% endif %}Sale
+                {% else %}
+                  {% unless collection.handle ==  'face-masks' or collection.handle ==  'sale' %}
+                    {% if collection.handle contains 'women' %}
+                      Women's 
+                    {% else %}
+                      Men’s 
+                    {% endif %}
+                  {% endunless %}
+                  {% if collection.handle == 'sale' and today == 'Sun' %} Sunday {% endif %}{{ collection.title | replace: 'Women', '' }}
+                {% endif %}
+              </h1>
+            </div>
+          </div>
+          
+          <div class="CollectionToolbar top-bar hidden-pocket {% unless section.settings.show_layout_switch and show_filters == false and section.settings.show_sort_by == false %}CollectionToolbar--reverse{% endunless %}">
+            {%- if show_filters or section.settings.show_sort_by -%}
+            <div class="CollectionToolbar__Group ">
+              {%- if section.settings.show_sort_by -%}
+              <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                      aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      aria-controls="collection-sort-popover">
+                {{ 'collection.sorting.title' | t }} {% include 'icon' with 'select-arrow' %}
+              </button>
+              {%- endif -%}
+            </div>
+            {%- endif -%}
+          </div>
+
+
+        </header>
+        </div>
+      {%- else -%}
+        <header class="PageHeader">
+          <div class="Container">
+            <div class="SectionHeader SectionHeader--center">
+              <h1 class="SectionHeader__Heading Heading u-h1">
+                {% if collection.handle == 'all-products' %}
+                  All Clothing Product
+                {% elsif collection.handle == 'sale-all' %}
+                  {% if today == 'Sun' %} Sunday {% endif %}Sale
+                {% else %}
+                  {% unless collection.handle ==  'face-masks' or collection.handle ==  'sale' %}
+                    {% if collection.handle contains 'women' %}
+                      Women's 
+                    {% else %}
+                      Men’s 
+                    {% endif %}
+                  {% endunless %}
+                  {% if collection.handle == 'sale' and today == 'Sun' %} Sunday {% endif %}{{ collection.title | replace: 'Women', '' }}
+                {% endif %}
+              </h1>
+            </div>
+          </div>
+          <div class="CollectionToolbar top-bar hidden-pocket {% unless section.settings.show_layout_switch and show_filters == false and section.settings.show_sort_by == false %}CollectionToolbar--reverse{% endunless %}">
+            {%- if show_filters or section.settings.show_sort_by -%}
+            <div class="CollectionToolbar__Group ">
+              {%- if section.settings.show_sort_by -%}
+              <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                      aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      aria-controls="collection-sort-popover">
+                {{ 'collection.sorting.title' | t }} {% include 'icon' with 'select-arrow' %}
+              </button>
+              {%- endif -%}
+            </div>
+            {%- endif -%}
+          </div>
+        </header>
+
+      {%- endif -%}
+    {% else %}
+      <header class="PageHeader">
+          <div class="Container">
+            <div class="SectionHeader SectionHeader--center">
+              <h1 class="SectionHeader__Heading Heading u-h1">
+                {% if collection.handle == 'all-products' %}
+                  All Clothing Product
+                {% elsif collection.handle == 'sale-all' %}
+                  {% if today == 'Sun' %} Sunday {% endif %}Sale
+                {% else %}
+                  {% unless collection.handle ==  'face-masks' or collection.handle ==  'sale' %}
+                    {% if collection.handle contains 'women' %}
+                      Women's 
+                    {% else %}
+                      Men’s 
+                    {% endif %}
+                  {% endunless %}
+                  {% if collection.handle == 'sale' and today == 'Sun' %} Sunday {% endif %}{{ collection.title | replace: 'Women', '' }}
+                {% endif %}
+              </h1>
+            </div>
+          </div>
+      </header>
+    {%- endif -%}
+    
+    {%- capture submenu_html -%}
+        
+    {%- assign coll_handle = collection.handle -%}
+    {%- assign submenuFlag = false -%}
+    {% if coll_handle contains 'women' %}
+      {%- if coll_handle contains 'new' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'women-new' -%}
+      {%- elsif coll_handle contains 'sale' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'women-sale' -%}
+      {%- elsif coll_handle contains 'all' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'women-all' -%}
+      {% endif %}
+    {% else %}
+      {%- if coll_handle contains 'new' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'new' -%}
+      {%- elsif coll_handle contains 'sale' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'sale' -%}
+      {%- elsif coll_handle contains 'tshirts' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'tshirts' -%}
+      {%- elsif coll_handle contains 'lounge-pants' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'lounge-pants' -%}
+      {%- elsif coll_handle contains 'jodhpuri-suits' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'wedding-engagement' -%}
+      {%- elsif coll_handle contains 'jackets' -%}
+        {%- assign submenuFlag = true -%}
+        {%- assign menu_handle = 'jackets' -%}
+      {%- else -%}
+        {%- for submenuLink in linklists['main-menu'].links -%}
+          {% assign sub_link_handle = submenuLink.url | split: '/' | last %}
+          {%- if coll_handle contains sub_link_handle  -%}
+            {%- assign menu_handle = sub_link_handle -%}
+            {%- assign submenuFlag = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {% endif %}
+
+    {%- if submenuFlag  -%}
+    <div class="Container">
+      <div class="collection_category">
+        <ul class="">
+          {%- for link in linklists[menu_handle].links -%}
+            {% assign link_handle = link.url | split: '/' | last %}
+            {% assign pr_count = collections[link_handle].all_products_count %}
+            {% if pr_count > 0 %}
+              <li class="coll_link{% if link_handle == coll_handle %} active{% endif %}">
+                <a href="{{link.url}}" title="{{link.title}}" style="{% if link.url contains 'designer' %}font-size: 16px;font-weight: bold;background-image: linear-gradient( to right, #462523 0, #cb9b51 78%, #462523 100% );color: transparent;-webkit-background-clip: text;{% endif %}">{{link.title}}</a>
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+    {%- endif -%}
+    {%- endcapture -%}
+    {{submenu_html}}
+
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION TOOLBAR
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {%- if collection.all_products_count > 0 -%}
+      {%- comment -%}
+      In order to provide more predictable results (for instance not showing filters by tag even if the option is checked in settings,
+      but that there are no tags for the given collection to show), we are doing some more logic here. Basically, we try to check if there
+      are tags to show by stripping internal tags (those that start by "__")
+      {%- endcomment -%}
+
+      {%- assign has_visible_tags = false -%}
+
+      {%- case section.settings.filter_mode -%}
+        {%- when 'tag' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- unless tag contains '__' -%}
+              {%- assign has_visible_tags = true -%}
+              {%- break -%}
+            {%- endunless -%}
+          {%- endfor -%}
+
+        {%- when 'group' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- assign tag_parts = tag | split: '_' -%}
+
+            {%- if tag_parts.size == 2 -%}
+              {%- assign has_visible_tags = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+      {%- endcase -%}
+
+      {%- assign show_filters = false -%}
+      {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+
+      {%- if quick_links != blank or has_visible_tags -%}
+        {%- assign show_filters = true -%}
+      {%- endif -%}
+
+      {%- capture collection_toolbar -%}
+        {%- if show_filters or section.settings.show_sort_by or section.settings.show_layout_switch -%}
+          <div class="CollectionToolbar CollectionToolbar--{{ section.settings.toolbar_position }} hidden-lap-and-up {% unless section.settings.show_layout_switch and show_filters == false and section.settings.show_sort_by == false %}CollectionToolbar--reverse{% endunless %}">
+            {%- if show_filters or section.settings.show_sort_by -%}
+              <div class="CollectionToolbar__Group ">
+                {%- if show_filters -%}
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading {% unless current_tags %}Text--subdued{% endunless %} u-h6 {% if section.settings.filter_position != 'drawer' %}hidden-lap-and-up{% endif %}"
+                          data-action="open-drawer"
+                          data-drawer-id="collection-filter-drawer"
+                          aria-label="{{ 'collection.filter.show_filter' | t }}">
+                    {{ 'collection.filter.title' | t }} {% if current_tags %}<span class="Text--subdued">({{ current_tags.size }})</span>{% endif %}
+                  </button>
+                {%- endif -%}
+
+                {%- if section.settings.show_sort_by -%}
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                          aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          aria-controls="collection-sort-popover">
+                    {{ 'collection.sorting.title' | t }} {% include 'icon' with 'select-arrow' %}
+                  </button>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.show_layout_switch -%}
+              <div class="CollectionToolbar__Item CollectionToolbar__Item--layout">
+                <div class="CollectionToolbar__LayoutSwitch hidden-tablet-and-up">
+                  <button aria-label="{{ 'collection.layout.show_one_per_row' | t }}" class="CollectionToolbar__LayoutType {% if mobile_items_per_row == 1 %}is-active{% endif %}" data-action="change-layout-mode" data-grid-type="mobile" data-count="1">{% include 'icon' with 'wall-1' %}</button>
+                  <button aria-label="{{ 'collection.layout.show_two_per_row' | t }}" class="CollectionToolbar__LayoutType {% if mobile_items_per_row == 2 %}is-active{% endif %}" data-action="change-layout-mode" data-grid-type="mobile" data-count="2">{% include 'icon' with 'wall-2' %}</button>
+                </div>
+
+                <div class="CollectionToolbar__LayoutSwitch hidden-phone">
+                  <button aria-label="{{ 'collection.layout.show_two_per_row' | t }}" class="CollectionToolbar__LayoutType {% if desktop_items_per_row == 2 %}is-active{% endif %}" data-action="change-layout-mode" data-grid-type="desktop" data-count="2">{% include 'icon' with 'wall-2' %}</button>
+                  <button aria-label="{{ 'collection.layout.show_four_per_row' | t }}" class="CollectionToolbar__LayoutType {% if desktop_items_per_row >= 3 %}is-active{% endif %}" data-action="change-layout-mode" data-grid-type="desktop" data-count="{{ section.settings.grid_desktop_items_per_row }}">{% include 'icon' with 'wall-4' %}</button>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+          {%- endif -%}
+      {%- endcapture -%}
+
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      FILTERS AND SORT BY POPOVER
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      {%- if show_filters -%}
+        {%- comment -%}
+        Implementation note: the filters can be displayed in two different ways: in a sidebar menu, always visible, or in a drawer. Due to that, we are
+        setting the general code here, and then we will output it twice.
+        {%- endcomment -%}
+        
+    
+        {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+        {%- capture filters_content -%}
+    
+    {%- include 'tag-filter' -%}
+    
+          {%- if has_visible_tags -%}
+            {%- if section.settings.filter_mode == 'tag' -%}
+              <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                  {{- 'collection.filter.all' | t -}} <span class="Collapsible__Plus"></span>
+                </button>
+
+                <div class="Collapsible__Inner">
+                  <div class="Collapsible__Content">
+                    <ul class="Linklist">
+                      {%- for tag in collection.all_tags -%}
+                        {%- if tag contains '__' -%}
+                          {%- continue -%}
+                        {%- endif -%}
+
+                        <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                            {{- tag -}}
+                          </button>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              {%- assign groups = '' -%}
+
+              {%- for tag in collection.all_tags -%}
+                {%- assign tag_parts = tag | split: '_' -%}
+
+                {%- if tag_parts.size != 2 -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                {%- assign groups = groups | append: tag_parts.first | append: ',' -%}
+              {% endfor %}
+
+              {%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' -%}
+              {%- assign groups = groups | split: ',' | compact | uniq -%}
+
+              {%- for group in groups -%}
+                {%- assign group_downcase = group | downcase -%}
+
+                {%- if color_label contains group_downcase and section.settings.show_filter_color_swatch -%}
+                  {%- assign show_color_swatch = true -%}
+                {%- else -%}
+                  {%- assign show_color_swatch = false -%}
+                {%- endif -%}
+
+                <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                    {{- group | escape -}} <span class="Collapsible__Plus"></span>
+                  </button>
+
+                  <div class="Collapsible__Inner">
+                    <div class="Collapsible__Content">
+                      <ul class="{% if show_color_swatch %}ColorSwatchList HorizontalList HorizontalList--spacingTight{% else %}Linklist{% endif %}">
+                        {%- for tag in collection.all_tags -%}
+                          {%- assign tag_parts = tag | split: '_' -%}
+
+                          {%- if tag_parts.size != 2 or tag_parts.first != group -%}
+                            {%- continue -%}
+                          {%- endif -%}
+
+                          {%- if show_color_swatch -%}
+                            <li class="HorizontalList__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                              {%- assign color_swatch_name = tag_parts.last | handle | append: '.png' -%}
+                              {%- assign color_swatch_image = images[color_swatch_name] -%}
+
+                              <button type="button" class="ColorSwatch {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag" data-tooltip="{{ tag_parts.last | escape }}" style="background-color: {{ tag_parts.last | replace: ' ', '' | downcase }}; {% if color_swatch_image != blank %}background-image: url({{ color_swatch_image | img_url: '64x64' }}){% endif %}">
+                                <span class="u-visually-hidden">{{ tag_parts.last }}</span>
+                              </button>
+                            </li>
+                          {%- else -%}
+                            <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                              <button type="button" class="Text--subdued Link Link--primary {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                                {{- tag_parts.last -}}
+                              </button>
+                            </li>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+    
+            {%- endif -%}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
+          <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
+            <span class="Drawer__Title Heading u-h4">{{ 'collection.filter.all' | t }}</span>
+
+            <button class="Drawer__Close Icon-Wrapper--clickable" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="{{ 'header.navigation.close_sidebar' | t }}">
+              {%- include 'icon' with 'close' -%}
+            </button>
+          </header>
+
+          <div class="Drawer__Content">
+            <div class="Drawer__Main" data-scrollable>
+              {{ filters_content }}
+            </div>
+
+            <div class="Drawer__Footer Drawer__Footer--padded" data-drawer-animated-bottom>
+              <div class="ButtonGroup">
+                <button type="button" class="ButtonGroup__Item Button Button--secondary" data-action="reset-tags" {% if current_tags == blank %}style="display: none"{% endif %}>{{ 'collection.filter.reset' | t }}</button>
+                <button type="button" class="ButtonGroup__Item ButtonGroup__Item--expand Button Button--primary" data-action="apply-tags">{{ 'collection.filter.apply' | t }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_sort_by -%}
+        <div id="collection-sort-popover" class="Popover" aria-hidden="true">
+          <header class="Popover__Header">
+            <button class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover">{% include 'icon' with 'close' %}</button>
+            <span class="Popover__Title Heading u-h4">{{ 'collection.sorting.title' | t }}</span>
+          </header>
+
+          <div class="Popover__Content">
+            <div class="Popover__ValueList" data-scrollable>
+              {% assign collection_sort_by = collection.sort_by | default: collection.default_sort_by %}
+
+              {%- for option in collection.sort_options -%}
+              {%- unless option.value contains 'title-ascending' or option.value contains 'title-descending' -%}
+                <button class="Popover__Value {% if option.value == collection_sort_by %}is-selected{% endif %} Heading Link Link--primary u-h6" data-value="{{ option.value }}" data-action="select-value">
+                  {%- if option.name contains 'Featured'-%}
+                    popularity
+                  {%- else -%}
+                  {{ option.name }}
+                  {%- endif -%}
+                </button>
+              {%- endunless -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    
+    
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      COLLECTION PRODUCTS
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      <div class="CollectionMain">
+        {%- if section.settings.toolbar_position == 'top' -%}
+          {{- collection_toolbar -}}
+        {%- endif -%}
+        
+       <div class="CollectionInner">
+          {%- if show_filters and section.settings.filter_position == 'sidebar' -%}
+            <div class="CollectionInner__Sidebar {% if collection_toolbar != blank and section.settings.toolbar_position == 'top' %}CollectionInner__Sidebar--withTopToolbar{% endif %} hidden-pocket">
+              <div class="CollectionFilters">
+                <a data-action="reset-tags" class="reset-button" {% if current_tags == blank %}style="display: none"{% endif %}>{{ 'collection.filter.reset' | t | upcase }}</a>
+                {{ filters_content }}                
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="CollectionInner__Products">
+            {% include 'collection-banner' %}
+            {{ collection_inner }}
+            {%- if collection.description != blank -%}
+              <div class="SectionHeader__Description Rte collection-description">
+                {{- collection.description -}}
+                <p>We provide fast shipping of all products in Mumbai, Hyderabad, Kolkata, Ahmedabad, Surat,Bangalore, Chennai and in many more Indian cities. </p>
+              </div>
+            {%- endif -%}
+          </div>
+         
+        </div>
+
+        {%- if section.settings.toolbar_position == 'bottom' -%}
+          {{- collection_toolbar -}}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      <div class="EmptyState">
+        <div class="Container">
+          <h3 class="EmptyState__Title Heading u-h5">{{ 'collection.general.empty' | t: collection_title: collection.title }}</h3>
+          <a href="{{ shop.url }}" class="EmptyState__Action Button Button--primary">{{ 'collection.general.empty_button' | t }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{%- capture hack -%}
+{%- comment -%}This is just an ugly hack to make those variables appear as part of the theme editor in the General Settings{%- endcomment -%}
+{{ settings.product_list_horizontal_spacing }},{{ settings.product_list_vertical_spacing }}
+{%- endcapture -%}
+{% comment %}{% include 'custom-selectcallback' %} {% endcomment %}
+{% schema %}
+{
+  "name": "Collection page",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_info",
+      "label": "Show collection info",
+      "default": true
+    },  
+  {
+     "type": "checkbox",
+       "id": "half-half",
+     "label": "Half/ Half grid",
+     "default": true
+  },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show collection image",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "apply_overlay",
+      "label": "Apply overlay on image",
+      "info": "This can improve text visibility.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_swatch",
+      "label": "Show color swatch",
+      "info": "Some colors appear white? [Learn more](http://support.maestrooo.com/article/80-product-uploading-custom-color-for-color-swatch).",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "collection_image_size",
+      "label": "Collection image size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "header",
+      "content": "Toolbar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_by",
+      "label": "Show sort by",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_layout_switch",
+      "label": "Show layout switch"
+    },
+    {
+      "type": "select",
+      "id": "toolbar_position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+  {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "select",
+      "id": "filter_position",
+      "label": "Desktop position",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "drawer",
+          "label": "Drawer"
+        }
+      ],
+      "default": "sidebar"
+    },
+    {
+      "type": "select",
+      "id": "filter_mode",
+      "label": "Mode",
+      "info": "Filters by group requires specific tag formatting. [Learn more](https://help.shopify.com/manual/using-themes/themes-by-shopify/supply#product-tips-tips-specific)",
+      "options": [
+        {
+          "value": "hidden",
+          "label": "Hidden"
+        },
+        {
+          "value": "tag",
+          "label": "By tag"
+        },
+        {
+          "value": "group",
+          "label": "By group"
+        }
+      ],
+      "default": "tag"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_color_swatch",
+      "label": "Show filter color swatch",
+      "info": "This is only used if filters by group is enabled.",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "filter_menu",
+      "label": "Quick links",
+      "info": "This menu won't show dropdown items."
+    },
+    {
+      "type": "textarea",
+      "id": "fabric_taglist",
+      "label": "Fabric Filter"
+    },
+  {
+      "type": "text",
+      "id": "collar_title",
+      "label": "collar Filter Title",
+      "default":"Collar"
+    },
+  {
+      "type": "textarea",
+      "id": "collar_taglist",
+      "label": "Shirt Collar Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "jacket_collar_taglist",
+      "label": "Jacket Collar Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "socks_length_taglist",
+      "label": "Socks Length"
+    },
+    {
+      "type": "text",
+      "id": "fabric_title",
+      "label": "Fabric Filter Title",
+      "default":"Fabric"
+    },
+    {
+      "type": "textarea",
+      "id": "shirt_size_taglist",
+      "label": "Shirt Size Filter"
+    },
+    {
+    "type": "textarea",
+    "id": "suit_price_taglist",
+    "label": "Suit Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "blazer_price_taglist",
+      "label": "Blazer Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "accessories_price_taglist",
+      "label": "Accessories Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "footwear_price_taglist",
+      "label": "Footwear Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "belt_price_taglist",
+      "label": "Belt Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "wallet_price_taglist",
+      "label": "Wallet Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "waistcoat_price_taglist",
+      "label": "Waistcoat Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "pant_price_taglist",
+      "label": "Pant Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "shorts_price_taglist",
+      "label": "Shorts Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "jeans_price_taglist",
+      "label": "Jeans Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "boxer_price_taglist",
+      "label": "Boxer Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "lounge_pant_price_taglist",
+      "label": "Lounge Pant Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "shirt_price_taglist",
+      "label": "Shirt Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "tshirt_price_taglist",
+      "label": "Tshirt Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "price_taglist",
+      "label": "Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "coords_price_taglist",
+      "label": "Co-ords Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "perfume_price_taglist",
+      "label": "Perfume Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "wedding_price_taglist",
+      "label": "Wedding Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "socks_price_taglist",
+      "label": "Socks Price Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "boxer_size_taglist",
+      "label": "Boxer Size Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "lounge_pants_size_taglist",
+      "label": "Lounge Pants Size Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "lounge_shorts_size_taglist",
+      "label": "Lounge Shorts Size Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "waistcoat_taglist",
+      "label": "Waistcoat Size Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "trousers_size_taglist",
+      "label": "Trousers Size Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "shorts_size_taglist",
+      "label": "Shorts Size Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_size_taglist",
+      "label": "Jeans Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "jeans_woman_size_taglist",
+      "label": "Jeans Woman Size Filter"
+  },
+  {
+    "type": "textarea",
+    "id": "footwear_size_taglist",
+    "label": "Footwear Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "blazer_size_taglist",
+      "label": "Blazer Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "tshirts_size_taglist",
+      "label": "Tshirts Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "kurta_size_taglist",
+      "label": "Kurta Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "jacket_size_taglist",
+      "label": "Jacket Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "belt_size_taglist",
+      "label": "Belt Size Filter"
+  },
+  {
+      "type": "textarea",
+      "id": "tshirt_color_taglist",
+      "label": "Tshirt Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "tshirt_neck_taglist",
+      "label": "Tshirt Neck Filter"
+    },
+    {
+      "type": "text",
+      "id": "size_title",
+      "label": "Size Filter Title",
+      "default":"Size"
+    },
+    {
+      "type": "text",
+      "id": "pattern_title",
+      "label": "Pattern Filter Title",
+      "default":"PATTERN"
+    },
+    {
+      "type": "textarea",
+      "id": "shirt_pattern_taglist",
+      "label": "Shirt Pattern Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "boxer_pattern_taglist",
+      "label": "Boxer Pattern Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "lounge_pants_pattern_taglist",
+      "label": "Lounge Pants Pattern Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "lounge_shorts_pattern_taglist",
+      "label": "Lounge Shorts Pattern Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "trousers_pattern_taglist",
+      "label": "Trousers Size Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "waistcoat_pattern_taglist",
+      "label": "Waistcoat Pattern Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "shorts_pattern_taglist",
+      "label": "Shorts Pattern Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "sale_pattern_taglist",
+      "label": "Sale Pattern Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "socks_pattern_taglist",
+      "label": "Socks Pattern Filter"
+    },
+    {
+      "type": "text",
+      "id": "color_title",
+      "label": "Color Filter Title",
+    "default":"Color"
+    },
+  {
+      "type": "textarea",
+      "id": "shirt_color_taglist",
+      "label": "Shirt Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "boxer_color_taglist",
+      "label": "Boxer Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "lounge_pants_color_taglist",
+      "label": "Lounge Pants Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "lounge_shorts_color_taglist",
+      "label": "Lounge Shorts Color Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "waistcoat_color_taglist",
+      "label": "Waistcoat Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "trousers_color_taglist",
+      "label": "Trousers Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "shorts_color_taglist",
+      "label": "Shorts Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "shirts_occation_taglist",
+      "label": "Shirts Occation Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "sale_color_taglist",
+      "label": "Sale Color Filter"
+    },
+
+  {
+      "type": "textarea",
+      "id": "jeans_color_taglist",
+      "label": "Jeans Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_woman_color_taglist",
+      "label": "Jeans Woman Color Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "jeans_style_taglist",
+      "label": "Jeans Style Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_fade_taglist",
+      "label": "Jeans Fade Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_shade_taglist",
+      "label": "Jeans Color shade Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_fit_taglist",
+      "label": "Jeans Fit Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "jeans_woman_fit_taglist",
+      "label": "Jeans Woman Fit Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "suit_color_taglist",
+      "label": "Suit Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "wallets_color_taglist",
+      "label": "Wallets Color Filter"
+    },
+  {
+      "type": "textarea",
+      "id": "blazer_occation_taglist",
+      "label": "Blazer Occation Filter"
+    },
+  {
+      "type": "text",
+      "id": "suit_cufflink_color_title",
+      "label": "Suit Cufflink Color Title",
+    "default":"Cufflink Color"
+    },
+  {
+      "type": "textarea",
+      "id": "cufflink_color_taglist",
+      "label": "Suit Cufflink Color Filter"
+    },
+  {
+      "type": "text",
+      "id": "mask_color_title",
+      "label": "Mask Color Title",
+      "default":"Color"
+    },
+    {
+      "type": "textarea",
+      "id": "mask_color_taglist",
+      "label": "Mask Color Filter"
+    },
+  {
+      "type": "text",
+      "id": "mask_pack_title",
+      "label": "Mask pack Title",
+      "default":"Pack"
+    },
+    {
+      "type": "textarea",
+      "id": "mask_pack_taglist",
+      "label": "Mask Pack Fliter"
+    },
+  {
+      "type": "text",
+      "id": "mask_fabric_title",
+      "label": "Mask Fabric Title",
+      "default":"Mask Fabric"
+    },
+    {
+      "type": "textarea",
+      "id": "socks_fabric_taglist",
+      "label": "Socks Fabric Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "mask_fabric_taglist",
+      "label": "Mask Fabric Filter"
+    },
+  {
+      "type": "text",
+      "id": "belt_type_title",
+      "label": "Belt Type Title",
+      "default":"Belt Type"
+    },
+    {
+      "type": "textarea",
+      "id": "belt_type_taglist",
+      "label": "Belt Type Filter"
+    },
+  {
+      "type": "text",
+      "id": "belt_color_title",
+      "label": "Belt Color Title",
+      "default":"Belt Color"
+    },
+    {
+      "type": "textarea",
+      "id": "belt_color_taglist",
+      "label": "Belt Color Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "category_taglist",
+      "label": "Category Filter"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_topwear_size_taglist",
+      "label": "Woman Topwear Size"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_bottomwear_size_taglist",
+      "label": "Woman Bottomwear Size"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_category_taglist",
+      "label": "Woman Category"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_bottom_length_taglist",
+      "label": "Woman Bottom Length"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_top_length_taglist",
+      "label": "Woman Top Length"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_western_length_taglist",
+      "label": "Woman Wastern Length"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_top_collar_taglist",
+      "label": "Woman Top Collar"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_western_collar_taglist",
+      "label": "Woman Wastern Collar"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_top_fabric_taglist",
+      "label": "Woman Top Fabric"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_western_fabric_taglist",
+      "label": "Woman Western Fabric"
+    },
+    {
+      "type": "textarea",
+      "id": "woman_sleeves_taglist",
+      "label": "Woman Sleeves"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "grid_items_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 248,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "grid_mobile_items_per_row",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "min": 2,
+      "max": 4,
+      "id": "grid_desktop_items_per_row",
+      "label": "Products per row (desktop)",
+      "default": 4
+    },
+  {
+    "type": "checkbox",
+    "id": "enabled_review",
+    "label": "Enabled Reviews"
+  },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Review Logo"
+    },
+  {
+    "type": "checkbox",
+    "id": "enabled_promo",
+    "label": "Enabled Promo"
+  }
+  ],
+  "blocks": [
+    {
+      "type": "review_slider",
+      "name": "Review Slider",
+      "settings": [
+        {
+            "type": "header",
+            "content": "Review Slider in grid"
+        },
+    {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+      "info": "Image must be 400x225"
+        },
+      {
+          "type": "text",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "Tell your story"
+        },
+    { 
+      "type": "text",
+      "id": "customer",
+      "label": "Customer"
+    }
+    ]
+  },
+  {
+      "type": "promotion_slider",
+      "name": "Promo Slider",
+      "settings": [
+        {
+            "type": "header",
+            "content": "Promo Slider in grid"
+        },
+    {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+      "info": "Image must be 400x225"
+        },
+      {
+          "type": "text",
+          "id": "review_text",
+          "label": "Promo Text",
+          "default": "Tell your story"
+        },
+    { 
+      "type": "text",
+      "id": "customer",
+      "label": "Customer"
+    }
+    ]
+  }
+]
+}
+{% endschema %}

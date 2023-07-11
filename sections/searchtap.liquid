@@ -1,0 +1,632 @@
+<script src="{{ 'searchtap.js' | asset_url }}" defer></script>
+
+{% raw %}
+
+<div id="searchModalContainer">
+
+<div id="searchModal" v-show="isOpen" v-cloak>
+
+<div id="overlay">
+<div class="resultLoading" v-show="resultLoading">
+<div></div>
+</div>
+<div class="noResult" v-show="noResult">
+<div class="h1">No Search Result for '{{ query }}'</div>
+<div style="margin-bottom: 20px;">Please try different query or select different Filters</div>
+<div id="section-collection-list ">
+<div class="CollectionList CollectionList--grid CollectionList--spaced">
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell is-selected"
+     data-slide-index="0">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/home_pahe_shirt-1_1x1.jpg?v=1602524213)">
+        <a target="_blank" href="/collections/shirts">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--zoomOut hide-no-js Image--lazyLoaded lazybg"
+                        style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+                        data-style="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/home_pahe_shirt-1_1500x.jpg?v=1602524213&quot;);"
+                        data-mobstyle="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/home_pahe_shirt-1_750x960_crop_center.jpg?v=1602524213&quot;);"
+                        data-optimumx="1.4" data-expand="-150"></div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: center center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/home_pahe_shirt-1_1000x.jpg?v=1602524213)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><div
+                    class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                Shirts</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/shirts"
+                                                             class="CollectionItem__Link Button">View
+                    shirts</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell "
+     data-slide-index="1">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/1G6A5581_1x1.jpg?v=1602524317)">
+        <a target="_blank" href="/collections/trousers">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--zoomOut hide-no-js Image--lazyLoaded lazybg"
+                        data-optimumx="1.4" data-expand="-150"
+                        style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+                        data-style="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/1G6A5581_1500x.jpg?v=1602524317&quot;);"
+                        data-mobstyle="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/1G6A5581_750x960_crop_center.jpg?v=1602524317&quot;);"
+                        >
+                </div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: bottom center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/1G6A5581_1000x.jpg?v=1602524317)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><div
+                    class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                Pants</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/trousers"
+                                                             class="CollectionItem__Link Button">View
+                    Pants</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell "
+     data-slide-index="2">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-10_1x1.jpg?v=1602524916)">
+        <a target="_blank"
+            href="https://frenchcrown.in/collections/tshirts">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--lazyLoaded Image--zoomOut hide-no-js" style="background-image: url(&quot;//cdn.shopify.com/s/files/1/0094/6326/7379/files/Mariyo_T-shirt_Collection_1500x.jpg?v=1657256600&quot;); background-position: center top;" data-style="background-image:url(//cdn.shopify.com/s/files/1/0094/6326/7379/files/Mariyo_T-shirt_Collection_1500x.jpg?v=1657256600);background-position: top center;" data-mobstyle="background-image:url(//cdn.shopify.com/s/files/1/0094/6326/7379/files/Mariyo_T-shirt_Collection.jpg?v=1657256600);background-position: top center;" data-optimumx="1.4" data-expand="-150"></div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: center center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-10_1000x.jpg?v=1602524916)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><div
+                    class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                T-SHIRTS</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/tshirts"
+                                                             class="CollectionItem__Link Button">View
+                    T-SHIRTS</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell "
+     data-slide-index="3">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-9_1x1.jpg?v=1602524748)">
+        <a target="_blank"
+            href="https://frenchcrown.in/collections/suits">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--zoomOut hide-no-js Image--lazyLoaded lazybg"
+                        data-optimumx="1.4" data-expand="-150"
+                        style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+                        data-style="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-9_1500x.jpg?v=1602524748&quot;);"
+                        data-mobstyle="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-9_750x960_crop_center.jpg?v=1602524748&quot;);"
+                        >
+                </div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: center center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-9_1000x.jpg?v=1602524748)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><div
+                    class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                SUITS</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/suits"
+                                                             class="CollectionItem__Link Button">View
+                    SUITS</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell "
+     data-slide-index="4">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-3_240c7323-933d-495a-a1fa-0a9217981b99_1x1.jpg?v=1602524676)">
+        <a target="_blank" href="/collections/jeans">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--zoomOut hide-no-js Image--lazyLoaded lazybg"
+                        style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);" data-optimumx="1.4" data-expand="-150"
+                        data-style="background-position: center bottom; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-3_240c7323-933d-495a-a1fa-0a9217981b99_1500x.jpg?v=1602524676&quot;);"
+                        data-mobstyle="background-position: center bottom; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-3_240c7323-933d-495a-a1fa-0a9217981b99_750x960_crop_center.jpg?v=1602524676&quot;);"
+                        >
+                </div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: bottom center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-3_240c7323-933d-495a-a1fa-0a9217981b99_1000x.jpg?v=1602524676)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><h3
+                    class="SectionHeader__SubHeading Heading u-h6">Stay
+                sturdy</h3>
+                <div class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                    Jeans</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/jeans"
+                                                             class="CollectionItem__Link Button">View
+                    jeans</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+<div class="CollectionItem CollectionItem--expand  Carousel__Cell "
+     data-slide-index="5">
+    <div class="CollectionItem__Wrapper CollectionItem__Wrapper--normal lazybg"
+            style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+            data-style="background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-1_1x1.jpg?v=1602525093)">
+        <a target="_blank"
+            href="https://frenchcrown.in/collections/nehru-jackets">
+            <div class="CollectionItem__ImageWrapper">
+                <div class="CollectionItem__Image Image--contrast Image--zoomOut hide-no-js Image--lazyLoaded lazybg"
+                        style="background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=);"
+                        data-style="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-1_1500x.jpg?v=1602525093&quot;);"
+                        data-mobstyle="background-position: center center; background-image: url(&quot;https://cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-1_750x960_crop_center.jpg?v=1602525093&quot;);"
+                        data-optimumx="1.4" data-expand="-150"
+                        >
+                </div>
+                <noscript>
+                    <div class="CollectionItem__Image Image--contrast"
+                         style="background-position: center center; background-image: url(//cdn.shopify.com/s/files/1/0323/5574/5932/files/Untitled-1_1000x.jpg?v=1602525093)"></div>
+                </noscript>
+            </div>
+            }</a>
+        <div class="CollectionItem__Content CollectionItem__Content--bottomLeft">
+            <header class="SectionHeader"><div
+                    class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">
+                NEHRU JACKETS</div>
+
+                <div class="SectionHeader__ButtonWrapper"><a target="_blank"
+                                                             href="/collections/nehru-jackets"
+                                                             class="CollectionItem__Link Button">View
+                    NEHRU JACKETS</a></div>
+            </header>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="somethingWentWrong" v-show="somethingWentWrong">
+<div class="h1">Oops !!! Something Went Wrong.</div>
+<h3>Please try <a href="" onclick="window.location.reload()">again</a> or visit our Home <a href="https://frenchcrown.in">Page.</a></h3>
+</div>
+</div>
+
+<div id="searchtap-main-content" v-show="!noResult && !somethingWentWrong && !resultLoading">
+
+<div class="contain-size">
+<div class="st-row">
+<div class="st-col-md-12">
+<div id="new_tags">
+    <div id="st-scroll" class="clear-fix all_tags">
+        <div class="multiple_box" v-for="filter in textFacetFilters" v-if="filter.onTop" v-show="filter.values.length > 0 || filter.selected.length > 0">
+            <div class="tag-button" v-for="item in filter.selected" v-bind:key="item">
+                <label class="bt-bg">
+                    <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering()">
+                    <span class="filter-tags">{{ item }}</span>
+                </label>
+            </div>
+
+            <div class="tag-button" v-for="item in getNotSelectedFilters(filter.field,'text')" v-bind:key="item.name">
+                <label class="bt-bg">
+                    <input type="checkbox" v-bind:value="item.name" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('top',filter.title,item.name)">
+                    <span class="filter-tags">{{ item.name }}</span>
+                </label>
+            </div>
+
+            <span id="tag_left" class="hidden-mobile" v-on:click="breadCrumbScroll(-1)">
+                <span class="st-left-arrow"></span>
+            </span>
+            <span id="tag_right" class="hidden-mobile" v-on:click="breadCrumbScroll(1)">
+                <span class="st-right-arrow"></span>
+            </span>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="CollectionInner st-mt-0">
+
+<div id="STbar" class="sidebar hidden-mobile">
+<div class="filter-header">
+<div class="plr">
+    <h4 class="filter-title">
+        <span class="filter-cross hidden-desktop">X</span>
+        Filter by
+        <span class="st-reset-all" v-show="totalFilterCount > 0" v-on:click="clearFilters()">Reset all</span>
+    </h4>
+</div>
+</div>
+<div class="sidebar__inner">
+<div class="filter-container" v-for="filter in textFacetFilters" v-bind:key="filter.field" v-show="(filter.values.length > 0 || filter.selected.length > 0) && filter.type!=='single'">
+    <div class="st-filter-tab">
+        <span class="st-clear" v-show="filter.selected.length > 0" v-on:click="clearFilters(filter.field,'text')">Clear</span>
+        <h4 class="main-filter-title" v-on:click="filter.isOpen = !filter.isOpen">
+
+            <span class="filter-title">{{ filter.title }}</span>
+
+            <span class="st-collapse">
+                <i aria-hidden="true" class="indicator fa fa-plus" v-show="!filter.isOpen"></i>
+                <i aria-hidden="true" class="indicator fa fa-minus" v-show="filter.isOpen"></i>
+            </span>
+        </h4>
+    </div>
+    <div class="filter-list-container" v-show="filter.isOpen">
+        <ul v-bind:id=`${filter.field}-filters` class="filter-list-desktop" v-if="filter.type === 'multiple'">
+            <li v-for="item in filter.selected" v-bind:key="item">
+                <div class="outer-checkbox">
+                    <label>
+                        <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering()">
+                        <span class="st-checkbox">
+                            <i class="cr-icon fa fa-check"></i>
+                        </span>
+                        <span  class="filter-label">{{ item }}</span>
+                        <span class="number_of_product">({{getSelectedCount(item,filter.field,'text')}})</span>
+                    </label>
+                </div>
+            </li>
+
+            <li v-for="item in getNotSelectedFilters(filter.field,'text')" v-bind:key="item.name">
+                <div class="outer-checkbox">
+                    <label>
+                        <input type="checkbox" v-bind:value="item.name" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,item.name)">
+                        <span class="st-checkbox">
+                            <i class="cr-icon fa fa-check"></i>
+                        </span>
+                        <span  class="filter-label">{{ item.name }}</span>
+                        <span class="number_of_product">({{ item.count }})</span>
+                    </label>
+                </div>
+            </li>
+        </ul>
+
+<!--                                                    <ul v-bind:id=`${filter.field}-filters` class="filter-list-desktop" v-if="filter.type === 'single'">-->
+<!--                                                        <li v-for="item in filter.values" v-bind:key="item">-->
+<!--                                                            <div class="outer-checkbox">-->
+<!--                                                                <label>-->
+<!--                                                                    <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,item)">-->
+<!--                                                                    <span class="st-checkbox">-->
+<!--                                                                        <i class="cr-icon fa fa-check"></i>-->
+<!--                                                                    </span>-->
+<!--                                                                    <span  class="filter-label">{{ item }}</span>-->
+<!--                                                                </label>-->
+<!--                                                            </div>-->
+<!--                                                        </li>-->
+<!--                                                    </ul>-->
+
+    </div>
+</div>
+<div class="filter-container" v-for="filter in numericFacetFilters" v-bind:key="filter.field" v-show="filter.values.length > 0 || filter.selected.length > 0">
+    <div class="st-filter-tab">
+        <span class="st-clear" v-show="filter.selected.length > 0" v-on:click="clearFilters(filter.field,'numerical')">Clear</span>
+        <h4 class="main-filter-title" v-on:click="filter.isOpen = !filter.isOpen">
+
+            <span class="filter-title">{{ filter.title }}</span>
+
+            <span class="st-collapse">
+                <i aria-hidden="true" class="indicator fa fa-plus" v-show="!filter.isOpen"></i>
+                <i aria-hidden="true" class="indicator fa fa-minus" v-show="filter.isOpen"></i>
+            </span>
+        </h4>
+    </div>
+    <div class="filter-list-container" v-show="filter.isOpen">
+        <ul v-bind:id=`${filter.field}-filters` class="filter-list-desktop">
+            <li v-for="item in filter.selected" v-bind:key="item[0]">
+                <div class="outer-checkbox">
+                    <label>
+                        <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering()">
+                        <span class="st-checkbox">
+                            <i class="cr-icon fa fa-check"></i>
+                        </span>
+                        <span  class="filter-label"><span>RS. {{ numberWithCommas(item[0]) }}</span> - <span>RS. {{numberWithCommas(item[1])}}</span></span>
+                        <span class="number_of_product">({{getSelectedCount([item[0],item[1]],filter.field,'numerical')}})</span>
+                    </label>
+                </div>
+            </li>
+
+            <li v-for="item in getNotSelectedFilters(filter.field,'numerical')" v-bind:key="item.min">
+                <div class="outer-checkbox">
+                    <label>
+                        <input type="checkbox" v-bind:value="[item.min,item.max]" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,[item.min,item.max])">
+                        <span class="st-checkbox">
+                            <i class="cr-icon fa fa-check"></i>
+                        </span>
+                        <span  class="filter-label"><span>RS. {{ numberWithCommas(item.min) }}</span> - <span>RS. {{numberWithCommas(item.max)}}</span></span>
+                        <span class="number_of_product">({{ item.count }})</span>
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<div class="clearfix"></div>
+</div>
+
+
+<div class="CollectionInner__Products">
+
+
+<div class="ProductListWrapper">
+<div class="custom-selectcallback ProductList ProductList--grid ProductList--removeMargin Grid">
+
+    <div class="st-sort-bg">
+        <div class="st-col-md-7 st-col-xs-12">
+            <div class="resut-summary-t">
+                <span class="block-bld hidden-mobile"> {{ totalHits }} </span>
+                <span class="hidden-mobile" v-if="totalHits > 1">Products</span>
+                <span class="hidden-mobile" v-else>Product</span>
+                <span class=" hidden-mobile">for</span>
+                <span class=" txt-red block-bld hidden-mobile">'{{ query }}'</span>
+                <span class="mobile-count hidden-desktop">
+                    <span class="block-bld">{{ totalHits }}</span>
+                    <span v-if="totalHits > 1">Products</span>
+                     <span v-else>Product</span>
+                </span>
+                <span class="st-brand-outer">
+                    <a href="https://www.searchtap.io/?utm_source=frenchcrown&amp;utm_medium=website" target="_blank">
+                        <span class="st-brand-txt">Powered by SearchTap</span>
+                        <span class="st-brand"></span>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+        <div class="st-col-md-5 pr0 hidden-mobile">
+            <div class="sort-by">
+                <div class="form-group">
+                    <label for="st-sort-web">Sort by : </label>
+                    <select id="st-sort-web" v-model="sortLabel" v-on:change="sorting(sortLabel)">
+                        <option v-for="sort in sorts" v-bind:key="sort.field" v-bind:value="sort.label">{{ sort.label }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="jQueryEqualHeight Grid__Cell 1/2--phone 1/2--tablet-and-up 1/3--desk" v-for="result in results" v-bind:key="result.id">
+        <div class="ProductItem ">
+            <div class="ProductItem__Wrapper">
+                <a v-bind:href="urlHandle(result.handle)" target="_blank" v-on:click="urlClicked(result.title)" class="ProductItem__ImageWrapper ">
+
+                    <div class="AspectRatio AspectRatio--withFallback st-ProdctImage-wrap">
+                        <img class="ProductItem__Image Image--fadeIn lazyautosizes Image--lazyLoaded" v-bind:src="imgReSizer(result.image)">
+                        <div class="ProductItem__LabelList">
+                            <span v-if="(result.discounted_price !== result.price) && result.isActive" class="ProductItem__Label Heading Text--subdued">On sale</span>
+                            <span v-if="result.tags.indexOf('designer-piece')>-1" class="ProductItem__Label Heading Text--subdued" style="background: darkgreen">Designer Piece</span>
+                            <span v-if="result.tags.indexOf('limited-stock')>-1" class="ProductItem__Label Heading Text--subdued" style="background: maroon">Limited Stock</span>
+                        </div>
+                        <div class="ProductItem__LabelList" v-if="!result.isActive">
+                            <span class="ProductItem__Label Heading Text--subdued">Sold out</span>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="ProductItem__Info ProductItem__Info--left">
+                    <div class="ProductItem__Title Heading">
+                        <a v-bind:href="urlHandle(result.handle)" target="_blank" v-on:click="urlClicked(result.title)" class="">{{ result.title }}</a>
+                    </div>
+
+                    <div class="wishlist-wrapper ProductItem__PriceList  Heading" v-if="result.discounted_price !== result.price">
+                        <span class="ProductItem__Price Price Price--highlight Text--subdued">Rs. {{ numberWithCommas(result.discounted_price) }}</span>
+                        <span class="ProductItem__Price Price Price--compareAt Text--subdued">Rs. {{ numberWithCommas(result.price) }}</span>
+                    </div>
+                    <div class="wishlist-wrapper ProductItem__PriceList  Heading" v-else>
+                        <span class="ProductItem__Price Price Text--subdued">Rs. {{ numberWithCommas(result.price) }}</span>
+                    </div>
+                </div>
+                <div class="available-size" v-if="result.size && result.all_size && result.all_size.length !== result.size.length">
+                    <span class="size-list hidden-mobile">Available Sizes:  {{spread(result.showSize)}}</span>
+                    <span class="size-list hidden-tablet-and-up">Sizes: {{spread(result.showSize)}}</span>
+                </div>
+                <div class="available-size" v-else-if="result.size && result.all_size && result.all_size.length === result.size.length"><span class="size-list">All Sizes available</span></div>
+                <!-- <div class="custom-addtocart">
+                     <a class="btn show-swatch-btn show-swatch">Add to cart</a>
+                 </div>-->
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div id="noResults" class="st-results-end">
+    <span class="no-result-label" v-if="resultEnd">No more results</span>
+    <span class="result-loading" v-else>
+            <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+        </span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="filter-bar hidden-desktop">
+<div id="sortFilter" class="sortFilterCon">
+<div class="filter_h" v-on:click="toggleMobileFilter(true)">
+<span class="tabIcon filterIcon"></span>
+<span class="filter-applied-ellip" v-show="totalFilterCount > 0"></span>
+<span class="disInBlock">Filter</span>
+</div>
+<div class="sort_h">
+<span class="tabIcon sortIcon"></span>
+<select id="st-mobile-sort" class="pdSorting" v-model="sortLabel" v-on:change="sorting(sortLabel)">
+    <option v-for="sort in sorts" v-bind:key="sort.field" v-bind:value="sort.label">{{ sort.label }}</option>
+</select>
+<span class="filter-applied-ellip" v-show="sortLabel !== 'Relevance' "></span>
+<span class="disInBlock">Sort</span>
+</div>
+</div>
+</div>
+
+<div id="st-back-top" class="back-top"><span rel="tooltip" title="Top"></span></div>
+
+<div id="searchFilterMobile" class="hidden-desktop">
+<div class="mobile-filter-popup" v-show="showMobileFilters">
+<div class="filter-list">
+<div class="filterHeader">
+    <div class="st-mobile-cross" v-on:click="toggleMobileFilter(false)"></div>
+    Filter by
+    <span class="pull-right"><span class="st-reset-all-mobile" v-show="totalFilterCount > 0" v-on:click="clearFilters()">Reset all</span></span>
+</div>
+<div class="row">
+    <div class="filter-body">
+        <div class="mobileFilters" v-for="filter in textFacetFilters" v-bind:key="filter.field" v-show="(filter.values.length > 0 || filter.selected.length > 0) && filter.type!=='single'">
+            <div class="panel-heading">
+                <span class="st-mobile-filter-clear" style="text-align: right;" v-show="filter.selected.length > 0" v-on:click="clearFilters(filter.field,'text')">Clear</span>
+                <h4 class="panel-title" v-on:click="filter.isOpen = !filter.isOpen">
+                    <i aria-hidden="true" class="indicator fa fa-minus" v-show="filter.isOpen"></i>
+                    <i aria-hidden="true" class="indicator fa fa-plus" v-show="!filter.isOpen"></i>
+                    {{ filter.title }}
+                </h4>
+            </div>
+            <div class="panel-items" v-show="filter.isOpen">
+                <ul v-bind:id=`${filter.field}-mfilters` class="filter-list-desktop" v-if="filter.type==='multiple'">
+                    <li v-for="item in filter.selected" v-bind:key="item">
+                        <div class="outer-checkbox">
+                            <label>
+                                <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering()">
+                                <span class="st-checkbox"><i class="cr-icon fa fa-check"></i>&nbsp;</span>
+                                <span class="filter-label">{{ item }}</span>
+                                <span class="number_of_product">({{getSelectedCount(item,filter.field,'text')}})</span>
+                            </label>
+                        </div>
+                    </li>
+
+                    <li v-for="item in getNotSelectedFilters(filter.field,'text')" v-bind:key="item.name">
+                        <div class="outer-checkbox">
+                            <label>
+                                <input type="checkbox" v-bind:value="item.name" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,item.name)">
+                                <span class="st-checkbox"><i class="cr-icon fa fa-check"></i>&nbsp;</span>
+                                <span class="filter-label">{{ item.name }}</span>
+                                <span class="number_of_product">({{ item.count }})</span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+<!--                                                            <ul v-bind:id=`${filter.field}-mfilters` class="filter-list-desktop" v-if="filter.type==='single'">-->
+<!--                                                                <li v-for="item in filter.values" v-bind:key="item">-->
+<!--                                                                    <div class="outer-checkbox">-->
+<!--                                                                        <label>-->
+<!--                                                                            <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,item)">-->
+<!--                                                                            <span class="st-checkbox"><i class="cr-icon fa fa-check"></i>&nbsp;</span>-->
+<!--                                                                            <span class="filter-label">{{ item }}</span>-->
+<!--                                                                        </label>-->
+<!--                                                                    </div>-->
+<!--                                                                </li>-->
+<!--                                                            </ul>-->
+            </div>
+        </div>
+
+        <div class="mobileFilters" v-for="filter in numericFacetFilters" v-bind:key="filter.field" v-show="filter.values.length > 0 || filter.selected.length > 0">
+            <div class="panel-heading">
+                <span class="st-mobile-filter-clear" style="text-align: right;" v-show="filter.selected.length > 0" v-on:click="clearFilters(filter.field,'numerical')">Clear</span>
+                <h4 class="panel-title" v-on:click="filter.isOpen = !filter.isOpen">
+                    <i aria-hidden="true" class="indicator fa fa-minus" v-show="filter.isOpen"></i>
+                    <i aria-hidden="true" class="indicator fa fa-plus" v-show="!filter.isOpen"></i>
+                    {{ filter.title }}
+                </h4>
+            </div>
+            <div class="panel-items" v-show="filter.isOpen">
+                <ul v-bind:id=`${filter.field}-mfilters` class="filter-list-desktop">
+                    <li v-for="item in filter.selected" v-bind:key="item[0]">
+                        <div class="outer-checkbox">
+                            <label>
+                                <input type="checkbox" v-bind:value="item" v-model="filter.selected" v-on:change="filtering()">
+                                <span class="st-checkbox"><i class="cr-icon fa fa-check"></i>&nbsp;</span>
+                                <span class="filter-label"><span>RS. {{ numberWithCommas(item[0]) }}</span> - <span>RS. {{numberWithCommas(item[1])}}</span></span>
+                                <span class="number_of_product">({{getSelectedCount([item[0],item[1]],filter.field,'numerical')}})</span>
+                            </label>
+                        </div>
+                    </li>
+
+                    <li v-for="item in getNotSelectedFilters(filter.field,'numerical')" v-bind:key="item.min">
+                        <div class="outer-checkbox">
+                            <label>
+                                <input type="checkbox" v-bind:value="[item.min,item.max]" v-model="filter.selected" v-on:change="filtering(),filterAnalytics('left',filter.title,[item.min,item.max])">
+                                <span class="st-checkbox"><i class="cr-icon fa fa-check"></i>&nbsp;</span>
+                                <span class="filter-label"><span>RS. {{ numberWithCommas(item.min) }} USD</span> - <span>$ {{numberWithCommas(item.max)}}</span></span>
+                                <span class="number_of_product">({{ item.count }})</span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="st-mobile-apply-all"  v-on:click="toggleMobileFilter(false)">
+            <div class="apply-btn">Apply</div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endraw %}
+
+<script>
+  // to close searchbox and keypad on enter on mobile
+  document.addEventListener('keypress', (evt)=>{
+    if(evt.keyCode === 13 && window.matchMedia("only screen and (max-width: 834px)").matches){ 
+      document.querySelector('.Search__Close.Link.Link--primary').click();
+    document.querySelector('#Search .Search__Input.Heading').blur();
+    }
+  });
+  
+</script>
+
+<style>
+
+  #searchModal .ProductItem__Wrapper .st-ProdctImage-wrap:before {
+    padding-bottom: 0 !important;
+}
+  .st-ProdctImage-wrap img {
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    width: 100%;
+}
+</style>
+
+{% schema %}
+{
+"name": "searchtap",
+"settings": []
+}
+{% endschema %}
