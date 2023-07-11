@@ -21,6 +21,7 @@
 
         {% render 'social-meta-tags' %}
         {% render 'integration-scripts' %}
+
         {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
             {{ content_for_header }}
         {%- else -%}
@@ -28,11 +29,12 @@
         	{{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload2" ' | replace: " src=", " data-src=" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('wnw_load', asyncLoad, false);" | replace: "DOMContentLoaded", "DOMContentLoaded2" | replace: "addEventListener('load', prefetchAssets);", "addEventListener('wnw_load', prefetchAssets);" }}
         	<script>var trekkie=[];trekkie.integrations=!0;window.BOOMR={},window.BOOMR.version=true;</script>
         {%- endif -%}
+
         {% render 'critical-css' %}
         {% render 'font-css' %}
         <link rel="stylesheet" data-href="{{ 'theme.min.css' | asset_url }}">
 
-        <script>
+        <script type="lazyload2">
             // This allows to expose several variables to the global scope, to be used in scripts
             window.theme = {
               template: {{ template.name | json }},
@@ -86,7 +88,10 @@
 				location.reload(true);
             }
         </script>
+        {% comment %}
         {% render 'jquery-min' %}
+        {% endcomment %}      
+        <script data-src="https://code.jquery.com/jquery-3.7.0.min.js" type="lazyload2"></script>
         <script data-src="{{ 'lazysizes.min.js' | asset_url }}" type="lazyload2"></script>
 
         {% if settings.currency_conversion_enabled %}
@@ -103,7 +108,7 @@
         <script type="lazyload2" data-src="{{ 'theme.js' | asset_url }}"></script>
         <script type="lazyload2" data-src="{{ 'custom.js' | asset_url }}"></script>
         <script type="lazyload2" data-src="{{ 'jquery-equal-height.min.js' | asset_url }}"></script>
-        <script type="lazyload2" src="{{ 'option_selection.js' | shopify_asset_url }}"></script>
+        <script type="lazyload2" data-src="{{ 'option_selection.js' | shopify_asset_url }}"></script>
         <script type="lazyload2" data-src="{{ 'api.jquery.js' | shopify_asset_url }}"></script>
         {% comment %}{% render 'app-header-block' %}
     	{% include 'storebundle-header' %}{% endcomment %}
@@ -133,12 +138,14 @@
 			{% section 'announcement' %}
 			{% section 'header' %}
 			<main id="main" role="main">
+
             {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
             	{{ content_for_layout }}
             {%- else -%}
             	{% capture content_for_layout2 %}{{ content_for_layout }}{% endcapture %}
             	{{ content_for_layout2 | replace: 'src="https://www.youtube.com/', 'data-src="https://www.youtube.com/'  }}
             {%- endif -%}
+
             </main>
 			{% section 'footer' %}
         </div>
@@ -172,9 +179,11 @@
                 });
             });
         </script> -->
+       {% comment %}
        <div class="page-loader"><img src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/page-loader-3.gif?v=1680067148"></div>
-       <script>
-        $(window).load(function() {
+       {% endcomment %}
+       <script type="lazyload2">
+        setTimeout(function() {
           $(".page-loader").fadeOut("slow");
         });
        </script>
@@ -189,7 +198,7 @@
             });
 		});
       </script>
-      <script src="//swopstore.com/wrapper.php?method=container&shopId=1083" type="text/javascript"></script>
+      <script type="lazyload2" data-src="//swopstore.com/wrapper.php?method=container&shopId=1083" type="text/javascript"></script>
 	</body>
 </html>
 {{ 'wnw-optimization.js' | asset_url | script_tag }}

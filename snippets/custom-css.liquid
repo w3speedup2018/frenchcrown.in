@@ -1,5 +1,7 @@
 <style>
-
+.no-js .AspectRatio>img {
+    display: block !important;
+}
 @media(min-width:1200px){
 #shopify-section-1643716457e05fc47c {
     background-image: url(https://cdn.shopify.com/s/files/1/0094/6326/7379/files/video_desktop_img.jpg?v=1686826826) !important;
@@ -20,23 +22,52 @@
 
 @media(max-width:767px){
 #shopify-section-1643716457e05fc47c {
-    background-image: url(https://cdn.shopify.com/s/files/1/0094/6326/7379/files/video_phone_img.jpg?v=1686826825) !important;
+    background-image: url(https://cdn.shopify.com/s/files/1/0094/6326/7379/files/video_phone_img_360x.jpg?v=1686826825) !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-size: cover !important;
     background-position: center !important;
 }
 
-#shopify-section-8ddfb26e-a7e4-47e0-90bb-be5c15373419{
-    background-image: url(https://cdn.shopify.com/s/files/1/0094/6326/7379/t/255/assets/6b1bb00f36c640e18e7784c14e0bec.jpg) !important;
+/* #shopify-section-8ddfb26e-a7e4-47e0-90bb-be5c15373419{
+    background-image: url(https://cdn.shopify.com/s/files/1/0094/6326/7379/t/255/assets/6b1bb00f36c640e18e7784c14e0bec_280x.jpg) !important;
     opacity: 1 !important;
     visibility: visible !important;
     background-size: cover !important;
     background-position: center !important;
-}
+} */
 }
 
 .template-index .Slideshow:not(.flickity-enabled) {
     margin-bottom: 30px;
 }
+
+body:not(.wnw_loaded) #searchModalContainer {
+    display: none !important;
+}
+
+.template-index  .Slideshow__Carousel  .flickity-slider .Slideshow__Slide:nth-child(1) .Slideshow__Content  header.SectionHeader,
+.template-index  .Slideshow__Carousel  .flickity-slider .Slideshow__Slide:nth-child(1) .Slideshow__Content  header.SectionHeader *{
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: unset !important;
+}
+
+.template-collection .CollectionMain  .CollectionFilters > .Collapsible:nth-child(2) .Collapsible__Inner:not([style]) {
+    height: auto;
+    opacity: 1;
+    visibility: visible !important;
+}
+
+body:not(.wnw_loaded).template-collection .CollectionMain  .CollectionFilters > .Collapsible:nth-child(2) .Collapsible__Button .Collapsible__Plus:before {
+    opacity: 0;
+}
+
+@media(max-width:767px){
+.Product__Slideshow:not(.flickity-enabled) .Product__SlideItem:nth-child(n+2) {
+    display:none !important;
+}
+}
+
+
 </style>

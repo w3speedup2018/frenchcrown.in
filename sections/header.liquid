@@ -354,8 +354,13 @@ The theme currency converter is used in lot of different places so to simply the
                src="{{ section.settings.logo | img_url: image_size }}"
                srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
                width="{{ section.settings.logo_max_width }}"
-               alt="{{ section.settings.logo.alt | default: shop.name | escape }}">
+               alt="{{ section.settings.logo.alt | default: shop.name | escape }}">                   
+          <img class="Header__LogoImage Header__LogoImage--primary other-logo" 
+                src="{{ 'fc_logo_black.png' | asset_url }}" 
+                srcset="{{ 'fc_logo_black.png' | asset_url }} 2x" width="350" alt="French Crown">
+          {% comment %}
           <img class="Header__LogoImage Header__LogoImage--primary other-logo" src="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/fc_logo_black.svg?v=1687237310" srcset="https://cdn.shopify.com/s/files/1/0094/6326/7379/files/fc_logo_black.svg?v=1687237310 2x" width="350" alt="French Crown">
+          {% endcomment %}
           {%- if use_transparent_header and section.settings.transparent_logo != blank -%}
             <img class="Header__LogoImage Header__LogoImage--transparent"
                  src="{{ section.settings.transparent_logo | img_url: image_size }}"
@@ -491,95 +496,7 @@ The theme currency converter is used in lot of different places so to simply the
 
 
 <style>
-/*  Added by ST Team  */  
-/*   .st-search-box-mobile {
-    display: none;
-    position: absolute;
-    top: 100%;
-    width: 100%;
-    background: #fff;
-    pointer-events: none;
-    transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
-    z-index:-1;
-}
-   */
-  
-  .st-search-box-mobile {
-    display: block;
-    width: 100%;
-    background: white;
-}
-  
-  .close-icon{
-    display:none;
-  }
-  
-.search-box-active .st-search-box-mobile{
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
-  
-  .search-box-active #section-header{
-    background:#000;
-  }
-  
-.st-search-box {
-    width: 350px;
-    height: 50px;
-    position: relative;
-}
-
-.st-search {
-    position: absolute;
-    top: 10px;
-    right: 5px;
-    box-sizing: border-box;
-    width: 0;
-    height: 35px;
-    padding: 0 20px;
-    visibility: hidden;
-    outline: none;
-    font-size: 17px;
-    border-radius: 50px;
-    color: #333;
-    border: 3px solid #ffffff;
-    transition: all 0.8s ease;
-}
-
-.st-btn {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border-radius: 50%;
-    right: 10px;
-    top: 0;
-    cursor: pointer;
-    text-align: center;
-    line-height: 55px;
-    font-size: 20px;
-    color: #fff;
-    transition: all 0.8s ease;
-}
-  
-.st-btn .search-icon.hidden-phone {
-    background: #fff;
-    padding-left: 2px;
-}
-
-.st-search.active {
-    width: 300px;
-    right: 10px;
-    visibility: visible;
-}
-
-.st-btn.animate {
-    color: black;
-}
-  
-  
+ .st-search-box-mobile {display: block;width: 100%;background: white;}.close-icon{display:none;}.search-box-active .st-search-box-mobile{visibility: visible;opacity: 1;pointer-events: auto;transform: translateY(0);}.search-box-active #section-header{background:#000;}.st-search-box {width: 350px;height: 50px;position: relative;}.st-search {position: absolute;top: 10px;right: 5px;box-sizing: border-box;width: 0;height: 35px;padding: 0 20px;visibility: hidden;outline: none;font-size: 17px;border-radius: 50px;color: #333;border: 3px solid #ffffff;transition: all 0.8s ease;}.st-btn {position: absolute;width: 50px;height: 50px;background: transparent;border-radius: 50%;right: 10px;top: 0;cursor: pointer;text-align: center;line-height: 55px;font-size: 20px;color: #fff;transition: all 0.8s ease;}.st-btn .search-icon.hidden-phone {background: #fff;padding-left: 2px;}.st-search.active {width: 300px;right: 10px;visibility: visible;}.st-btn.animate {color: black;} 
   
   {%- if section.settings.use_sticky_header -%}
     :root {
@@ -635,7 +552,7 @@ The theme currency converter is used in lot of different places so to simply the
   {%- endif -%}
 </style>
 
-<script>
+<script type="lazyload2">
   
 //   function showSearchBox(){
 //    $('.st-search-box-mobile').show();

@@ -2201,7 +2201,7 @@ body:not(.is-tabbing) .flickity-enabled:focus {
 
 @supports (--css: variables) {
   .Drawer__Header {
-    height: 60px
+    height: var(--header-height)
   }
 }
 
@@ -2251,15 +2251,15 @@ body:not(.is-tabbing) .flickity-enabled:focus {
 
 @supports (--css: variables) {
   .Drawer__Content {
-    height: calc(100% - 60px);
-    max-height: calc(100% - 60px)
+    height: calc(100% - var(--header-height));
+    max-height: calc(100% - var(--header-height))
   }
 }
 
 @supports (width: max(100%)) {
   .Drawer__Content {
-    height: max(100% - 60px, 100% - 60px);
-    max-height: max(100% - 60px, 100% - 60px)
+    height: max(100% - var(--header-height), 100% - 60px);
+    max-height: max(100% - var(--header-height), 100% - 60px)
   }
 }
 
@@ -3099,7 +3099,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .Anchor {
-    top: calc(-1 * (60px))
+    top: calc(-1 * (var(--header-height)))
   }
 }
 
@@ -4059,7 +4059,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .PageHeader--withBackground .SectionHeader.SectionHeader {
-    margin-top: calc(60px * var(--header-is-transparent, 0))
+    margin-top: calc(var(--header-height) * var(--header-is-transparent, 0))
   }
 }
 
@@ -4078,7 +4078,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--withBackground {
-      min-height: calc(380px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(380px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4088,7 +4088,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--small.PageHeader--withBackground {
-      min-height: calc(350px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(350px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4098,7 +4098,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--large.PageHeader--withBackground {
-      min-height: calc(410px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(410px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4109,7 +4109,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--withBackground .SectionHeader.SectionHeader {
-      margin-top: calc(60px * var(--header-is-transparent, 0))
+      margin-top: calc(var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 }
@@ -4121,7 +4121,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--withBackground {
-      min-height: calc(450px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(450px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4131,7 +4131,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--small.PageHeader--withBackground {
-      min-height: calc(400px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(400px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4141,7 +4141,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--large.PageHeader--withBackground {
-      min-height: calc(520px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(520px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 }
@@ -4153,7 +4153,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--withBackground {
-      min-height: calc(600px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(600px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4163,7 +4163,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--small.PageHeader--withBackground {
-      min-height: calc(550px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(550px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 
@@ -4173,7 +4173,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageHeader--large.PageHeader--withBackground {
-      min-height: calc(650px + 60px * var(--header-is-transparent, 0))
+      min-height: calc(650px + var(--header-height) * var(--header-is-transparent, 0))
     }
   }
 }
@@ -4191,7 +4191,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .PageLayout__Section--sticky {
-    top: calc(60px + 20px)
+    top: calc(var(--header-height) + 20px)
   }
 }
 
@@ -4265,7 +4265,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .PageContent--fitScreen {
-    min-height: calc(var(--window-height) - 60px - var(--announcement-bar-height, 0px) - 120px)
+    min-height: calc(var(--window-height) - var(--header-height) - var(--announcement-bar-height, 0px) - 120px)
   }
 }
 
@@ -4293,7 +4293,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .PageContent--fitScreen {
-      min-height: calc(var(--window-height) - 60px - var(--announcement-bar-height, 0px) - 160px)
+      min-height: calc(var(--window-height) - var(--header-height) - var(--announcement-bar-height, 0px) - 160px)
     }
   }
 }
@@ -5204,7 +5204,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .ArticleToolbar {
-    top: calc(var(--use-sticky-header, 0) * 60px)
+    top: calc(var(--use-sticky-header, 0) * var(--header-height))
   }
 }
 
@@ -6059,7 +6059,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .CollectionToolbar--top {
-    top: calc(60px * var(--use-sticky-header, 0))
+    top: calc(var(--header-height) * var(--use-sticky-header, 0))
   }
 }
 
@@ -6390,13 +6390,13 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .CollectionInner__Sidebar {
-      top: calc(60px + 50px)
+      top: calc(var(--header-height) + 50px)
     }
   }
 
   @supports (--css: variables) {
     .CollectionInner__Sidebar--withTopToolbar {
-      top: calc(60px * var(--use-sticky-header, 0) + 105px)
+      top: calc(var(--header-height) * var(--use-sticky-header, 0) + 105px)
     }
   }
 
@@ -7382,7 +7382,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .MegaMenu {
-    max-height: calc(100vh - 60px)
+    max-height: calc(100vh - var(--header-height))
   }
 }
 
@@ -8280,7 +8280,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .Product__SlideshowNav--dots .Product__SlideshowNavScroller {
-      top: calc(50% + (60px / 2))
+      top: calc(50% + (var(--header-height) / 2))
     }
   }
 
@@ -8395,7 +8395,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .Product__Gallery--stack .Product__SlideshowNav--thumbnails {
-      top: 60px
+      top: var(--header-height)
     }
   }
 }
@@ -8526,7 +8526,7 @@ select::-ms-expand {
 
   @supports (--css: variables) {
     .Product__Info {
-      top: 60px
+      top: var(--header-height)
     }
   }
 
@@ -8696,7 +8696,7 @@ select::-ms-expand {
     position: -webkit-sticky;
     position: sticky;
     float: right;
-    top: calc(100vh - 60px)
+    top: calc(100vh - var(--header-height))
   }
 
   .no-supports-sticky .Product__ActionList {
@@ -9580,7 +9580,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .Search__Inner {
-    max-height: calc(100vh - 60px - 88px)
+    max-height: calc(100vh - var(--header-height) - 88px)
   }
 }
 
@@ -10096,7 +10096,7 @@ select::-ms-expand {
 
 @supports (--css: variables) {
   .js .Slideshow--fullscreen {
-    height: calc(var(--window-height) - (60px * var(--header-is-not-transparent, 0)) - var(--announcement-bar-height, 0px))
+    height: calc(var(--window-height) - (var(--header-height) * var(--header-is-not-transparent, 0)) - var(--announcement-bar-height, 0px))
   }
 }
 
@@ -13277,9 +13277,9 @@ ol.outer-table-content li:before {
 */
 
 @media (max-width: 480px) {
-  .Collapsible__Button.phone {
-    display: block !important
-  }
+	.Collapsible__Button.phone {
+		display: block !important
+	}
     .Header__Wrapper{
         padding: 5px 8px;
     }
@@ -13429,8 +13429,8 @@ ol.outer-table-content li:before {
     color: #707070;
 }
 .alternate-mobile-no-section, .send-otp-section, .whatsapp-email-section, .cod-otp-section{
-  margin: 25px;
-    color: #000;
+	margin: 25px;
+  	color: #000;
 }
 
 .fc_mainContent h3.otp-title{
@@ -13668,11 +13668,11 @@ img.Header__LogoImage.Header__LogoImage--primary {
     background: transparent;
 } */
 .Header__FlexItem--fill:last-child a.Header__Icon.hidden-phone {
-  margin-top: 9px;
+	margin-top: 9px;
 }
 #section-announcement {
-  background: #000 !important;
-  color: #fff !important;
+	background: #000 !important;
+	color: #fff !important;
 }
 .Header__Wrapper.is-sticky div.Search {
     margin-top: 6rem;
@@ -13696,8 +13696,8 @@ button.Search__Close.Link.Link--primary:hover {
     color: #000;
 }
 .lang-button .jobo_lang_wrapper {
-  margin-top: 15px;
-  margin-left: 12px;
+	margin-top: 15px;
+	margin-left: 12px;
 }
 .Product__Gallery--stack .Product__SlideshowNav--thumbnails{
   padding: 10px 0 0 0;
@@ -13779,7 +13779,7 @@ button.Drawer__Close.Icon-Wrapper--clickable {
     display: none !important;
   } */
   .Header__Wrapper.is-sticky div.Search {
-  margin-top: 0rem;
+	margin-top: 0rem;
   }
   .Header__Wrapper.is-sticky .Header__LogoLink img{
     display: block;
@@ -13834,9 +13834,9 @@ button.Drawer__Close.Icon-Wrapper--clickable {
   .lang-button .jobo_lang_wrapper .languages_container{
     top: 27px;
   }
-/*   .Drawer__Header.Drawer__Header--bordered.Drawer__Container { 
-    height: inherit;
-  } */
+  .Drawer__Header.Drawer__Header--bordered.Drawer__Container {	
+    height: 100%;	
+  }
 }
 @media (max-width:640px){
   .header-color .st-wrapper .st-search-box .st-search.active {

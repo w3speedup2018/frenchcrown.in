@@ -83,7 +83,7 @@
         {% endunless %}
       {% endunless %}
       {% if variant.available %}
-        <script>
+        <script type="lazyload2">
           jQuery('.{{product.id}} .{{ value | handle }}').removeClass('soldout').addClass('available').find(':radio').removeAttr('disabled');
         </script>
         {% endif %}
